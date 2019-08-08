@@ -8,18 +8,20 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>CG-CTF Web | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="GBKphp == md5 碰撞漏洞变量覆盖php strcmp字符串与数组比较，在php5.2.16返回-1，在php5.3.3返回0 12345678910111213$pass=@$_POST[&apos;pass&apos;];$pass1=***********;//被隐藏起来的密码if(isset($pass))&amp;#123;if(@!strcmp($pass,$pass1))&amp;#123;echo &quot;fla">
+  <meta name="description" content="GBKphp == md5 碰撞漏洞https://blog.csdn.net/qq_19980431/article/details/83018232 变量覆盖https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1 php strcmp字符串与数组比较，在php5.2.16返回-1，在php5.">
 <meta name="keywords" content="机器学习 计算机视觉 信息安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CG-CTF Web">
 <meta property="og:url" content="http://yoursite.com/2019/07/30/CG-CTF-Web/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="GBKphp == md5 碰撞漏洞变量覆盖php strcmp字符串与数组比较，在php5.2.16返回-1，在php5.3.3返回0 12345678910111213$pass=@$_POST[&apos;pass&apos;];$pass1=***********;//被隐藏起来的密码if(isset($pass))&amp;#123;if(@!strcmp($pass,$pass1))&amp;#123;echo &quot;fla">
+<meta property="og:description" content="GBKphp == md5 碰撞漏洞https://blog.csdn.net/qq_19980431/article/details/83018232 变量覆盖https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1 php strcmp字符串与数组比较，在php5.2.16返回-1，在php5.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-01T02:17:12.184Z">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/462486/201807/462486-20180718114524867-487464059.jpg">
+<meta property="og:updated_time" content="2019-08-08T02:25:49.617Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CG-CTF Web">
-<meta name="twitter:description" content="GBKphp == md5 碰撞漏洞变量覆盖php strcmp字符串与数组比较，在php5.2.16返回-1，在php5.3.3返回0 12345678910111213$pass=@$_POST[&apos;pass&apos;];$pass1=***********;//被隐藏起来的密码if(isset($pass))&amp;#123;if(@!strcmp($pass,$pass1))&amp;#123;echo &quot;fla">
+<meta name="twitter:description" content="GBKphp == md5 碰撞漏洞https://blog.csdn.net/qq_19980431/article/details/83018232 变量覆盖https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1 php strcmp字符串与数组比较，在php5.2.16返回-1，在php5.">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/462486/201807/462486-20180718114524867-487464059.jpg">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -165,8 +167,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2><span id="gbk">GBK</span></h2><h2><span id="php-md5-碰撞漏洞">php == md5 碰撞漏洞</span></h2><h2><span id="变量覆盖">变量覆盖</span></h2><h2><span id="php-strcmp">php strcmp</span></h2><p>字符串与数组比较，在php5.2.16返回-1，在php5.3.3返回0</p>
+        <h2><span id="gbk">GBK</span></h2><h2><span id="php-md5-碰撞漏洞">php == md5 碰撞漏洞</span></h2><p><a href="https://blog.csdn.net/qq_19980431/article/details/83018232" target="_blank" rel="noopener">https://blog.csdn.net/qq_19980431/article/details/83018232</a><br><img src="https://images2018.cnblogs.com/blog/462486/201807/462486-20180718114524867-487464059.jpg" alt=""></p>
+<h2><span id="变量覆盖">变量覆盖</span></h2><p><a href="https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1" target="_blank" rel="noopener">https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1</a></p>
+<h2><span id="php-strcmp">php strcmp</span></h2><p>字符串与数组比较，在php5.2.16返回-1，在php5.3.3返回0</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$pass=@$_POST[<span class="string">'pass'</span>];</span><br><span class="line">$pass1=***********;<span class="comment">//被隐藏起来的密码</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($pass))</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">if</span>(@!strcmp($pass,$pass1))&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"flag:nctf&#123;*&#125;"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"the pass is wrong!"</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"please input pass!"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2><span id="php反序列化对象注入漏洞">php反序列化(对象注入漏洞)</span></h2><h1><span id="php伪协议">php伪协议</span></h1><p><a href="https://www.freebuf.com/column/148886.html" target="_blank" rel="noopener">https://www.freebuf.com/column/148886.html</a></p>
+<blockquote>
+<p>常用<br>xxx.php?file=php://filter/read=convert.base64-encode/resource=x.php</p>
+</blockquote>
 
       
 
@@ -398,10 +406,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web sql</a>
               </li>
             
             <div class="clearfix"></div>

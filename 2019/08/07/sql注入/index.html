@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>sql注入 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="南望山男子职业技术学院（中国地质大学）17级学生">
-<meta name="keywords" content="web sql">
+  <meta name="description" content="https://blog.csdn.net/wuqiongrj/article/details/51995016 mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息  information.schema.schemataSCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的">
+<meta name="keywords" content="web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sql注入">
 <meta property="og:url" content="http://yoursite.com/2019/08/07/sql注入/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="南望山男子职业技术学院（中国地质大学）17级学生">
+<meta property="og:description" content="https://blog.csdn.net/wuqiongrj/article/details/51995016 mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息  information.schema.schemataSCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-07T09:25:22.784Z">
+<meta property="og:updated_time" content="2019-08-08T02:26:30.317Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sql注入">
-<meta name="twitter:description" content="南望山男子职业技术学院（中国地质大学）17级学生">
+<meta name="twitter:description" content="https://blog.csdn.net/wuqiongrj/article/details/51995016 mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息  information.schema.schemataSCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -165,7 +165,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><a href="https://blog.csdn.net/wuqiongrj/article/details/51995016" target="_blank" rel="noopener">https://blog.csdn.net/wuqiongrj/article/details/51995016</a></p>
+<p>mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息</p>
+<ol>
+<li><p>information.schema.schemata<br>SCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的结果取之此表</p>
+</li>
+<li><p>information.schema.tables<br>TABLES表:储存mysql中的表信息，（当然也有数据库名这一列，这样才能找到哪个数据库有哪些表嘛）包括这个表是基本表还是系统表，数据库的引擎是什么，表有多少行，创建时间，最后更新时间等。show tables from schemaname的结果取之此表.</p>
+</li>
+<li><p>information.schema.columns<br>COLUMNS表：提供了表中的列信息，（当然也有数据库名和表名称这两列）详细表述了某张表的所有列以及每个列的信息，包括该列是那个表中的第几列，列的数据类型，列的编码类型，列的权限，注释等。是show columns from schemaname.tablename的结果取之此表.</p>
+</li>
+</ol>
+
       
 
       
@@ -199,7 +209,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">web sql</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
         		</li>
       		
 		</ul>
@@ -407,10 +417,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web sql</a>
               </li>
             
             <div class="clearfix"></div>
