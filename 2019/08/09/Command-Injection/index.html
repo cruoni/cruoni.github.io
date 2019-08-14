@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>webshell 上传/解析漏洞 | cruoni的博客</title>
+  <title>Command Injection  | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
-<meta name="keywords" content="web">
+  <meta name="description" content="命令注入命令注入流程 是否调用系统命令 函数的参数是否可控 可控参数是否可控地拼接注入命令  &amp;amp;，&amp;amp;&amp;amp;，| ，||命令拼接符号的区别A&amp;amp;B：简单的拼接 A、B直接没有制约关系A&amp;amp;&amp;amp;B：A执行成功才会执行BA|B：A的输出，作为B的输入A||B：A执行失败才会执行B 无回显时 延时注入：     系统 命令     windows ping 127.0">
+<meta name="keywords" content="机器学习 计算机视觉 信息安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="webshell 上传&#x2F;解析漏洞">
-<meta property="og:url" content="http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/index.html">
+<meta property="og:title" content="Command Injection ">
+<meta property="og:url" content="http://yoursite.com/2019/08/09/Command-Injection/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta property="og:description" content="命令注入命令注入流程 是否调用系统命令 函数的参数是否可控 可控参数是否可控地拼接注入命令  &amp;amp;，&amp;amp;&amp;amp;，| ，||命令拼接符号的区别A&amp;amp;B：简单的拼接 A、B直接没有制约关系A&amp;amp;&amp;amp;B：A执行成功才会执行BA|B：A的输出，作为B的输入A||B：A执行失败才会执行B 无回显时 延时注入：     系统 命令     windows ping 127.0">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:13:14.823Z">
+<meta property="og:updated_time" content="2019-08-09T02:13:08.289Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webshell 上传&#x2F;解析漏洞">
-<meta name="twitter:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta name="twitter:title" content="Command Injection ">
+<meta name="twitter:description" content="命令注入命令注入流程 是否调用系统命令 函数的参数是否可控 可控参数是否可控地拼接注入命令  &amp;amp;，&amp;amp;&amp;amp;，| ，||命令拼接符号的区别A&amp;amp;B：简单的拼接 A、B直接没有制约关系A&amp;amp;&amp;amp;B：A执行成功才会执行BA|B：A的输出，作为B的输入A||B：A执行失败才会执行B 无回显时 延时注入：     系统 命令     windows ping 127.0">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,43 +145,79 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webshell-上传-解析漏洞" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-Command-Injection" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      webshell 上传/解析漏洞
+      Command Injection 
     </h1>
   
 
         
-        <a href="/2019/07/25/webshell-上传-解析漏洞/" class="archive-article-date">
-  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+        <a href="/2019/08/09/Command-Injection/" class="archive-article-date">
+  	<time datetime="2019-08-09T01:35:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1><span id="什么是webshell">什么是Webshell</span></h1><h2><span id="webshell定义">Webshell定义</span></h2><p>Web服务端的一种脚本工具</p>
-<h2><span id="webshell功能">Webshell功能</span></h2><ol>
-<li>环境探针</li>
-<li>资源管理器</li>
-<li>文件编辑器</li>
-<li>执行OS命令</li>
-<li>读取注册表</li>
-<li>创建Socket</li>
-<li>调用系统组件</li>
+        <h1><span id="命令注入">命令注入</span></h1><h2><span id="命令注入流程">命令注入流程</span></h2><ol>
+<li>是否调用系统命令</li>
+<li>函数的参数是否可控</li>
+<li>可控参数是否可控地拼接注入命令</li>
 </ol>
-<h2><span id="webshell的分类">Webshell的分类</span></h2><p>功能强弱分为大马、小马、一句话木马</p>
-<p>一句话木马：<br><code>%eval request(&quot;pass&quot;)%&gt;</code><br>eval 将request(“pass”)转化成代码执行 request功能：引用外部文件</p>
-<p>IIS 5.X/6.0 解析漏洞</p>
-<p>Is7.0/ IIS 7.5 /Nginx &lt; 0.83 畸形解析漏洞<br>xxx.jpg/.php</p>
-<p>Nginx 0.5 0.6 0.7-0.7.65 0.8-0.8.37 空字节代码执行漏洞<br>xxx.jpg%00.php</p>
-<p>Apache解析漏洞</p>
-<p>windows 不允许这两个文件存在 （末尾为.或空格）<br>xx.jpg.  xx.jpg_ (_为空格)<br>上传成功后会自动把 . _ 去掉</p>
+<h2><span id="ampampamp-命令拼接符号的区别">&amp;，&amp;&amp;，| ，||命令拼接符号的区别</span></h2><p>A&amp;B：简单的拼接 A、B直接没有制约关系<br>A&amp;&amp;B：A执行成功才会执行B<br>A|B：A的输出，作为B的输入<br>A||B：A执行失败才会执行B</p>
+<h2><span id="无回显时">无回显时</span></h2><ol>
+<li>延时注入：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>windows</td>
+<td>ping 127.0.0.1 -n 5&gt;null</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>sleep 5</td>
+</tr>
+</tbody>
+</table>
+<p>通过响应时间判断</p>
+<ol start="2">
+<li>远程请求</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>windows</td>
+<td>ping,telnet等</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>wget，curl等</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>dns查询</li>
+</ol>
+<h2><span id="fix">fix</span></h2><p>白名单<br>黑名单容易存在绕过 “”,’’</p>
 
       
 
@@ -211,17 +247,6 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
@@ -272,7 +297,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/09/Command-Injection/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -286,18 +311,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/07/30/CG-CTF-Web/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/08/09/Brute-Force/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          CG-CTF Web
+          Brute Force 
         
       </div>
     </a>
   
   
-    <a href="/2019/07/25/SSRF/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SSRF</div>
+    <a href="/2019/08/08/ByPassWAF思路/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ByPassWAF思路</div>
       <i class="icon-circle-right"></i>
     </a>
   

