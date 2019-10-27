@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>5G | cruoni的博客</title>
+  <title>PHP intval和chr的利用 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="5G[toc]5G现有应用 uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠） eMBB 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽） mMTC 海量机器   NG-RAN基本结构（SA） SA/NSA架构选择  NSA优选Option 3X  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。 Cloud RAN方案选择 选择5G频谱">
-<meta name="keywords" content="机器学习 计算机视觉 信息安全">
+  <meta name="description" content="[toc] 题目1234567891011121314151617 &amp;lt;?phperror_reporting(0);require &apos;flag.php&apos;;$value = $_GET[&apos;value&apos;];$password = $_GET[&apos;password&apos;];$username = &apos;&apos;;for ($i = 0; $i &amp;lt; count($value); ++$i) &amp;#123;">
+<meta name="keywords" content="WriteUp,PHP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="5G">
-<meta property="og:url" content="http://yoursite.com/2019/08/14/5G/index.html">
+<meta property="og:title" content="PHP intval和chr的利用">
+<meta property="og:url" content="http://yoursite.com/2019/09/29/PHP-intval和chr的利用/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="5G[toc]5G现有应用 uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠） eMBB 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽） mMTC 海量机器   NG-RAN基本结构（SA） SA/NSA架构选择  NSA优选Option 3X  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。 Cloud RAN方案选择 选择5G频谱">
+<meta property="og:description" content="[toc] 题目1234567891011121314151617 &amp;lt;?phperror_reporting(0);require &apos;flag.php&apos;;$value = $_GET[&apos;value&apos;];$password = $_GET[&apos;password&apos;];$username = &apos;&apos;;for ($i = 0; $i &amp;lt; count($value); ++$i) &amp;#123;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:12:06.070Z">
+<meta property="og:updated_time" content="2019-09-29T16:40:39.885Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="5G">
-<meta name="twitter:description" content="5G[toc]5G现有应用 uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠） eMBB 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽） mMTC 海量机器   NG-RAN基本结构（SA） SA/NSA架构选择  NSA优选Option 3X  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。 Cloud RAN方案选择 选择5G频谱">
+<meta name="twitter:title" content="PHP intval和chr的利用">
+<meta name="twitter:description" content="[toc] 题目1234567891011121314151617 &amp;lt;?phperror_reporting(0);require &apos;flag.php&apos;;$value = $_GET[&apos;value&apos;];$password = $_GET[&apos;password&apos;];$username = &apos;&apos;;for ($i = 0; $i &amp;lt; count($value); ++$i) &amp;#123;">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,46 +145,50 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-5G" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-PHP-intval和chr的利用" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      5G
+      PHP intval和chr的利用
     </h1>
   
 
         
-        <a href="/2019/08/14/5G/" class="archive-article-date">
-  	<time datetime="2019-08-14T00:59:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-14</time>
+        <a href="/2019/09/29/PHP-intval和chr的利用/" class="archive-article-date">
+  	<time datetime="2019-09-29T15:59:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1><span id="5g">5G</span></h1><h2><span id="toc">[toc]</span></h2><h2><span id="5g现有应用">5G现有应用</span></h2><ol>
-<li>uRLLC 超高可高低时延通信：自动驾驶 （低时延、高可靠）</li>
-<li><strong>eMBB</strong> 增强移动宽带：VR、AR、超高清视频、云游戏 （带宽）</li>
-<li>mMTC 海量机器</li>
-</ol>
-<ul>
-<li>NG-RAN基本结构（SA）</li>
-<li>SA/NSA架构选择<br>  NSA优选Option 3X<br>  相对NSA、SA对LTE现网改造更小，且便于引入5G新业务，但是投资成本高，产业进度较晚。</li>
-<li>Cloud RAN方案选择</li>
-<li>选择5G频谱<br>  最宽的连续频谱：连续160MHz良好的覆盖性能<br>  相比3.5GHz更好的覆盖<br>  优质的产业基础：2.6GHz TD-LTE产业积累</li>
-<li>5G频段重耕</li>
-</ul>
-<ol>
-<li>Massive  MIMO 及波束管理技术<br> Massive MIMO是更大规模天线阵列的多天线形态，天线通道数显著提升</li>
-<li>多址技术 <blockquote>
-<p>1G FDMA 频分多址<br> 2G TDMA 频分 时分<br> 3G CDMA 码分多址<br> 4G OFDMA 正交频分多址<br> 多址F-OFDM技术</p>
-</blockquote>
+        <p>[toc]</p>
+<h2><span id="题目">题目</span></h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">'flag.php'</span>;</span><br><span class="line">$value = $_GET[<span class="string">'value'</span>];</span><br><span class="line">$password = $_GET[<span class="string">'password'</span>];</span><br><span class="line">$username = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; count($value); ++$i) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($value[$i] &gt; <span class="number">32</span> &amp;&amp; $value[$i] &lt; <span class="number">127</span>) <span class="keyword">unset</span>($value);</span><br><span class="line">    <span class="keyword">else</span> $username .= chr($value[$i]);</span><br><span class="line">    <span class="keyword">if</span> ($username == <span class="string">'w3lc0me_To_xid1an'</span> &amp;&amp; intval($password) &lt; <span class="number">232</span> &amp;&amp; intval($password + <span class="number">1</span>) &gt; <span class="number">233</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'Hello '</span>.$username.<span class="string">'!'</span>, <span class="string">'&lt;br&gt;'</span>, PHP_EOL;</span><br><span class="line">        <span class="keyword">echo</span> $flag, <span class="string">'&lt;hr&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br></pre></td></tr></table></figure>
+<h2><span id="关键函数">关键函数</span></h2><ol>
+<li><p>chr()<br> 返回ascii值对应的字符</p>
 </li>
-<li>上下行解耦</li>
+<li><p>intval()<br>取整 </p>
+</li>
 </ol>
+<h2><span id="分析">分析</span></h2><p>首先大概分析一下题目，用get方式传入value喝password，对数组value中的每个字符进行判断，要求ascii码值大于32小于127，然后将value作为username，并将username与<code>&#39;w3lc0me_To_xid1an&#39;</code>进行比较，同时对password的值进行判断，要求<code>intval($password) &lt; 232 &amp;&amp; intval($password + 1) &gt; 233)</code>。</p>
+<hr>
+<h2><span id="解题">解题</span></h2><h3><span id="1">1.</span></h3><p>先构造一个数组<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Python</span></span><br><span class="line">str = <span class="string">'w3lc0me_To_xid1an'</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> str:</span><br><span class="line">    print(ord(i) , <span class="string">" "</span>, end=<span class="string">""</span>)</span><br></pre></td></tr></table></figure></p>
+<p>得到=&gt;119  51  108  99  48  109  101  95  84  111  95  120  105  100  49  97  110<br>但该值在32~127中，会被过滤<br>chr()返回字符时，会先对数值进行模256处理，可以对每个数值加上256，绕过<code>if ($value[$i] &gt; 32 &amp;&amp; $value[$i] &lt; 127) unset($value);</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str = <span class="string">'w3lc0me_To_xid1an'</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> str:</span><br><span class="line">    print(ord(i) + <span class="number">256</span>, <span class="string">" "</span>, end=<span class="string">""</span>)</span><br></pre></td></tr></table></figure></p>
+<p>得到=&gt;375  307  364  355  304  365  357  351  340  367  351  376  361  356  305  353  366</p>
+<p>构造</p>
+<blockquote>
+<p>value[0]=375&amp;value[1]=307&amp;value[2]=364&amp;value[3]=355&amp;value[4]=304&amp;value[5]=365&amp;value[6]=357&amp;value[7]=351&amp;value[8]=340&amp;value[9]=367&amp;value[10]=351&amp;value[11]=376&amp;value[12]=361&amp;value[13]=356&amp;value[14]=305&amp;value[15]=353&amp;value[16]=366</p>
+</blockquote>
+<h3><span id="2">2.</span></h3><p>利用intval()函数的特性 处理16进制字符串时<br><strong>intval(字符串)为0</strong><br>php ‘字符串’+1自动转换成数值<br>intval(数值)为数值取整<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$password=<span class="string">'0123'</span>;</span><br><span class="line"><span class="keyword">echo</span>(intval($password));</span><br><span class="line"><span class="comment"># 123</span></span><br><span class="line"></span><br><span class="line">$password=<span class="string">'0x123'</span>;</span><br><span class="line"><span class="keyword">echo</span>(intval($password));</span><br><span class="line"><span class="comment"># 0</span></span><br><span class="line"></span><br><span class="line">$password=<span class="string">'0x123'</span>+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span>(intval($password));</span><br><span class="line"><span class="comment"># 292</span></span><br></pre></td></tr></table></figure></p>
+<p>绕过<code>if ($value[$i] &gt; 32 &amp;&amp; $value[$i] &lt; 127) unset($value);</code></p>
+<p>PHP7中修复了该问题</p>
+<p>构造</p>
+<blockquote>
+<p>value[0]=375&amp;value[1]=307&amp;value[2]=364&amp;value[3]=355&amp;value[4]=304&amp;value[5]=365&amp;value[6]=357&amp;value[7]=351&amp;value[8]=340&amp;value[9]=367&amp;value[10]=351&amp;value[11]=376&amp;value[12]=361&amp;value[13]=356&amp;value[14]=305&amp;value[15]=353&amp;value[16]=366&amp;password=0x123<br>得到flag</p>
+</blockquote>
 
       
 
@@ -214,6 +218,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">WriteUp,PHP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -264,7 +279,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/14/5G/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/09/29/PHP-intval和chr的利用/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -278,18 +293,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/08/14/upload/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/10/08/BUUOJ-Warmup-HCTF2018-warmup-WriteUp/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          upload 文件上传绕过方法总结
+          BUUOJ Warmup-HCTF2018 warmup WriteUp
         
       </div>
     </a>
   
   
-    <a href="/2019/08/12/XCTF-攻防世界-upload/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">XCTF 攻防世界 -upload</div>
+    <a href="/2019/09/25/HCTF2018-Warmup-wp/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">HCTF2018 Warmup WriteUp</div>
       <i class="icon-circle-right"></i>
     </a>
   
