@@ -6,20 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Hello World | cruoni的博客</title>
+  <title>XCTF lottery WriteUpup .git源码泄露 php弱类型比较 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="先用御剑对后台进行扫描 发现robots.txt根据robots.txt 发现存在/.git/目录用Githack获取源代码代码审计 在aip.php中发现漏洞（php弱类型比较)只要传入的数据与系统随机数进行 == 比较 可以用php弱类型比较进行绕过 （true==1）返回结果为真  抓包将number值改为七个值为true的数组[ture,true,true,true,true,true">
 <meta name="keywords" content="机器学习 计算机视觉 信息安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2019/02/09/hello-world/index.html">
+<meta property="og:title" content="XCTF lottery WriteUpup .git源码泄露 php弱类型比较">
+<meta property="og:url" content="http://yoursite.com/2019/11/10/XCTF-lottery-WriteUpup-git源码泄露-php弱类型比较/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="先用御剑对后台进行扫描 发现robots.txt根据robots.txt 发现存在/.git/目录用Githack获取源代码代码审计 在aip.php中发现漏洞（php弱类型比较)只要传入的数据与系统随机数进行 == 比较 可以用php弱类型比较进行绕过 （true==1）返回结果为真  抓包将number值改为七个值为true的数组[ture,true,true,true,true,true">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-09T06:46:31.031Z">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/9kPgCAKHl6qo7GW.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/zwpda5DsVRPjYcC.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/ioq1g5vcZ29GkEm.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/UbiIZpJveY7c5rL.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/BCjH9vAlqbe8tEP.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/b9n6M8G2xSRzuIX.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2018110515185387.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzQxODcxNzk0,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/zDjGBMyUZnJAQEF.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/HuWmyOSiQcJt91n.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/qgaGMEWOdDRJxrN.png">
+<meta property="og:updated_time" content="2019-11-10T11:29:51.133Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="XCTF lottery WriteUpup .git源码泄露 php弱类型比较">
+<meta name="twitter:description" content="先用御剑对后台进行扫描 发现robots.txt根据robots.txt 发现存在/.git/目录用Githack获取源代码代码审计 在aip.php中发现漏洞（php弱类型比较)只要传入的数据与系统随机数进行 == 比较 可以用php弱类型比较进行绕过 （true==1）返回结果为真  抓包将number值改为七个值为true的数组[ture,true,true,true,true,true">
+<meta name="twitter:image" content="https://i.loli.net/2019/11/10/9kPgCAKHl6qo7GW.png">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -145,35 +156,31 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hello-world" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-XCTF-lottery-WriteUpup-git源码泄露-php弱类型比较" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      XCTF lottery WriteUpup .git源码泄露 php弱类型比较
     </h1>
   
 
         
-        <a href="/2019/02/09/hello-world/" class="archive-article-date">
-  	<time datetime="2019-02-09T06:46:31.031Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-09</time>
+        <a href="/2019/11/10/XCTF-lottery-WriteUpup-git源码泄露-php弱类型比较/" class="archive-article-date">
+  	<time datetime="2019-11-10T11:08:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2><span id="quick-start">Quick Start</span></h2><h3><span id="create-a-new-post">Create a new post</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3><span id="run-server">Run server</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3><span id="generate-static-files">Generate static files</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p><img src="https://i.loli.net/2019/11/10/9kPgCAKHl6qo7GW.png" alt="1.png"></p>
+<p><img src="https://i.loli.net/2019/11/10/zwpda5DsVRPjYcC.png" alt="2.png"></p>
+<p>先用御剑对后台进行扫描 发现robots.txt<br><img src="https://i.loli.net/2019/11/10/ioq1g5vcZ29GkEm.png" alt="3.png"><br>根据robots.txt 发现存在/.git/目录<br><img src="https://i.loli.net/2019/11/10/UbiIZpJveY7c5rL.png" alt="4.png"><br>用Githack获取源代码<br><img src="https://i.loli.net/2019/11/10/BCjH9vAlqbe8tEP.png" alt="5.png"><br>代码审计 在aip.php中发现漏洞（php弱类型比较)<br>只要传入的数据与系统随机数进行 == 比较 可以用php弱类型比较进行绕过 （true==1）返回结果为真<br><img src="https://i.loli.net/2019/11/10/b9n6M8G2xSRzuIX.png" alt="6.png"></p>
+<p><img src="https://img-blog.csdnimg.cn/2018110515185387.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzQxODcxNzk0,size_16,color_FFFFFF,t_70" alt="php弱类型比较"></p>
+<p>抓包<br><img src="https://i.loli.net/2019/11/10/zDjGBMyUZnJAQEF.png" alt="7.png"><br>将number值改为七个值为true的数组<br>[ture,true,true,true,true,true,true]<br><img src="https://i.loli.net/2019/11/10/HuWmyOSiQcJt91n.png" alt="8.png"><br>成功  获得flag<br><img src="https://i.loli.net/2019/11/10/qgaGMEWOdDRJxrN.png" alt="9.png"></p>
 
       
 
@@ -253,7 +260,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/02/09/hello-world/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/10/XCTF-lottery-WriteUpup-git源码泄露-php弱类型比较/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -267,15 +274,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/07/25/Web/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Web 前端与后端
-        
-      </div>
-    </a>
   
+    <a href="/2019/11/06/ssrf-url解析器/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ssrf:url解析器</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
