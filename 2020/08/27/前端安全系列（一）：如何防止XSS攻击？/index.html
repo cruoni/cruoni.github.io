@@ -9,14 +9,14 @@
   <title>前端安全系列（一）：如何防止XSS攻击？ | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="转自xss过滤速查表[toc] XSS 攻击的介绍在开始本文之前，我们先提出一个问题，请判断以下两个说法是否正确：  XSS 防范是后端 RD（研发人员）的责任，后端 RD 应该在所有用户提交数据的接口，对敏感字符进行转义，才能进行下一步操作。 所有要插入到页面上的数据，都要通过一个敏感字符过滤函数的转义，过滤掉通用的敏感字符后，就可以插入到页面中。  如果你还不能确定答案，那么可以带着这些问题向">
-<meta name="keywords" content="机器学习 计算机视觉 信息安全">
+<meta name="keywords" content="xss">
 <meta property="og:type" content="article">
 <meta property="og:title" content="前端安全系列（一）：如何防止XSS攻击？">
 <meta property="og:url" content="http://yoursite.com/2020/08/27/前端安全系列（一）：如何防止XSS攻击？/index.html">
 <meta property="og:site_name" content="cruoni的博客">
 <meta property="og:description" content="转自xss过滤速查表[toc] XSS 攻击的介绍在开始本文之前，我们先提出一个问题，请判断以下两个说法是否正确：  XSS 防范是后端 RD（研发人员）的责任，后端 RD 应该在所有用户提交数据的接口，对敏感字符进行转义，才能进行下一步操作。 所有要插入到页面上的数据，都要通过一个敏感字符过滤函数的转义，过滤掉通用的敏感字符后，就可以插入到页面中。  如果你还不能确定答案，那么可以带着这些问题向">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-28T07:16:34.012Z">
+<meta property="og:updated_time" content="2020-09-16T11:32:45.459Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端安全系列（一）：如何防止XSS攻击？">
 <meta name="twitter:description" content="转自xss过滤速查表[toc] XSS 攻击的介绍在开始本文之前，我们先提出一个问题，请判断以下两个说法是否正确：  XSS 防范是后端 RD（研发人员）的责任，后端 RD 应该在所有用户提交数据的接口，对敏感字符进行转义，才能进行下一步操作。 所有要插入到页面上的数据，都要通过一个敏感字符过滤函数的转义，过滤掉通用的敏感字符后，就可以插入到页面中。  如果你还不能确定答案，那么可以带着这些问题向">
@@ -428,6 +428,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">xss</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -629,19 +640,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PHP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WriteUP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web php</a>
+                <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -649,11 +648,55 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ctf ssrf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具 nmap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ctf 文件上传</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">思维导图</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xss</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">wp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color3">挖洞</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">PHP ctf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ctf sql注入</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">工具 sql注入</a>
               </li>
             
             <div class="clearfix"></div>

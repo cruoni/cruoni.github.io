@@ -9,14 +9,14 @@
   <title>PHP intval和chr的利用 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="[toc] 题目1234567891011121314151617 &amp;lt;?phperror_reporting(0);require &apos;flag.php&apos;;$value = $_GET[&apos;value&apos;];$password = $_GET[&apos;password&apos;];$username = &apos;&apos;;for ($i = 0; $i &amp;lt; count($value); ++$i) &amp;#123;">
-<meta name="keywords" content="PHP">
+<meta name="keywords" content="PHP ctf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP intval和chr的利用">
 <meta property="og:url" content="http://yoursite.com/2019/09/29/PHP-intval和chr的利用/index.html">
 <meta property="og:site_name" content="cruoni的博客">
 <meta property="og:description" content="[toc] 题目1234567891011121314151617 &amp;lt;?phperror_reporting(0);require &apos;flag.php&apos;;$value = $_GET[&apos;value&apos;];$password = $_GET[&apos;password&apos;];$username = &apos;&apos;;for ($i = 0; $i &amp;lt; count($value); ++$i) &amp;#123;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-10T13:52:34.580Z">
+<meta property="og:updated_time" content="2020-09-16T11:34:38.349Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP intval和chr的利用">
 <meta name="twitter:description" content="[toc] 题目1234567891011121314151617 &amp;lt;?phperror_reporting(0);require &apos;flag.php&apos;;$value = $_GET[&apos;value&apos;];$password = $_GET[&apos;password&apos;];$username = &apos;&apos;;for ($i = 0; $i &amp;lt; count($value); ++$i) &amp;#123;">
@@ -223,7 +223,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">PHP</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PHP ctf</a>
         		</li>
       		
 		</ul>
@@ -293,11 +293,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/10/08/BUUOJ-Warmup-HCTF2018-warmup-WriteUp/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/10/27/XCTF-ics-05-WriteUP/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          BUUOJ Warmup-HCTF2018 warmup WriteUp
+          XCTF ics-05 WriteUP ——php://filter preg_replace命令执行
         
       </div>
     </a>
@@ -430,19 +430,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PHP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WriteUP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web php</a>
+                <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -450,11 +438,55 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ctf ssrf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具 nmap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ctf 文件上传</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">思维导图</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xss</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">wp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color3">挖洞</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">PHP ctf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ctf sql注入</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">工具 sql注入</a>
               </li>
             
             <div class="clearfix"></div>

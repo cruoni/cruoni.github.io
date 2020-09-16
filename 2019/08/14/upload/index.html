@@ -9,14 +9,14 @@
   <title>upload 文件上传绕过方法总结 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12# Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式.php4 .php5也能被解析 （fast-cgi）里配置正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
-<meta name="keywords" content="机器学习 计算机视觉 信息安全">
+<meta name="keywords" content="ctf 文件上传">
 <meta property="og:type" content="article">
 <meta property="og:title" content="upload 文件上传绕过方法总结">
 <meta property="og:url" content="http://yoursite.com/2019/08/14/upload/index.html">
 <meta property="og:site_name" content="cruoni的博客">
 <meta property="og:description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12# Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式.php4 .php5也能被解析 （fast-cgi）里配置正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-14T08:30:27.326Z">
+<meta property="og:updated_time" content="2020-09-16T11:35:56.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="upload 文件上传绕过方法总结">
 <meta name="twitter:description" content="文件上传[toc] 绕过方法 burp抓包 改后缀绕过 1.php .jpg  00截断绕过 图片马 + 解析漏洞绕过 图片马制作方法：  12# Windows DOS:copy 1.jpg/b + 2.php/a tu.jpg  特殊的PHP代码格式.php4 .php5也能被解析 （fast-cgi）里配置正则检测文件内容中包含 &amp;lt;? 就异常退出，通常的PHP代码就不行了，可以使用这种">
@@ -214,6 +214,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf 文件上传</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -278,18 +289,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/08/14/php奇技淫巧/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/09/25/HCTF2018-Warmup-wp/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          php奇技淫巧
+          HCTF2018 Warmup WriteUp
         
       </div>
     </a>
   
   
-    <a href="/2019/08/14/5G/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">5G</div>
+    <a href="/2019/08/12/XCTF-攻防世界-upload/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">XCTF 攻防世界 -upload</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -415,19 +426,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PHP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WriteUP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">web php</a>
+                <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -435,11 +434,55 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ctf ssrf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具 nmap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ctf 文件上传</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">思维导图</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xss</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">wp</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color3">挖洞</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">PHP ctf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ctf sql注入</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">工具 sql注入</a>
               </li>
             
             <div class="clearfix"></div>
