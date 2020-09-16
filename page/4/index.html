@@ -146,6 +146,246 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Brute-Force" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/09/Brute-Force/">Brute Force </a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/09/Brute-Force/" class="archive-article-date">
+  	<time datetime="2019-08-09T01:44:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/09/Brute-Force/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Command-Injection" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/09/Command-Injection/">Command Injection </a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/09/Command-Injection/" class="archive-article-date">
+  	<time datetime="2019-08-09T01:35:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1><span id="命令注入">命令注入</span></h1><h2><span id="命令注入流程">命令注入流程</span></h2><ol>
+<li>是否调用系统命令</li>
+<li>函数的参数是否可控</li>
+<li>可控参数是否可控地拼接注入命令</li>
+</ol>
+<h2><span id="ampampamp-命令拼接符号的区别">&amp;，&amp;&amp;，| ，||命令拼接符号的区别</span></h2><p>A&amp;B：简单的拼接 A、B直接没有制约关系<br>A&amp;&amp;B：A执行成功才会执行B<br>A|B：A的输出，作为B的输入<br>A||B：A执行失败才会执行B</p>
+<h2><span id="无回显时">无回显时</span></h2><ol>
+<li>延时注入：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>windows</td>
+<td>ping 127.0.0.1 -n 5&gt;null</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>sleep 5</td>
+</tr>
+</tbody>
+</table>
+<p>通过响应时间判断</p>
+<ol start="2">
+<li>远程请求</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>windows</td>
+<td>ping,telnet等</td>
+</tr>
+<tr>
+<td>linux</td>
+<td>wget，curl等</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>dns查询</li>
+</ol>
+<h2><span id="fix">fix</span></h2><p>白名单<br>黑名单容易存在绕过 “”,’’</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/09/Command-Injection/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-ByPassWAF思路" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/08/ByPassWAF思路/">ByPassWAF思路</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/08/ByPassWAF思路/" class="archive-article-date">
+  	<time datetime="2019-08-08T03:15:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://www.secpulse.com/archives/109577.html" target="_blank" rel="noopener">【思路/技术】某大佬的BypassWAF新思路</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/08/ByPassWAF思路/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2019安全态势" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -285,6 +525,80 @@
 
 
   
+    <article id="post-SSRF" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/25/SSRF/">SSRF</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/25/SSRF/" class="archive-article-date">
+  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1><span id="ssrf-server-side-request-forgery-服务端请求伪造">SSRF-Server-Side Request Forgery 服务端请求伪造</span></h1><p><a href="https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf" target="_blank" rel="noopener">https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/25/SSRF/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-webshell-上传-解析漏洞" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -346,80 +660,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/07/25/webshell-上传-解析漏洞/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SSRF" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/25/SSRF/">SSRF</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/25/SSRF/" class="archive-article-date">
-  	<time datetime="2019-07-25T07:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1><span id="ssrf-server-side-request-forgery-服务端请求伪造">SSRF-Server-Side Request Forgery 服务端请求伪造</span></h1><p><a href="https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf" target="_blank" rel="noopener">https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html#0x01-ssrf</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/25/SSRF/">展开全文 >></a>
         </p>
       
 
@@ -801,15 +1041,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">PHP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">XCTF WriteUP</a>
+                <a href="javascript:void(0)" class="js-tag color4">web</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -818,6 +1054,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">web php</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">XCTF WriteUP</a>
               </li>
              
               <li class="article-tag-list-item">
